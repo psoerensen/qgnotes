@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Estimation of Genetic Parameters | QG Notes</title>
+  <meta name="description" content="These notes are to be used on our QG Analytics website." />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Estimation of Genetic Parameters | QG Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="These notes are to be used on our QG Analytics website." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Estimation of Genetic Parameters | QG Notes" />
+  
+  <meta name="twitter:description" content="These notes are to be used on our QG Analytics website." />
+  
+
+<meta name="author" content="Peter Sørensen" />
+
+
+<meta name="date" content="2022-02-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="quantitative-genetics.html"/>
+<link rel="next" href="methods-for-estimation-of-genetic-parameters.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="quantitative-genetics.html"><a href="quantitative-genetics.html"><i class="fa fa-check"></i><b>3</b> Quantitative Genetics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="quantitative-genetics.html"><a href="quantitative-genetics.html#infinitesimal-model"><i class="fa fa-check"></i><b>3.1</b> Infinitesimal model</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="quantitative-genetics.html"><a href="quantitative-genetics.html#genetic-effects-genetic-values-and-breeding-values"><i class="fa fa-check"></i><b>3.1.1</b> Genetic effects, genetic values and breeding values</a></li>
+<li class="chapter" data-level="3.1.2" data-path="quantitative-genetics.html"><a href="quantitative-genetics.html#infinite-number-of-loci-each-with-small-effect-on-the-phenotype"><i class="fa fa-check"></i><b>3.1.2</b> Infinite number of loci each with small effect on the phenotype</a></li>
+<li class="chapter" data-level="3.1.3" data-path="quantitative-genetics.html"><a href="quantitative-genetics.html#genetic-parameters"><i class="fa fa-check"></i><b>3.1.3</b> Genetic parameters</a></li>
+<li class="chapter" data-level="3.1.4" data-path="quantitative-genetics.html"><a href="quantitative-genetics.html#basic-questions-remain"><i class="fa fa-check"></i><b>3.1.4</b> Basic questions remain</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="estimation-of-genetic-parameters.html"><a href="estimation-of-genetic-parameters.html"><i class="fa fa-check"></i><b>4</b> Estimation of Genetic Parameters</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="estimation-of-genetic-parameters.html"><a href="estimation-of-genetic-parameters.html#genetic-model"><i class="fa fa-check"></i><b>4.1</b> Genetic model</a></li>
+<li class="chapter" data-level="4.2" data-path="quantitative-genetics.html"><a href="quantitative-genetics.html#genetic-parameters"><i class="fa fa-check"></i><b>4.2</b> Genetic parameters</a></li>
+<li class="chapter" data-level="4.3" data-path="estimation-of-genetic-parameters.html"><a href="estimation-of-genetic-parameters.html#data-required-for-estimating-genetic-parameters"><i class="fa fa-check"></i><b>4.3</b> Data required for estimating genetic parameters</a></li>
+<li class="chapter" data-level="4.4" data-path="estimation-of-genetic-parameters.html"><a href="estimation-of-genetic-parameters.html#statistical-models-and-variance-components"><i class="fa fa-check"></i><b>4.4</b> Statistical models and variance components</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="methods-for-estimation-of-genetic-parameters.html"><a href="methods-for-estimation-of-genetic-parameters.html"><i class="fa fa-check"></i><b>5</b> Methods for estimation of genetic parameters</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="methods-for-estimation-of-genetic-parameters.html"><a href="methods-for-estimation-of-genetic-parameters.html#estimating-heritability-using-parent---offspring-regression"><i class="fa fa-check"></i><b>5.1</b> Estimating heritability using parent - offspring regression</a></li>
+<li class="chapter" data-level="5.2" data-path="methods-for-estimation-of-genetic-parameters.html"><a href="methods-for-estimation-of-genetic-parameters.html#estimating-heritability-using-anova-for-family-data"><i class="fa fa-check"></i><b>5.2</b> Estimating heritability using ANOVA for family data</a></li>
+<li class="chapter" data-level="5.3" data-path="methods-for-estimation-of-genetic-parameters.html"><a href="methods-for-estimation-of-genetic-parameters.html#estimating-heritability-using-restricted-maximum-likelihood"><i class="fa fa-check"></i><b>5.3</b> Estimating heritability using Restricted Maximum Likelihood</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="methods-for-estimation-of-genetic-parameters.html"><a href="methods-for-estimation-of-genetic-parameters.html#linear-mixed-model"><i class="fa fa-check"></i><b>5.3.1</b> Linear mixed model:</a></li>
+<li class="chapter" data-level="5.3.2" data-path="methods-for-estimation-of-genetic-parameters.html"><a href="methods-for-estimation-of-genetic-parameters.html#likelihood-approach-for-estimating-variance-components"><i class="fa fa-check"></i><b>5.3.2</b> Likelihood approach for estimating variance components</a></li>
+<li class="chapter" data-level="5.3.3" data-path="methods-for-estimation-of-genetic-parameters.html"><a href="methods-for-estimation-of-genetic-parameters.html#advantages-of-using-reml-for-estimating-genetic-parameters"><i class="fa fa-check"></i><b>5.3.3</b> Advantages of using REML for estimating genetic parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="methods-for-estimation-of-genetic-parameters.html"><a href="methods-for-estimation-of-genetic-parameters.html#when-to-estimate-variance-components"><i class="fa fa-check"></i><b>5.4</b> When to estimate variance components?</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>6</b> Applications</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>6.1</b> Example one</a></li>
+<li class="chapter" data-level="6.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>6.2</b> Example two</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>7</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">QG Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estimation-of-genetic-parameters" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Estimation of Genetic Parameters</h1>
+<p>This section introduces the basic concepts of estimating genetic parameters such as:</p>
+<ul>
+<li>basic principles of estimating genetic parameters</li>
+<li>use of genetic relationships for estimating genetic parameters</li>
+<li>different methods, data sources and experimental designs for estimating genetic parameters</li>
+<li>importance of estimation of genetic parameters in breeding</li>
+<li>knowing when estimation of genetic parameters may be required</li>
+</ul>
+<p>The estimation of genetic parameters is an important issue in animal and plant breeding. First of
+all, estimating additive genetic and possible non-additive genetic variances contributes
+to a better understanding of the genetic mechanism. Secondly, estimates of genetic and
+phenotypic variances and covariances are essential for the prediction of breeding values
+and for the prediction of the expected genetic response of
+selection programmes. Parameters that are of interest are heritability, genetic and
+phenotypic correlation and repeatability, and those are computed as functions of the
+variance components.</p>
+<p>Genetic parameters are estimated using information on phenotypes and genetic relationships
+for individuals in the breeding population. Heritability is estimated by comparing individual
+phenotypic variation among related individuals in a population. Close (compared to distant) relatives
+share more DNA in common and if the trait is under genetic influence they will therefore share
+phenotypic similarities. In this section we will illustrate how different phenotypic sources
+and genetic relationships are used for estimating genetic parameters.</p>
+<div id="genetic-model" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Genetic model</h2>
+<p>As introduced previously the phenotype for a quantitative trait is the sum of both genetic and environmental factors. In general the total genetic effect for an individual is the sum of both additive and non-additive effects. However, only the additive genetic effects are passed on to the offspring and therefore have a breeding value. Therefore we only consider the additive genetic model as the basis for estimation of genetic parameters. The model for the phenotype (<span class="math inline">\(y\)</span>) is:
+<span class="math display">\[\begin{align}
+            y=\mu+a+e    \notag
+\end{align}\]</span>
+where <span class="math inline">\(\mu\)</span> is the population mean, <span class="math inline">\(a\)</span> is the additive effect, and <span class="math inline">\(e\)</span> is the environmental deviation (or residual) not explained by the genetic effects in the model.
+We assume that the additive genetic effect, a, and the residual term, e, are normally distributed which means that the observed phenotype is also normally distributed
+<span class="math display">\[\begin{align}
+a \sim N(0,\sigma^2_{a}), \quad
+e \sim N(0,\sigma^2_{e}), \quad
+y \sim N( \mu,\sigma^2_{y}) \notag
+\end{align}\]</span>
+where <span class="math inline">\(\sigma^2_{a}\)</span> is additive genetic variance, <span class="math inline">\(\sigma^2_{e}\)</span> is residual variance, and (<span class="math inline">\(\sigma^2_{y}\)</span>) is the total phenotypic variance.</p>
+</div>
+<div id="genetic-parameters" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Genetic parameters</h2>
+<p>Heritability and genetic correlation are the key genetic parameters used in animal and plant breeding. They are defined in terms of the variance component (<span class="math inline">\(\sigma^2_{a}\)</span> and <span class="math inline">\(\sigma^2_{e}\)</span>) defined in the previous section.</p>
+<p><strong>Heritability</strong> estimates the degree of variation in a phenotypic trait in a population that is due to genetic variation between individuals in that population. It measures how much of the variation of a trait can be attributed to variation of genetic factors, as opposed to variation of environmental factors. The narrow sense heritability is the ratio of additive genetic variance (<span class="math inline">\(\sigma^2_{a}\)</span>) to the overall phenotypic variance (<span class="math inline">\(\sigma^2_{y}=\sigma^2_{a}+\sigma^2_{e}\)</span>):
+<span class="math display">\[\begin{align}
+h^2 &amp;= \sigma^2_{a}/(\sigma^2_a+\sigma^2_e)
+\end{align}\]</span>
+A heritability of 0 implies that the no genetic effects influence the trait, while a heritability of 1 implies that all of the variation in the trait is explained by the genetic effects. In general the amount of information provided by the phenotype about the breeding value is determined by the narrow sense heritability.</p>
+<p><strong>Genetic correlation</strong> is the proportion of variance that two traits share due to genetic causes. Genetic correlations are not the same as heritability, as it is about the overlap between the two sets of influences and not their absolute magnitude; two traits could be both highly heritable but not be genetically correlated or have small heritabilities and be completely correlated (as long as the heritabilities are non-zero).
+Genetic correlation (<span class="math inline">\(\rho_a\)</span>) is the genetic covariance between two traits divided by the product of genetic standard deviation for each of the traits:
+<span class="math display">\[\begin{align}
+\rho_{a_{12}}=\frac{\sigma_{a_{12}}}{\sqrt{\sigma_{a_{1}}^2 \sigma_{a_{2}}^2}}
+\end{align}\]</span>
+where <span class="math inline">\(\sigma_{a_{12}}\)</span> is the genetic covariance and <span class="math inline">\(\sigma_{a_{1}}^2\)</span> and <span class="math inline">\(\sigma_{a_{2}}^2\)</span> are the variances of the additive genetic values for the two traits in the population.
+A genetic correlation of 0 implies that the genetic effects on one trait are independent of the other, while a correlation of 1 implies that all of the genetic influences on the two traits are identical.
+Thus in order to estimate the heritability and genetic correlation we need to estimate the variance component defined above.</p>
+</div>
+<div id="data-required-for-estimating-genetic-parameters" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Data required for estimating genetic parameters</h2>
+<p>Information on phenotypes and genetic relationships for individuals in the breeding population
+are used to formulate appropriate statistical models for the analysis of the data
+and accurate estimation of genetic parameters and breeding values of individuals.</p>
+<p><strong>Phenotypes</strong> for traits of economic importance need to be recorded accurately and completely. All individuals
+within a production unit (herd, flock, ranch, plot) should be recorded. Individuals should not be
+selectively recorded. Data includes the dates of events when traits are observed, factors
+that could influence an individual’s performance, and an identification of contemporaries that
+are raised and observed in the same environment under the same management regime.
+Observations should be objectively measured, if at all possible.</p>
+<p><strong>Genetic relationships</strong> for the individuals in the breeding population is required. Genetic relationships can be inferred from a pedigree or alternative alternative from genetic markers. Individuals and their parents need to be uniquely identified in the data. Information about birth dates, breed composition, and genotypes for various markers or QTLs could also be stored. If individuals are not uniquely identified, then genetic change of the population may not be
+possible. In aquaculture species, for example, individual identification may not be feasible,
+but family identification (father and mother) may be known.</p>
+<p>Furthermore knowledge and understanding of the production system is
+important for designing optimum selection and mating strategies. For dairy cattle key elements are the
+gestation length and the age at first breeding. The number of offspring per female per
+gestation will influence family structure. The use of artificial insemination and/or embryo
+transfer could be important. Other management practices are also useful to know.</p>
+<p>Prior information about the traits is useful. Read the literature. Most likely other researchers or
+breeders have already made analyses of the same species and traits. Their models could be useful
+starting points for further analyses. Their parameter estimates could predict the kinds of
+results that might be found. The idea is to avoid the pitfalls and problems that other
+researchers have already encountered. Be aware of new kinds of analyses of the same data,
+that may not involve statistical models.</p>
+</div>
+<div id="statistical-models-and-variance-components" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Statistical models and variance components</h2>
+<p>For estimating genetic parameters we need to specify a model that describes the genetic and non-genetic factors that may affect the trait phenotypes. Often the non-genetic factors are referred to as systematic effect
+such as age, parity, litter size, days open, sex, herd, year, season, management, etc.</p>
+<p><span class="math display">\[\begin{align}
+            \text{mean}=\text{mean} + \text{systematic effect} + \text{genetic effect}  + residual   \notag
+\end{align}\]</span></p>
+<p>In this, we make a distinction between fixed effects, that determine the level (expected means) of observations, and
+random effects that determine variance. A model at least exists of one fixed (mean)
+and one random effect (residual error variance). If observations also are influenced by a
+genetic contribution of the individuals, then a genetic variance component exists as well. In
+that situation, we have two components contributing to the total variance of the
+observations: a genetic and a residual variance component.</p>
+<p>A statistical model is usually specified as a mathematical relationship between one or more random variables and other non-random variables. In quantitative genetics it is often based on the additive genetic model specified above with inclusion of additional factors that may affect the trait of interest:</p>
+<p><span class="math display">\[\begin{align}
+            y=\mu + \text{...systematic effect....} + a + e  \notag
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mu\)</span> is the population mean, <span class="math inline">\(a\)</span> is the additive effect, and <span class="math inline">\(e\)</span> is the environmental deviation (or residual) not explained by the systematic effects and the genetic effects in the model. We assume that the additive genetic effect, a, and the residual term, e, are normally distributed such that <span class="math inline">\(a \sim N(0,\sigma^2_{a})\)</span> and <span class="math inline">\(e \sim N(0,\sigma^2_{e})\)</span>. The goal of the statistical analysis is to derive estimates for the variance components that is the additive genetic variance <span class="math inline">\(\sigma^2_{a}\)</span>, and the residual variance <span class="math inline">\(\sigma^2_{e}\)</span> the residual variance.</p>
+<p>The statistical model is a formal representation of our quantitative genetic theory, but it is important to realize that all models are simple approximations to how factors influence a trait. The goal of the statistical analysis is to find the best practical model that explains the most variation in the data. Statistical knowledge is required. The methods used for estimating genetic parameters is based on statistical concepts such as random variables, multivariate normal theory and linear (mixed) models. These concepts and their use will be explained in the following sections.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="quantitative-genetics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="methods-for-estimation-of-genetic-parameters.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["qgnotes.pdf", "qgnotes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
