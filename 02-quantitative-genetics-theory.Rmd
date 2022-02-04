@@ -34,7 +34,7 @@ Genetic effects may also depend on the environment in which the genes are expres
 P = G + E + GxE
 \end{align}
 
-In practice, the genotype-environment interaction effect can be important for the phenotype of individuals, but for the sake of simplicity we will ignore them in the remainder of this section. Therefore, hereafter, we will assume that genotypic effects are not impacted by environmental factors.
+In practice, the genotype-environment interaction effect can be important for the phenotype of individuals, but for the sake of simplicity we will ignore them in the remainder of this section and thereby ignore the impact of environmental factors.
 
 ### Genetic effects, genetic values and breeding values
 The genetic effect (G) in the model can include additive effects (A), dominance effects (D), and epistatic effects (I). Additive effects are the summed effects of individual alleles. Dominance effects are interactions between alleles within loci. Epistatic effects are interactions between alleles in different loci and can therefore only occur if two or more loci affect the trait. 
