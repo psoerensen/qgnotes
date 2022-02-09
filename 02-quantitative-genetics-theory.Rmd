@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Quantitative Genetics
 This section introduces the basic concepts in quantitative genetics such as:
 
@@ -34,7 +39,7 @@ Genetic effects may also depend on the environment in which the genes are expres
 P = G + E + GxE
 \end{align}
 
-In practice, the genotype-environment interaction effect can be important for the phenotype of individuals, but for the sake of simplicity we will ignore them in the remainder of this section and thereby ignore the impact of environmental factors.
+In practice, the genotype-environment interaction effect can be important for the phenotype of individuals, but for the sake of simplicity we will ignore them in the remainder of this section.
 
 ### Genetic effects, genetic values and breeding values
 The genetic effect (G) in the model can include additive effects (A), dominance effects (D), and epistatic effects (I). Additive effects are the summed effects of individual alleles. Dominance effects are interactions between alleles within loci. Epistatic effects are interactions between alleles in different loci and can therefore only occur if two or more loci affect the trait. 
@@ -43,7 +48,7 @@ Consider a diploid organism (i.e., it carries two copies of every gene, except i
 
 #### Additive Effects
 Additive effects are the summed effects of average allele effects. Additive effects depend on the population, because average allele effects depend on the frequency of genotypes in the population. For example, assume that genotypes have values -2 (A2A2), +1 (A2A1) and +2 (A1A1). In a population consisting of 25% A2A2, 50% A2A1 and 25% A1A1, you would expect the A1 allele in a A1A2 genotype 2/3 of the time, and you would expect the A1 allele in a A1A1 genotype 1/3 of the time. In another population consisting of 90% A2A2, 18% A2A1 and 1% A1A1, you would expect the A1 allele in a A1A2 genotype about 95% of the time, and in a A1A1 genotype only about 5% of the time. As a result, the effect of the A1 allele, averaged over genotypes, will not be the same, from one population to another.
-The concept of additive genetic effects and average allele effects is fundamental to quantitative genetics. However, it is one of is most confusing, precisely because of the dependance of allele effects on genotype frequencies.
+The concept of additive genetic effects and average allele effects is fundamental to quantitative genetics. However, it is one of the most confusing, precisely because of the dependence of allele effects on genotype frequencies.
 
 #### Dominance Effects
 Dominance genetic effects are the interactions among alleles at a given locus. This is an effect that is extra to the sum of the additive allele effects. Each genotype has its own dominance effect, denoted by  $\delta_{ij}$, for the specific combination of alleles i and j, (e.g., $\delta_{A_{1}A_{2}}$), and each of them are non-zero quantities. Using the previous example, the additive and dominance effects would give .....to be completed
