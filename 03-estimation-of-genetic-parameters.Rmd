@@ -101,10 +101,10 @@ such as age, parity, litter size, days open, sex, herd, year, season, management
 			\text{phenotype}=\text{mean} + \text{systematic effect} + \text{genetic effect}  + \text{residual}	 \notag
 \end{align}
 
-In this, we make a distinction between fixed effects that determine the level (expected means) of observations, and 
+Here we make a distinction between fixed effects that determine the level (expected means) of observations, and 
 random effects that determine variance. A model exists of at least one fixed (mean) 
-and one random effect (residual error variance). If observations also are influenced by a 
-genetic contribution of the individuals, then a genetic variance component exists as well. In 
+and one random effect (residual error variance). If observations are additionally influenced by a 
+genetic contribution of the individuals, then a genetic variance component also exists. In 
 such a situation, we have two components contributing to the total variance of the 
 observations: a genetic and a residual variance component. 
 
