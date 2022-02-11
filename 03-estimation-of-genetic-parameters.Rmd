@@ -76,9 +76,8 @@ that could influence an individual’s performance, and an identification of con
 are raised and observed in the same environment under the same management regime.
 Observations should be objectively measured, if at all possible.
 
-__Genetic relationships__ for the individuals in the breeding population is required. Genetic relationships can be inferred from a pedigree or alternative alternative from genetic markers. Individuals and their parents need to be uniquely identified in the data. Information about birth dates, breed composition, and genotypes for various markers or QTLs could also be stored. If individuals are not uniquely identified, then genetic change of the population may not be
-possible. In aquaculture species, for example, individual identification may not be feasible,
-but family identification (father and mother) may be known.
+__Genetic relationships__ for the individuals in the breeding population is required. Genetic relationships can be inferred from a pedigree or alternatively from genetic markers. Individuals and their parents need to be uniquely identified in the data. Information about birth dates, breed composition, and genotypes for various markers or QTLs could also be stored. If individuals are not uniquely identified, then measuring the genetic change of the population may not be
+possible. 
 
 Furthermore knowledge and understanding of the production system is 
 important for designing optimum selection and mating strategies. For dairy cattle key elements are the
@@ -95,18 +94,18 @@ that may not involve statistical models.
 
 
 ## Statistical models and variance components
-For estimating genetic parameters we need to specify a model that describes the genetic and non-genetic factors that may affect the trait phenotypes. Often the non-genetic factors are referred to as systematic effect 
+For estimating genetic parameters we need to specify a model that describes the genetic and non-genetic factors that may affect the trait phenotypes. Often the non-genetic factors are referred to as systematic effects 
 such as age, parity, litter size, days open, sex, herd, year, season, management, etc.
 
 \begin{align}
-			\text{mean}=\text{mean} + \text{systematic effect} + \text{genetic effect}  + residual	 \notag
+			\text{phenotype}=\text{mean} + \text{systematic effect} + \text{genetic effect}  + \text{residual}	 \notag
 \end{align}
 
-In this, we make a distinction between fixed effects, that determine the level (expected means) of observations, and 
-random effects that determine variance. A model at least exists of one fixed (mean) 
+In this, we make a distinction between fixed effects that determine the level (expected means) of observations, and 
+random effects that determine variance. A model exists of at least one fixed (mean) 
 and one random effect (residual error variance). If observations also are influenced by a 
 genetic contribution of the individuals, then a genetic variance component exists as well. In 
-that situation, we have two components contributing to the total variance of the 
+such a situation, we have two components contributing to the total variance of the 
 observations: a genetic and a residual variance component. 
 
 A statistical model is usually specified as a mathematical relationship between one or more random variables and other non-random variables. In quantitative genetics it is often based on the additive genetic model specified above with inclusion of additional factors that may affect the trait of interest: 
