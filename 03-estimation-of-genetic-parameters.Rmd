@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Estimation of Genetic Parameters
 This section introduces the basic concepts of estimating genetic parameters such as: 
 
@@ -29,8 +34,8 @@ As introduced previously the phenotype for a quantitative trait is the sum of bo
 \begin{align}
 			y=\mu+a+e	 \notag
 \end{align}
-where  $\mu$ is the population mean, $a$ is the additive effect, and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. 
-We assume that the additive genetic effect, a, and the residual term, e, are normally distributed which means that the observed phenotype is also normally distributed
+where  $\mu$ is the population mean, $a$ is the additive genetic effect, and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. 
+We assume that the additive genetic effect, $a$, and the residual term, $e$, are normally distributed which means that the observed phenotype is also normally distributed
 \begin{align}
 a \sim N(0,\sigma^2_{a}), \quad
 e \sim N(0,\sigma^2_{e}), \quad
@@ -119,6 +124,7 @@ The statistical model is a formal representation of our quantitative genetic the
 In general estimation of heritability and genetic correlation is based on methods that determine resemblance 
 between genetically related individuals. Here we will present three methods for estimating heritability, parent-offspring regression, analysis of variance (ANOVA) for family data (e.g. halfsib/fullsib families) and restricted maximum likelihood (REML) analysis for general pedigree. 
 
+\begin{comment}
 ## Estimating heritability using parent - offspring regression
 The simplest method for estimation genetic parameters is based on regression analysis. 
 Heritability may be estimated by comparing phenotypes for traits recorded in parent and offspring. Parent-offspring regression compares trait values in parents ($y_p$) to trait values in their offspring ($y_o$). Estimation of heritability is based on a linear regression model:
@@ -325,7 +331,7 @@ genetic variance.
 Estimation of variance components is easier to generalise, and this method is generally 
 used to estimate genetic parameters. The remainder of this chapter will therefore mostly deal with 
 variance component estimation. 
-
+\end{comment}
 
 ## Estimating heritability using Restricted Maximum Likelihood
 Genetic parameters are nowadays estimated using restricted maximum likelihood (REML) or Bayesian methods.
