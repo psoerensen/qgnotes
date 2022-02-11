@@ -35,19 +35,20 @@ As introduced previously the phenotype for a quantitative trait is the sum of bo
 			y=\mu+a+e	 \notag
 \end{align}
 where  $\mu$ is the population mean, $a$ is the additive genetic effect, and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. 
-We assume that the additive genetic effect, $a$, and the residual term, $e$, are normally distributed which means that the observed phenotype is also normally distributed
+We assume that the additive genetic effect, $a$, and the residual term, $e$, are normally distributed which means that the observed phenotype is also normally distributed:
 \begin{align}
 a \sim N(0,\sigma^2_{a}), \quad
 e \sim N(0,\sigma^2_{e}), \quad
 y \sim N( \mu,\sigma^2_{y}) \notag
 \end{align}
-where $\sigma^2_{a}$ is additive genetic variance, $\sigma^2_{e}$ is residual variance, and ($\sigma^2_{y}$) is the total phenotypic variance. 
+where $\sigma^2_{a}$ is additive genetic variance, $\sigma^2_{e}$ is residual variance, and $\sigma^2_{y}$ is the total phenotypic variance. 
 
 
 ## Genetic parameters
-Heritability and genetic correlation are the key genetic parameters used in animal and plant breeding. They are defined in terms of the variance component ($\sigma^2_{a}$ and $\sigma^2_{e}$) defined in the previous section.    
+Heritability and genetic correlation are the key genetic parameters used in animal and plant breeding. They are defined in terms of the variance components ($\sigma^2_{a}$ and $\sigma^2_{e}$) as presented in the previous section.    
     
-__Heritability__ estimates the degree of variation in a phenotypic trait in a population that is due to genetic variation between individuals in that population. It measures how much of the variation of a trait can be attributed to variation of genetic factors, as opposed to variation of environmental factors. The narrow sense heritability is the ratio of additive genetic variance ($\sigma^2_{a}$) to the overall phenotypic variance ($\sigma^2_{y}=\sigma^2_{a}+\sigma^2_{e}$):
+__Heritability__ estimates the degree of variation in a phenotypic trait in a population that is due to genetic variation between individuals in that population. It measures how much of the variation of a trait can be attributed to variation of genetic factors, as opposed to variation of environmental factors. The narrow sense heritability is the ratio of additive genetic variance ($\sigma^2_{a}$) to the overall phenotypic variance  
+($\sigma^2_{y}=\sigma^2_{a}+\sigma^2_{e}$):
 \begin{align}
 h^2 &= \sigma^2_{a}/(\sigma^2_a+\sigma^2_e)
 \end{align}
@@ -58,7 +59,7 @@ Genetic correlation ($\rho_a$) is the genetic covariance between two traits divi
 \begin{align}
 \rho_{a_{12}}=\frac{\sigma_{a_{12}}}{\sqrt{\sigma_{a_{1}}^2 \sigma_{a_{2}}^2}}
 \end{align}
-where $\sigma_{a_{12}}$ is the genetic covariance and  $\sigma_{a_{1}}^2$ and $\sigma_{a_{2}}^2$ are the variances of the additive genetic values for the two traits in the population. 
+where $\sigma_{a_{12}}$ is the genetic covariance and  $\sigma_{a_{1}}^2$ and $\sigma_{a_{2}}^2$ are the respective variances of the additive genetic values for each of the two traits in the population. 
 A genetic correlation of 0 implies that the genetic effects on one trait are independent of the other, while a correlation of 1 implies that all of the genetic influences on the two traits are identical. 
 Thus in order to estimate the heritability and genetic correlation we need to estimate the variance component defined above. 
 
