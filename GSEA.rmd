@@ -1,6 +1,6 @@
 ---
 title: "Gene Set Enrichment Analysis"
-author: "Stefan McKinnon Høj-Edwards, Izel Fourie Sørensen, Palle Duun Rohde & Peter Sørensen"
+author: "Stefan McKinnon Høj-Edwards, Palle Duun Rohde, Izel Fourie Sørensen, & Peter Sørensen"
 date: "`r Sys.Date()`"
 output:
   bookdown::pdf_document2:

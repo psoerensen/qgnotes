@@ -19,7 +19,7 @@ link-citations: yes
 
 
 # Introduction
-Genetic parameters (heritability and genetic correlations) are nowadays estimated using restricted maximum likelihood (REML) or Bayesian methods. These methods allow for estimation of genetic parameters using phenotypic information and genetic relationships for individuals in a study population. Genetic relationships are inferred from a general pedigree or from genetic marker data. These methods allow for unbalanced data and account for genetic relationships within and between families. REML is based on linear mixed model methodology and use a likelihood approach for estimating genetic parameters.
+Genetic parameters (heritability and genetic correlations) can be estimated using a restricted maximum likelihood (REML) method. This method allow for estimation of genetic parameters using phenotypic information and genetic relationships for individuals in a study population. Genetic relationships are inferred from a general pedigree or from genetic marker data. These methods allow for unbalanced data and account for genetic relationships within and between families. REML is based on linear mixed model methodology and use a restricted likelihood approach for estimating genetic parameters.
 
 
 
