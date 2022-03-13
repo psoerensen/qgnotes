@@ -18,20 +18,35 @@ link-citations: yes
 
 # Introduction
 
-Bayesian linear regression models have been proposed as a unified framework for mapping, prediction, estimation of heritability and effect distribution ([Moser et al. 2015](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4388571/)). 
+Bayesian linear regression models have been proposed as a unified framework for gene mapping, prediction of genetic predispostion, estimation of genetic parameters and effect size distribution ([Moser et al. 2015](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4388571/)). 
 
-Bayesian linear regression models attempts to account for the underlying genetic architecture of the trait. This is achieved by using many linked markers covering the entire genome to jointly estimate marker effects, and by allowing for the genetic signal to be heterogeneous distributed over the genome (i.e. some regions have stronger genetic signal than others). This may in some situations allow a more accurate estimate of the true underlying genetic signal leading to more accurate predictions. 
+Bayesian linear regression models attempts to account for the underlying genetic architecture of the trait. This is achieved by using many linked markers covering the entire genome to jointly estimate marker effects, and by allowing the genetic signal to be heterogeneous distributed over the genome (i.e. some regions have stronger genetic signal than others). This may in some situations allow a more accurate estimate of the true underlying genetic signal leading to more accurate predictions. 
 
-Bayesian linear regression models can also be used to map variants associated with phenotypes and to estimate the total variance explained by the SNPs. Because they fit all SNPs simultaneously and account for LD between SNPs, they should have greater power to detect associations, find less false negatives and give unbiased estimates of the larger SNP effects. They can also provide information about the genetic architecture of the trait from the hyper-parameters of the distribution of SNP effects.
+Bayesian linear regression models can also be used to map genetic variants associated with phenotypes and to estimate the total variance explained by the genetic markers. Because they fit all markers simultaneously and account for linkage disequilibrium between markers, they should have greater power to detect true associations, find less false negatives and give unbiased estimates of the larger marker effects. They can also provide information about the genetic architecture of the trait from the hyper-parameters of the distribution of marker effects.
 
-Bayesian linear regression models fit all markers simultaneously and their effects as drawn from a prior distribution that attemtps to match the true distribution of SNP effects as closely as possible. However the true distribution of effect sizes is unknown but a mixture of normal distributions can approximate a wide variety of distributions by varying the mixing proportions. Erbe et al. used this prior and included one component of the mixture with zero variance. A similar model was proposed by Zhou et al. but with a mixture of two normal distributions, one with a small variance and one with a larger variance.
+Bayesian linear regression models fit all markers simultaneously and their effects as drawn from a prior distribution that attempts to match the true distribution of marker effects as closely as possible. However the true distribution of effect sizes is unknown but a mixture of normal distributions can approximate a wide variety of distributions by varying the mixing proportions. Erbe et al. used this prior and included one component of the mixture with zero variance. A similar model was proposed by Zhou et al. but with a mixture of two normal distributions, one with a small variance and one with a larger variance.
 
-In the following the statistical model, prior distributions, algorithms for estimation of model parameters, extensions for handling multiple marker sets and multiple traits for the Bayesian linear regression models is presented. We will present to alternative BLR models, BLR model for marker effects and BLR model for individual effects.  
+In the following the statistical model, prior distributions of model parameters, algorithms for estimation of model parameters, extensions for handling multiple marker sets and multiple traits for the Bayesian linear regression models is presented. We will present two alternative BLR models, BLR model for marker effects and BLR model for individual effects.  
 
 
 # Bayesion Linear Regression Model for Marker Effects
 
 ## Statistical model and model parameters
+The linear model contains the observation vector for the trait(s) of interest ($y$), the `fixed effects` that explain systematic differences in $y$, and the `random genetic effects` $a$ and random residual effects $e$.
+
+A matrix formulation of a general model equation is:
+\begin{align}
+y &= Xb + a + e \notag
+\end{align}
+
+where
+\begin{align}
+y &: \text{is the vector of observed values of the trait,} \notag \\
+b &: \text{is a vector of fixed effects,} \notag \\
+a &: \text{is a vector of random genetic effects,} \notag \\
+e &: \text{is a vector of random residual effects,} \notag \\
+X &: \text{is a known design matrix that relates the elements of b to their corresponding element in y.} \notag 
+\end{align}
 
 The phenotype is related to the set of genetic markers under the multiple linear regression model:
 
