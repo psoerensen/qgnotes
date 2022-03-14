@@ -213,7 +213,7 @@ Furthermore, the matrices needed inverted in MME can be sparse so more effective
 \subsection{Predicting \texorpdfstring{$\vect{g}$}{genetic values} from \texorpdfstring{$\vect{b}$}{marker effects}: \texorpdfstring{$\E[\vect{g} | \vect{b}]$}{E[g|b]}}
 \label{sec:b2g}
 
-\subsection{Formula for calculating the genomic value for an individual from the SNP effects obtained from the M-BLUP}
+<!-- \subsection{Formula for calculating the genomic value for an individual from the SNP effects obtained from the M-BLUP} -->
 
 Having predicted values of marker effects (${\bhat}$), we can predict genetic values based on the linear combination:
 \begin{subequations}
