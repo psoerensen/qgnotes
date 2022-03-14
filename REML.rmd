@@ -19,7 +19,7 @@ link-citations: yes
 
 
 # Introduction
-Genetic parameters (heritability and genetic correlations) can be estimated using a restricted maximum likelihood (REML) method. This method allow for estimation of genetic parameters using phenotypic information and genetic relationships for individuals in a study population. Genetic relationships are inferred from a general pedigree or from genetic marker data. These methods allow for unbalanced data and account for genetic relationships within and between families. REML is based on linear mixed model methodology and use a restricted likelihood approach for estimating genetic parameters.
+Genetic parameters (heritability and genetic correlations) can be estimated using a restricted maximum likelihood (REML) method. This method allow for estimation of genetic parameters using phenotypic information and genetic relationships for individuals in a study population. Genetic relationships are inferred from a general pedigree or from genetic marker data. REML allow for unbalanced data and account for genetic relationships within and between families. REML is based on linear mixed model methodology and use a restricted likelihood approach for estimating genetic parameters.
 
 
 
@@ -275,6 +275,8 @@ Another criterion would be to see if the first derivatives are small enough, in 
 
 but this criterion suffers from being very large when estimates are at the boundary of the parameter space.
 
+\begin{comment}
+
 \subsection{Advantages of REML}
 \label{sec:Advantage-REML}
 
@@ -289,7 +291,6 @@ handling complex pedigrees (and possibly several random effects). However, the u
 
 Early REML applications were generally limited to models largely equivalent to those in corresponding ANOVA type analysis, considering one random effect only and estimating genetic variances from paternal half sib covariances (so-called sire model). Today, heritability can be estimated based on genetic relationships inferred from general pedigrees or estimated from genetic markers. Linear mixed models is also used genetic evaluation schemes, allowing information on all known relationships between individuals to be incorporated in the analysis. Linear mixed models can include maternal, permanent environmental, dominance effects or effects at QTL thereby more accurately describe the observed data. These effects are fitted as additional random effects. 
 
-\begin{comment}
 
 \subsubsection{Which genomic variance are we really inferring?}
 \label{sec:whatvar}
