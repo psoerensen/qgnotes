@@ -35,40 +35,32 @@ This section introduces the basic concepts of estimating genetic predisposition 
    * the connection between genetic parameters and estimated genetic predisposition
    * different methods, data sources and experimental designs for estimating genetic predisposition
 
-Breeding value estimation is a fundamental component of breeding programmes, in which the breeding value of each individual is predicted to inform subsequent selection decisions. 
-The breeding value for an individual is the total additive genetic value which is passed on to the offspring. Thus the breeding value is not a measure of how good an individual is in itself, 
-but rather of the effect its genes will have in the population. Breeding values are used for:
-
-  * comparing individuals in the breeding population and selecting parents for the next generation
-  * predicting the consequences of selection decisions 
-  * describing genetic differences over time (result of previous selection)
-
-The true breeding value (TBV) for an individual cannot be observed. It is only possible to measure its phenotypic value, which is influenced both by genotype and environment. Therefore, we need a way to infer the breeding value from the phenotypic value and select individuals based on an estimated breeding value (EBV). This is the objective of breeding value estimation. 
+Estimation of genetic predisposition can play an important role in precision health. It can help inform diagnostic procedures and subsequent treatment decisions. The true genetic predisposition for an individual cannot be observed. It is only possible to measure its phenotypic value, which is influenced both by genotype and environment. Therefore, we need a way to infer the genetic predisposition from the phenotypic value. This is the objective of genetic predisposition estimation. 
 
 
-# Basic principles for breeding value estimation
-Breeding values are estimated using information on phenotypes and genetic relationships for individuals in a breeding population. As introduced previously the phenotype for a quantitative trait is the sum of both genetic and environmental factors. In general the amount of information provided by the phenotype about the breeding value is determined by the narrow sense heritability ($h^2$), which measures the proportion of additive genetic variance contained in the total phenotypic variance. Furthermore phenotypes collected from close relatives provide more information about the breeding value of an individual. In this section we will illustrate these principles using phenotypic data and genetic relationships used for for estimating genetic predisposition. We will now try to derive a general approach for predicting genetic predisposition for any situation. Even though the procedure is general we will use a simple example to describe it. 
+# Basic principles for genetic predisposition estimation
+Genetic predisposition is estimated using information on phenotypes and genetic relationships for individuals in a study population. As introduced previously the phenotype for a quantitative trait is the sum of both genetic and environmental factors. In general the amount of information provided by the phenotype about the genetic predisposition is determined by the narrow sense heritability ($h^2$), which measures the proportion of additive genetic variance contained in the total phenotypic variance. Furthermore phenotypes collected from close relatives provide more information about the genetic predisposition of an individual. In this section we will illustrate these principles using phenotypic data and genetic relationships used for for estimating genetic predisposition. We will now try to derive a general approach for predicting genetic predisposition for any situation. Even though the procedure is general we will use a simple example to describe it. 
 
 ## Genetic model
 
-The breeding value is based on an assumption of a specific genetic model. In general the total genetic effect for an individual is the sum of both additive and non-additive effects that affect the trait: 
+The genetic predisposition is based on an assumption of a specific genetic model. In general the total genetic effect for an individual is the sum of both additive and non-additive effects that affect the trait: 
 
 \begin{align}
 	y &=\mu+a+d+i+\epsilon
 \end{align}
 
-where  $\mu$ is the population mean, $a$ is the breeding value (i.e. additive effect), $d$ is the dominance effect, $i$ is the epistasis effect, and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. However, only the additive genetic effects are passed on to the offspring and therefore contributes to the breeding value. In contrast non-additive genetic effects (dominance and epistasis) are degraded by recombination and are not inherited, even though they may be important for the individual's phenotype. Therefore we only consider the additive genetic model as the basis for breeding value estimation:
+where  $\mu$ is the population mean, $a$ is the genetic predisposition (i.e. additive effect), $d$ is the dominance effect, $i$ is the epistasis effect, and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. However, only the additive genetic effects are passed on to the offspring and therefore contributes to the genetic predisposition. In contrast non-additive genetic effects (dominance and epistasis) are degraded by recombination and are not inherited, even though they may be important for the individual's phenotype. Therefore we only consider the additive genetic model as the basis for genetic predisposition estimation:
 
 \begin{align}
 			y=\mu+a+e	 \notag
 \end{align}
 			
-The true breeding value for an individual is the sum of all additive genetic effects that affect the quantitative trait:
+The true genetic predisposition for an individual is the sum of all additive genetic effects that affect the quantitative trait:
 \begin{align}
 		a=\sum_{j=1}^{q}a_{j} \notag
 \end{align}
 
-where $a$ is the total additive genetic effect and $a_{j}$ is the additive genetic effect for loci j. We therefore assume (based on the central limit theory) that the true breeding values, a, and the residual term, $e$, are normally distributed which means that the observed phenotype is also normally distributed:
+where $a$ is the total additive genetic effect and $a_{j}$ is the additive genetic effect for loci j. We therefore assume (based on the central limit theory) that the true genetic predisposition, a, and the residual term, $e$, are normally distributed which means that the observed phenotype is also normally distributed:
 \begin{align}
 a \sim N(0,\sigma^2_{a}) \notag \\
 e \sim N(0,\sigma^2_{e}) \notag \\
@@ -76,40 +68,36 @@ y \sim N( \mu,\sigma^2_{a} + \sigma^2_{e}) \notag
 \end{align}
 
 
-## Expected breeding value conditional on observed phenotype
-The breeding value cannot be observed but must be estimated from phenotypic data and genetic relationships between individuals from the breeding population. Estimation of an unknown parameter using statistical modelling expresses the estimated quantity as a mathematical function of the observed data. The question is how this function should look like and what properties the estimated genetic predisposition should fulfill. For breeding purposes one objective for the
-estimated genetic predisposition is that the response to selection is maximized.
-[Henderson, 1963] found that the improvement of an offspring generation compared to the parent generation can be maximized when parents are selected
-based on the conditional expected value ($E(a|y)$) of the true breeding value $a$
-given the observed phenotypic values $y$. Under the assumption of multivariate
-normality for $a$ and $y$ (which are justified under the central limit theorem and the assumptions of many genetic and environmental factors), the expected value of the breeding value conditional on the observed phenotype $y$ can be written as:
+## Expected genetic predisposition conditional on observed phenotype
+The genetic predisposition cannot be observed but must be estimated from phenotypic data and genetic relationships between individuals from the study population. Estimation of an unknown parameter using statistical modelling expresses the estimated quantity as a mathematical function of the observed data. The question is how this function should look like and what properties the estimated genetic predisposition should fulfill. 
+Under the assumption of multivariate normality for $a$ and $y$ (which are justified under the central limit theorem and the assumptions of many genetic and environmental factors), the expected value of the genetic predisposition conditional on the observed phenotype $y$ can be written as:
 \begin{align}
 E(a|y) &= E(a) + Cov(a,y)[Var(y)]^{-1}(y-E(y))
 \end{align}
-The breeding value is defined as deviation from the general mean which means that the expected value $E(a)$ of the true breeding value $a$ is $E(a)=0$. Therefore the expected value of the breeding value is:
+The genetic predisposition is defined as deviation from the general mean which means that the expected value $E(a)$ of the true genetic predisposition $a$ is $E(a)=0$. Therefore the expected value of the genetic predisposition is:
 \begin{align}
 E(a|y) &= Cov(a,y)[Var(y)]^{-1}(y-E(y))
 \end{align}
-The expression for the estimate of the breeding value consists of two parts;
+The expression for the estimate of the genetic predisposition consists of two parts;
 The term $y-E(y)$ shows that the observed phenotypic values are corrected for the
 fixed effects represented by $\mu$.
 The term $b_{a|y}=Cov(a,y)[Var(y)]^{-1}$ often referred to as the regression coefficient is a weighting factor with which the corrected phenotypic values are multiplied. 
 
-To be able to estimate the breeding value we need to determine the values for the terms $E(a)$, $E(y)$, $Var(y)$, and $Cov(a,y)$ in the expression above. It is possible to derive simple formula's for these terms based on: 
+To be able to estimate the genetic predisposition we need to determine the values for the terms $E(a)$, $E(y)$, $Var(y)$, and $Cov(a,y)$ in the expression above. It is possible to derive simple formula's for these terms based on: 
 
    * adjusted phenotypic observations for the quantitative trait of related individuals
    * heritability of the quantitative trait
    * knowledge of inheritance laws and genetic relationships (e.g. parents, grandparents, siblings) for individuals with phenotypic observations of the quantitative trait
 
-We will distinguish between true and estimated breeding value using the following notation:
+We will distinguish between true and estimated genetic predisposition using the following notation:
 \begin{align}
-a &= \text{additive genetic value = true breeding value} \notag \\
-\hat{a} &= E(a|y) = \text{estimated additive genetic value = estimated breeding value} \notag
+a &= \text{additive genetic value = true genetic predisposition} \notag \\
+\hat{a} &= E(a|y) = \text{estimated additive genetic value = estimated genetic predisposition} \notag
 \end{align}
 
 
 ### Estimated genetic predisposition are unbiased {-}
-Below we show that $\hat{a}$ is an unbiased estimator of $a$.The expected value ($E(\hat{a})$) of the predicted breeding value $\hat{a}$ can be computed
+Below we show that $\hat{a}$ is an unbiased estimator of $a$.The expected value ($E(\hat{a})$) of the predicted genetic predisposition $\hat{a}$ can be computed
 as:
 \begin{align}
 E(\hat{a}) &= E(Cov(a,y)[Var(y)]^{-1}(y-E(y))) \notag \\
@@ -120,7 +108,7 @@ Because we have already specified that $E(\hat{a})=0$, it follows that $E(\hat{a
 
 
 
-### Variance of estimated breeding value ($\hat{a}$) {-}
+### Variance of estimated genetic predisposition ($\hat{a}$) {-}
 \begin{align}
 Var(\hat{a}) &= Var(Cov(a,y)[Var(y)]^{-1}(y-E(y))) \notag \\
            &= Cov(a,y)[Var(y)]^{-1}Var((y-E(y)))[Var(y)]^{-1}Cov(a,y) \notag \\
@@ -151,18 +139,18 @@ Var(a|\hat{a}) &= Var(a) (1-r_{a,\hat{a}}^2) \notag
 \end{align}
 
 
-## Accuracy of breeding value estimates
+## Accuracy of genetic predisposition estimates
 
-Estimates of genetic predisposition ($\hat{a}$) are estimates of the true genetic predisposition ($a$), which cannot be observed directly. It is important to determine how well we have estimated the breeding value in relation to the true breeding value. This can be done using accuracy or reliability. 
+Estimates of genetic predisposition ($\hat{a}$) are estimates of the true genetic predisposition ($a$), which cannot be observed directly. It is important to determine how well we have estimated the genetic predisposition in relation to the true genetic predisposition. This can be done using accuracy or reliability. 
 
-__Accuracy__ is the correlation between the estimated and the true breeding value: 
+__Accuracy__ is the correlation between the estimated and the true genetic predisposition: 
 \begin{align}
 			r_{a,\hat{a}} &= \frac{\Cov(a,\hat{a})}{\sqrt{\Var(a) \Var(\hat{a})}}
 \end{align}
 
-A high correlation means that the estimated breeding value is very accurate. 
+A high correlation means that the estimated genetic predisposition is very accurate. 
 
-__Reliability__ is the squared correlation, $r_{a,\hat{a}}^2$, between the estimated breeding value and the true breeding value. To be able to compute the accuray or reliability of the estimated breeding value we need to determine the values for the terms, $Cov(a,\hat{a})$, $Var(\hat{a})$, and $Var(a)$ in the expression above. It can be shown that the variance of the estimated breeding value is the same as the covariance between the true and estimated breeding value (i.e. $Cov(a,\hat{a}) = Var(\hat{a})$). Therefore the reliability can be expressed as:
+__Reliability__ is the squared correlation, $r_{a,\hat{a}}^2$, between the estimated genetic predisposition and the true genetic predisposition. To be able to compute the accuray or reliability of the estimated genetic predisposition we need to determine the values for the terms, $Cov(a,\hat{a})$, $Var(\hat{a})$, and $Var(a)$ in the expression above. It can be shown that the variance of the estimated genetic predisposition is the same as the covariance between the true and estimated genetic predisposition (i.e. $Cov(a,\hat{a}) = Var(\hat{a})$). Therefore the reliability can be expressed as:
 
 \begin{align}
 			r_{a,\hat{a}}^2 &= \frac{\Var(\hat{a})}{\Var(a)}
@@ -177,13 +165,13 @@ Cov(a,\hat{a}) &= Cov(a,y)[Var(y)]^{-1}Cov(a,y)\notag \\
 \end{comment}
 
 Therefore reliability ($r_{a,\hat{a}}^2$) can be interpreted as the part of the genetic variation that is explained by the estimated genetic predisposition whereas the remainder (1 - $r_{a,\hat{a}}^2$) is the uncertainty. 
-Reliability of the breeding value ($r_{a,\hat{a}}^2$) is important because it determines how well we can predict an individual's genetic value. It can be used to control the risk of a breeding plan: for example, low $r_{a,\hat{a}}^2$ leads to greater "risk" for both lower and higher true breeding value and we might consider more phenotypic records, in order to make better-informed selection decisions. Lastly reliability is one of the crucial factors that determines the genetic progress (e.g., breeders equation which will be introduced later in the course).
+Reliability of the genetic predisposition ($r_{a,\hat{a}}^2$) is important because it determines how well we can predict an individual's genetic predisposition. It can be used to control the risk of decision making: for example, low $r_{a,\hat{a}}^2$ leads to greater "risk" for both lower and higher true genetic predisposition and we might consider more phenotypic records, in order to make better-informed precision health decisions. Lastly reliability is one of the crucial factors that determines the genetic progress (e.g., breeders equation which will be introduced later in the course).
 
-The variance of the estimated breeding value ($\hat{a}$) can be computed as:
+The variance of the estimated genetic predisposition ($\hat{a}$) can be computed as:
 \begin{align}
 			\sigma^2_{\hat{a}}=r_{a,\hat{a}}^2\sigma^2_{a} \notag
 \end{align}
-and from this expression it is clear that when the reliability increases, the variation in $\hat{a}$ increases (breeding value estimates are more variable over values of $y$), and the estimation becomes more precise (the residual variability of $y$, the part left unexplained, has decreased). If the reliability is 0, then we know nothing and the variance of $\hat{a}$ is 0. If the reliability is 1, then we know everything and the variance of $\hat{a}$ is $\sigma^2_{\hat{a}}=\sigma^2_{a}$ and the error variance (uncertainty) is 0. 
+and from this expression it is clear that when the reliability increases, the variation in $\hat{a}$ increases (genetic predisposition estimates are more variable over values of $y$), and the estimation becomes more precise (the residual variability of $y$, the part left unexplained, has decreased). If the reliability is 0, then we know nothing and the variance of $\hat{a}$ is 0. If the reliability is 1, then we know everything and the variance of $\hat{a}$ is $\sigma^2_{\hat{a}}=\sigma^2_{a}$ and the error variance (uncertainty) is 0. 
 
 
 ## Prediction error variance (PEV) of estimated genetic predisposition
@@ -208,112 +196,15 @@ SEP(\hat{a}) &= \sqrt{Var(a-\hat{a})} \notag \\
 
 
 # Phenotypic data and genetic relationships are used to estimate genetic predisposition
-We will illustrate the basic principles of breeding value estimation using some simple examples where the trait has been measured on the individuals themselves or close relatives. 
+We will illustrate the basic principles of genetic predisposition estimation using some simple examples where the trait has been measured on the individuals themselves or close relatives. 
 
-## Estimation of breeding value and accuracy based on own phenotype:
-An estimate of the breeding value (a) based on own phenotype (y) can be calculated as: 
-\begin{align}
-E(a|y) &= E(a) + Cov(a,y)[Var(y)]^{-1}(y-E(y)) \notag \\
-E(a|y) &= 0 + \sigma^2_{a}[\sigma^2_{a} + \sigma^2_{e}]^{-1}(y- \mu) \notag \\
-E(a|y) &= h^2(y-\mu) \notag
-\end{align}
-
-Thus the estimated breeding value using own phenotypic record can be computed based on an estimate of the trait heritability ($h^2$) and the observed phenotype deviation ($y-\mu$). Use of records on the candidate itself is called performance testing. For performance testing to be efficient, the heritability should be at least moderately high (as suggested by equation: $E(a|y) = h^2(y-\mu)$).
-
-The expression for expected value terms ($E(a)$ and $E(y)$) in the equation above are based on rules for expected value of a sum of (normally distributed) random variables:
-\begin{align}
-\E(a) &=0 \notag \\
-\E(e) &=0 \notag \\
-\E(y) &=\E(\mu+a+e) \notag \\
-      &=\E(\mu)+\E(a)+\E(e)  \notag \\
-      &=\mu+0+0  \notag \\
-      &=\mu  \notag 
-\end{align}
-
-The expression for (co)variance terms ($Var(y)$, and $Cov(a,y)$ ) in the equation above are based on rules for the variance of a sum of (normally distributed) random variables:
-\begin{align}
-\Var(y) &= Var(a) + Var(e) + 2Cov(a,e)  \notag \\
-\Var(a) &=\sigma^2_{a}  \notag \\
-\Var(e) &=\sigma^2_{e}  \notag \\
-\Cov(a,e) &=0  \notag \\
-\Var(y) &= \sigma^2_{a} + \sigma^2_{e} \notag \\ 
-Cov(a,y) &= Cov(a,a+e) \notag \\
-         &= Cov(a,a) + Cov(a,e) \notag \\
-         &= \sigma^2_{a} + 0 \notag \\
-         &= \sigma^2_{a}  \notag
-\end{align}
-
-
-The accuracy for the breeding value based on own phenotype ($y$) can be calculated as:
-\begin{align}
-			r_{a,\hat{a}} &= \frac{\Cov(a,\hat{a})}{\sqrt{\Var(a)} \sqrt{\Var(\hat{a})}} \notag \\
-			r_{a,\hat{a}} &= \frac{(h^2 )^2 \sigma_y^2}{\sqrt{h^2 \sigma_y^2}\sqrt{(h^2)^2 \sigma_y^2}} \notag \\
-			r_{a,\hat{a}} &= \sqrt{h^2} \notag
-\end{align}
-
-The variance of the estimated breeding value, $Var(\hat{a})$, can be expressed as:
-\begin{align}
-		Var(\hat{a}) &=Var(h^2 (y-\mu)) \notag \\
-		Var(\hat{a}) &=(h^2)^2 Var(y-\mu)=(h^2)^2 Var(y)=(h^2)^2 \sigma_y^2 \notag
-\end{align}
-
-The variance of the true breeding value, $Var(a)$, can be expressed by the heritability and phenotypic variance:
-\begin{align}
-		\sigma_a^2=(\sigma_a^2)/(\sigma_y^2 ) \sigma_y^2=h^2 \sigma_y^2 \notag
-\end{align}
-
-\begin{comment}
-The covariance between the true (a) and estimated breeding value, ($Cov(a,\hat{a})$), can be expressed as:
-\begin{align}
-	Cov(a,\hat{a}) &= \sigma_{a,\hat{a}} \notag \\					
-	Cov(a,\hat{a}) &=Cov(a,h^2 (y-\mu)  )=h^2 Cov(a,(y-\mu)) \notag \\
-	Cov(a,\hat{a}) &=h^2 Cov(a,(\mu+a+e-\mu)) \notag \\
-	Cov(a,\hat{a}) &=h^2 Cov(a,(a+e),a) \notag \\
-	Cov(a,\hat{a}) &=h^2 Cov(a,a)+h^2 Cov(a,e) \notag \\
-	Cov(a,\hat{a}) &=h^2 \sigma_a^2+0 \notag \\
-	Cov(a,\hat{a}) &=h^2 h^2 \sigma_y^2=(h^2 )^2 \sigma_y^2 \notag
-\end{align}
-\end{comment}
-
-Estimation of breeding value based on own phenotype is only possible when the trait in question can be measured (directly or indirectly) on the breeding individual, i.e., the candidate to be evaluated for selection. Sometimes this is not possible, e.g., traits that are sex-limited (milk production, female fertility, etc.) cannot be measured in male individuals. Traits like carcass composition and meat quality cannot be measured on live animals, unless an indirect method can be used (e.g. ultra-sonic measurement of carcass composition). In this situation it might be possible to use phenotypic information on relatives. 
-
-## Estimation of breeding value and accuracy based on phenotypes of close relatives:
-
-In practice we often use phenotypic records from close relatives, such as progenies, half-sibs, full-sibs, parents and grandparents. Phenotypes collected on close relatives (as compared to distant relatives) provide more information about the breeding value of an individual (as close relatives share more DNA in common). In the following we will provide a general formula for estimating genetic predisposition and their accuracies using phenotypic information on different types of relatives. 
-
-#### General formula for estimating genetic predisposition using different sources of information: {-}
-\begin{align}
-\hat{a}&=b_{a|y}(y-\mu) 
-\end{align}
-
-where the regression coefficient quantifies the weight (or importances) of the phenotypic information:
-\begin{align}
-b_{a|y}&=\frac{a'nh^2}{(1+(n-1)r} 
-\end{align}
-where $a'$ is the genetic relationship between the breeding individual and individuals with phenotypes, $n$ is the number of phenotypic records, $h^2$ is the trait heritability, and $r$ is correlation between individuals with observations ($r = a^{''}h2  + c2$, where $a^{''}$ = genetic relationship between individuals with records and target, c2 = common environmental component).
-
-Thus the importance given to a specific source of information depends on the additive genetic relationship ($a'$) with the breeding candidate, the heritability of the trait ($h^2$), and the amount of information ($n$), i.e. the number of progenies or sibs, etc. 
-
-#### General formula for reliability of estimated breeding value using different sources of information: {-}
-\begin{align}
-			r_{a,\hat{a}}^2=\frac{(a')^2nh^2}{1+(n-1)r}
-\end{align}
-
-Thus reliability depends on the same factors as the estimated breeding value except for the phenotypic value. Although the reliability depends on the number of records it does not depend on the numerical value of phenotypes. From this formula is it clear that higher reliability (and accuracy) can be achived when:
-
- * genetic relationship to individuals with information (a') is high
- * there are many records (n)
- * heritability ($h^2$) is high
- * correlation between individuals with observations ($r = a''h^2 + c^2$) is low 
-
-
-## Genetic relationship used for estimating breeding value
-Related individuals share genes and thus resemble each other (have correlated phenotypes, to an extent that depends on additive genetic relationships). Consider a simple parent-offspring example. The offspring get half of the genes from each parent and therefore the breeding value for the offspring is the average of the parents' genetic predisposition plus the Mendelian deviation (the part of the breeding value that is due to random segregation of the genes from each parent):
+## Genetic relationship used for estimating genetic predisposition
+Related individuals share genes and thus resemble each other (have correlated phenotypes, to an extent that depends on additive genetic relationships). Consider a simple parent-offspring example. The offspring get half of the genes from each parent and therefore the genetic predisposition for the offspring is the average of the parents' genetic predisposition plus the Mendelian deviation (the part of the genetic predisposition that is due to random segregation of the genes from each parent):
 
 \begin{align}
 		a_{\text{offspring}}=\frac{1}{2}a_{\text{father}}+\frac{1}{2}a_{\text{mother}}+a_{\text{mendelian}} \notag 	
 \end{align}
-	(a = additive genetic value = breeding value)
+	(a = additive genetic value = genetic predisposition
 
 The term $a_{mendelian}$ is necessary, because two fullsibs $i$ and $j$ both having parents $father$ and $mother$ receive different random samples of parental alleles. Hence the genetic predisposition $a_i$ and $a_j$ of fullsibs $i$ and $j$ are not going to be the same. The Mendelian deviation reflects that random contribution of (Mendelian) segregation to genetic predisposition of individuals.  
 
@@ -340,7 +231,7 @@ In this equation the $\frac{1}{2}$ refers to the additive genetic relationship w
   \hline
   Cousin  &  0.0625 \\
   \hline
-  Progeny  &  0.5 \\
+  Child  &  0.5 \\
   \hline
   Twin(MZ/DZ)  &  1/0.5 \\
   \hline
@@ -353,11 +244,8 @@ In this equation the $\frac{1}{2}$ refers to the additive genetic relationship w
 Several factors influence which sources of information to use when estimating 
 genetic predisposition for a trait: what information is available, the heritability of the 
 trait, and how and on what individuals the trait can be measured. Therefore in practice it is common to combine information from several sources. 
-As already mentioned, all information available is usually utilized when an animal’s breeding value is predicted. The weight given to a specific source of information depends on the additive genetic relationship with the candidate, the heritability and the amount of information, i.e. the number of progenies or sibs, etc. 
+As already mentioned, all information available is usually utilized when an individual’s genetic predisposition is predicted. The weight given to a specific source of information depends on the additive genetic relationship with the candidate, the heritability and the amount of information, i.e. the number of progenies or sibs, etc. 
 
-
- * Phenotypic records on progenies are generally the most accurate source 
-of information for genetic evaluation (high genetic relationship $a'$ and high $n$). The average phenotypic value of a progeny group gives the best indication of the additive genetic value (i.e. the breeding value) of the candidate. The reliability (and accuracy) of breeding value estimates increases with the size of the progeny group. Progeny testing is useful also when the heritability is low. For example, it can be much more accurate than evaluation on own phenotype when the heritability is low (say, 0.1) and the progeny is large (~100-150). The disadvantage is that it takes resources (time and money) before results on progenies are available. In animal breeding, progeny testing is often used for male animals as they usually get many more progenies than females, especially when artificial insemination is practiced.  
 
  * Phenotypic records on the candidate’s sibs, half-sibs and full-sibs, are often 
 used in addition to other information, or to give supplementary information, 
@@ -369,110 +257,25 @@ the genes from each locus of the parents are transmitted at random, so informati
 based on pedigree alone is not very accurate, but can be valuable 
 as additional information. Moreover, the additive genetic relationship, and thus the proportion of common genes between the candidate and the pedigree, is halved for every generation backwards (at least 0.5 for a parent, 0.25 for a grandparent, etc.). Finally, there is redundancy in the information provided by different generations of parents. Fore example, if there are accurate estimate of the parent's genetic predisposition, then there is little to gain in using information on grandparents (actually, if the parents true genetic predisposition are known, there would be no additional gain of information from grandparents). 
 
-As already mentioned, all information available is usually utilized when an individual’s breeding value is predicted. The weight given to a specific source of information depends on the additive genetic relationship with the candidate, the heritability and the amount of information, i.e. the number of relatives (progenies, sibs, parents, etc.). In the following sections we will show how genetic predisposition can be calculated when different types of phenotypic information (from different types of relatives) are available. 
+As already mentioned, all information available is usually utilized when an individual’s genetic predisposition is predicted. The weight given to a specific source of information depends on the additive genetic relationship with the candidate, the heritability and the amount of information, i.e. the number of relatives (progenies, sibs, parents, etc.). In the following sections we will show how genetic predisposition can be calculated when different types of phenotypic information (from different types of relatives) are available. 
 
 
-\begin{comment}
+# BLUP a general approach for estimation of genetic predisposition
 
-## Selection index combining multiple sources of information for breeding value estimation (skip this section)
-In general it is better to use all information available when estimating the breeding value. 
-Before the introduction of the BLUP method ((Henderson, 1973b) and
-(Henderson, 1975)), breeding values were estimated using selection index
-theory ((Hazel, 1943) and (Hazel and Lush, 1942)). Both methods (selection
-index and BLUP) are based on the same genetic model and provide a way to combine information from multiple sources. The main difference between the two methods consists in the way how they correct for identifiable
-systematic environmental effects. We start with a treatment of selection index
-theory. The selection index method combines information from different information sources to calculate a breeding value. 
+Genetic predisposition can bne estimated using the BLUP (Best Linear Unbiased Prediction) method. BLUP allows for estimation of genetic predisposition using phenotypic information for individuals from a general pedigree (with arbitrary relationships among them). BLUP is based on linear mixed model methodology, and estimates of genetic predisposition can be obtained by solving the mixed model equations. The BLUP method also require a genetic relationship matrix and estimates of variance components (e.g., $\sigma_a^2$ and $\sigma_e^2$). 
 
-In practice the selection index method is very seldom used for estimating breeding values as better alternatives exist (i.e. BLUP method presented below). However the selection index theory provides a simple way to calculate the precision (accuracy) of selection before you set up a breeding program. This is very useful for comparing alternative strategies. Here we will present a brief introduction to selection index theory.
+The estimation of genetic predisposition based on multiple sources of information must correct for the redundancy between them (e.g., the redundant information provided by parents and grandparents). Moreover, they need to be adjusted for average effects in the populations, "fixed effects". So far we have referred to that fixed effect as the population mean and we have assumed this adjustment $\mu$ to be known. Indeed, we defined the true genetic predisposition $a$ and the non-identifiable environmental effects $e$ as deviations from a common mean, the average effect of all fixed genetic and environmental factors captured by the population mean $\mu$. But this is only true in a single idealized population where all individuals are from the same environment in which they deliver their performances at the same time. In practice the phenotypic records often need to be adjusted for systematic (fixed) environmental effects, such as age, year, season, region, etc. Several of those effects fluctuate very little over time, so accurate estimates of their effect may be obtained from previous (“historical”) sets of data. Effects of factors like year, season, and region fluctuate more and are therefore best estimated directly from the data to be used in the genetic evaluations.
 
-A selection index for calculating breeding value is formulated as a linear combination of the individual information sources:
-\begin{align}
-			\hat{a} &= b_1p_1 + b_2p_2 + ... + b_mp_n = Pb \notag
-\end{align}
+Compared to the idealized cases described in the previous section, a practical scenario poses two problems: accounting for heterogeneous sources of genetic information (different types of relatives); and adjusting for fixed effects in the study population(s) (fixed environmental or genetic effects). 
 
-Where $b_i$ are optimal weights and $p_i$ are sources of information (eg own phenotype, parental phenotype, offspring average phenotype):
-\begin{align}
-			p_1 &= y_1 - \ma_{1}		\qquad   (\text{e.g., own phenotype}) \notag \\
-			p_2 &= y_2 - \mu_{2} 	\qquad   (\text{e.g., mother’s phenotype}) \notag
-\end{align}
+The BLUP solution to these problems was presented by Charles R. Henderson in several publications (e.g. Henderson1973a and Henderson1975). The key idea behind the solution is to estimate the identifiable environmental factors as fixed effects and to predict the genetic predisposition as random effects simultaneously in a linear mixed model. Here, mixed refers to the presence of two types of effects: fixed effects (identifiable effects from environmental or genetic factors) and random effects (non-identifiable effects from segregating genetic factors and fluctuating environmental conditions). The methodology developed by Henderson is called __BLUP__ and the properties of this methodology are directly incorporated into its name: 
 
-\begin{align}
-		y_1 &= \mu+a_1+e_1		\qquad   (\text{e.g., own phenotype}) \notag \\
-		y_2 &= \mu+a_2+e_2		\qquad   (\text{e.g., mother’s phenotype}) \notag
-\end{align}
-
-The optimal weights, b, are determined using calculation rules for random variables and matrix algebra:
-\begin{align}
-		b &= [Var(P)]^{-1}Cov(a,P) \notag \\
-		b &= V^{-1}G \notag
-\end{align}
-
-where $V$ is a matrix of (co)variances between the different phenotype sources 
-\begin{align}
-		V &= \begin{bmatrix}
-  Var(p_1) & Cov(p_1,p_2)\\
-  Cov(p_2,p_1) & Var(p_2)
-  \end{bmatrix} \notag \\
-\end{align}
-
-and $G$ is a matrix of (co)variances between the different phenotype sources 
-\begin{align}
-		G &= \begin{bmatrix}
-  Cov(a,p_1) \\
-  Cov(a,p_2)
-  \end{bmatrix} \notag
-\end{align}
-
-the covariance between the source of information and the true breeding value:$Cov(a,p_i)$ 
-the variance of the individual information sources; $Var(p_i)$
-the covariance between the different sources of information:$Cov(p_i,p_j)$
-
-Two variants of selection index.Index that combines information from different sources about the same trait the weights ($b_i$) are determined by genetic parameters ($h^2$), number of observation (n) and genetic relationship ($a$). Index that combines information from different traits the weights  ($b_i$) may also bring information about different traits in the breeding goal.
-Describe accuracy of selection index method
-
-and $G$ is a matrix of (co)variances between the different phenotype sources 
-\begin{align}
-			r_{a,\hat{a}} &= \frac{\Cov(a,\hat{a})}{\sqrt{\Var(a) \Var(\hat{a})}} \notag
-\end{align}
-
-\begin{align}
-			\Cov(a,\hat{a}) &= \Cov(a,\hat{a}) \notag \\
-			                &= \Cov(a,Pb) \notag \\
-			                &= b\Cov(a,P) \notag \\
-			                &= bG \notag \\
-			\Var(a) &= \Cov(a,\hat{a}) \notag \\
-			\Var(\hat{a}) &= \Var(Pb) \notag \\
-			              &= b'\Var(P)b \notag \\
-\end{align}
-
-As you could see above, the selection index theory does consider a number of 
-factors, such as heritabilities, phenotypic variances and economic weights of 
-traits, genetic and phenotypic correlations between traits, family size and type, 
-and influence of common environment. It is important to remember, though, that 
-the selection index theory per se does not take into account any systematic effects 
-that may have influenced the phenotypic records. Any adjustment required needs 
-to be done in a separate step. As pointed out earlier, the phenotypic records (Xi) 
-that are included in the index (I) must be the adjusted values (expressed as deviations). 
-
-\end{comment}
-
-
-# BLUP a general approach for estimation of breeding values
-
-Breeding value estimation in animal and plant breeding programmes are nowadays based on the BLUP (Best Linear Unbiased Prediction) method. BLUP allows for estimation of breeding values using phenotypic information for individuals from a general pedigree (with arbitrary relationships among them). BLUP is based on linear mixed model methodology, and estimates of breeding values can be obtained by solving the mixed model equations. The BLUP method also require a genetic relationship matrix and estimates of variance components (e.g., $\sigma_a^2$ and $\sigma_e^2$). 
-
-The estimation of breeding values based on multiple sources of information must correct for the redundancy between them (e.g., the redundant information provided by parents and grandparents). Moreover, they need to be adjusted for average effects in the populations, "fixed effects". So far we have referred to that fixed effect as the population mean and we have assumed this adjustment $\mu$ to be known. Indeed, we defined the true breeding value $a$ and the non-identifiable environmental effects $e$ as deviations from a common mean, the average effect of all fixed genetic and environmental factors captured by the population mean $\mu$. But this is only true in a single idealized population where all selection candidates are kept in the same environment in which they deliver their performances at the same time. In practice the phenotypic records often need to be adjusted for systematic (fixed) environmental effects, such as age, parity, litter size, days open, sex, herd, year, season, management, etc. Several of those effects fluctuate very little over time, so accurate estimates of their effect may be obtained from previous (“historical”) sets of data. Effects of factors like herd, year, season, and management fluctuate more and are therefore best estimated directly from the data to be used in the genetic evaluations.
-
-Compared to the idealized cases described in the previous section, a practical breeding scenario poses two problems: accounting for heterogeneous sources of genetic information (different types of relatives); and adjusting for fixed effects in the breeding population(s) (fixed environmental or genetic effects). 
-
-The BLUP solution to these problems was presented by Charles R. Henderson in several publications (e.g. Henderson1973a and Henderson1975). The key idea behind the solution is to estimate the identifiable environmental factors as fixed effects and to predict the breeding values as random effects simultaneously in a linear mixed model. Here, mixed refers to the presence of two types of effects: fixed effects (identifiable effects from environmental or genetic factors) and random effects (non-identifiable effects from segregating genetic factors and fluctuating environmental conditions). The methodology developed by Henderson is called __BLUP__ and the properties of this methodology are directly incorporated into its name: 
-
-* __B__ stands for __best__ which means that the correlation between the true ($a$) and the predicted breeding value ($\hat{a}$) is maximal or the prediction error variance ($Var(a - \hat{a})$) is minimal.
-* __L__ stands for __linear__ which means the predicted breeding values are linear functions of the observations ($y$)
-* __U__ stands for __unbiased__ which means that the expected values of the predicted breeding values are equal to the true breeding values
+* __B__ stands for __best__ which means that the correlation between the true ($a$) and the predicted genetic predisposition ($\hat{a}$) is maximal or the prediction error variance ($Var(a - \hat{a})$) is minimal.
+* __L__ stands for __linear__ which means the predicted genetic predisposition are linear functions of the observations ($y$)
+* __U__ stands for __unbiased__ which means that the expected values of the predicted genetic predisposition are equal to the true genetic predisposition
 * __P__ stands for __prediction__ 
 
-BLUP approaches are widely used in genetic evaluations, for both traditional predictions of breeding values and also for predicting genomic breeding values. The popularity of BLUP is not only due to the theoretical foundations behind BLUP, but also the efficient algorithms developed by Henderson for computing predicted breeding values, even in very large breeding populations. The theoretical foundations, and the development of efficient algorithms, together with the availability of large computational resources at a very low price, have made BLUP the de-facto standard for breeding value estimation.
+BLUP approaches are widely used in genetic evaluations, for both traditional predictions of genetic predisposition and also for predicting genomic genetic predisposition. The popularity of BLUP is not only due to the theoretical foundations behind BLUP, but also the efficient algorithms developed by Henderson for computing predicted genetic predisposition, even in very large study populations. 
 
 
 ## Linear Mixed Model {#mixedlineareffectsmodel}
@@ -519,14 +322,13 @@ The best linear unbiased prediction (BLUP) of $\hat{a}$ is:
 (\#eq:hatublup)
 \end{equation}
 
-which is similar to the expression shown earlier for the expected value of the breeding value conditional on the observed phenotype $y$:
+which is similar to the expression shown earlier for the expected value of the genetic predisposition conditional on the observed phenotype $y$:
 
 \begin{align}
 E(a|y) &= Cov(a,y)[Var(y)]^{-1}(y-E(y))
 \end{align}
 
-The BLUP equation for the estimate of the breeding value consists of three parts;
-The term, $y - X\hat{b}$, shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$. The covariance between the true breeding values ($a$) and phenotypes ($y$) is $Cov(a,y)=G$. The inverse of the phenotypic covariance matrix is $[Var(y)]^{-1}=V^{-1}$.
+The BLUP equation for the estimate of the genetic predisposition consists of three parts; The term, $y - X\hat{b}$, shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$. The covariance between the true genetic predisposition ($a$) and phenotypes ($y$) is $Cov(a,y)=G$. The inverse of the phenotypic covariance matrix is $[Var(y)]^{-1}=V^{-1}$.
 
 
 ## Mixed Model Equations
@@ -555,31 +357,21 @@ The solutions shown in \@ref(eq:hatublup) for $\hat{a}$ and in \@ref(eq:hatbetah
 (\#eq:mixedmodeleq)
 \end{equation}
 
-The above shown equations are called __mixed model equations__ (MME). They no longer contain the inverse $V^{-1}$ and hence these MME are much simpler to solve. Instead, the MME contain the inverses $R^{-1}$ and $G^{-1}$, which are easier to invert: $R=I\sigma_e^2$ is often a very simple matrix, and $G=A\sigma_a^2$ is usually smaller than (or the same size as) V. As a consequence, whenever we have to estimate breeding values using BLUP we will usually use the mixed model equations shown in \@ref(eq:mixedmodeleq).
+The above shown equations are called __mixed model equations__ (MME). They no longer contain the inverse $V^{-1}$ and hence these MME are much simpler to solve. Instead, the MME contain the inverses $R^{-1}$ and $G^{-1}$, which are easier to invert: $R=I\sigma_e^2$ is often a very simple matrix, and $G=A\sigma_a^2$ is usually smaller than (or the same size as) V. As a consequence, whenever we have to estimate genetic predisposition using BLUP we will usually use the mixed model equations shown in \@ref(eq:mixedmodeleq).
 
-In order to solve the mixed model equations (or BLUP equations), the additive genetic relationship matrix $A$ and estimates of the variance components (i.e. $\sigma_{a}^2$ and $\sigma_{e}^2$) are required. The additive genetic relationship matrix $A$ can be computed using a recursive method from a pedigree of the individuals in the breeding population. The variance components can be estimated using the REML method based on phenotypes and genetic relationships for individuals in the breeding population.
+In order to solve the mixed model equations (or BLUP equations), the additive genetic relationship matrix $A$ and estimates of the variance components (i.e. $\sigma_{a}^2$ and $\sigma_{e}^2$) are required. The additive genetic relationship matrix $A$ can be computed using a recursive method from a pedigree of the individuals in the study population. The variance components can be estimated using the REML method based on phenotypes and genetic relationships for individuals in the study population.
 
 
-## BLUP breeding values are useful for ranking and selection
-BLUP estimates of breeding values (EVBs), especially from the linear mixed model including all relationships, are useful tools in selection. Selection on BLUP breeding values maximizes the 
-probability for correct ranking of breeding individuals and selection on them maximizes genetic gain from one generation to another. There are many factors that 
+## BLUP genetic predisposition are useful for ranking and decision making in precision helath
+BLUP estimates of genetic predisposition (EVBs), especially from the linear mixed model including all relationships, are useful tools in precision health. Identification of individuals with an extreme genetic predisposition based on BLUP estimates maximizes the probability for correct ranking of individuals and decisions in precision health. . There are many factors that 
 contribute to this: 
 
- * The linear mixed model which makes full use of information from all relatives increases accuracy (precision) 
- * The breeding values are adjusted for systematic environmental effects in an optimal way. This means that individuals can also be compared across herds, age classes, plots etc, assuming the data is connected 
- * Non-random mating can be accounted for 
+ * The linear mixed model which makes full use of information from all relatives increases accuracy (precision) of the estimated genetic predisposition
+ * The genetic predisposition are adjusted for systematic environmental effects in an optimal way. This means that individuals can also be compared across environments, age classes, assuming the data is connected 
  * Several traits can be analyzed simultanously 
- * Bias due to culling within generation (e.g., between the 1st and 2nd lactations in dairy cattle) and selection (over generations) is accounted for, assuming that also non-selected individuals’ data are included in the analysis. 
-  
+ 
 It should, however, be noted that the genetic evaluation is based on phenotypic 
 observations, and that regardless of how great the BLUP procedure may be, it 
-cannot compensate for bad data. So a good recording system is necessary for a reliable genetic evaluation and subsequent genetic gain. It should also not be forgotten 
+cannot compensate for bad data. So a good health recording system is necessary for a reliable genetic evaluation. It should also not be forgotten 
 that BLUP assumes that the genetic parameters used 
-are the true ones. In practice that means that EBVs will only be accurate if the estimated genetic parameters are close enough to their true value.  
-It should be noted that there is a potential risk for increased inbreeding
-when selection is based on information from all relatives. 
-The probability that several family members are selected jointly is increased, 
-which may result in increased inbreeding. To avoid this, and to optimize longterm selection response, selection on BLUP breeding values might be combined 
-with some restriction on average relationship of the selected individuals. 
-A useful side effect of genetic evaluation by BLUP estimates is that it gives estimates of the 
-realized genetic trend. This trend can be observed by comparing BLUP breeding values of individuals from different years. 
+are the true ones. In practice that means that genetic predisposition will only be accurate if the estimated genetic parameters are close enough to their true value.  
