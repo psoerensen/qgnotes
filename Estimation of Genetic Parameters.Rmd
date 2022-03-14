@@ -1,6 +1,6 @@
 ---
 title: "Estimation of Genetic Parameters"
-author: "Izel Fourie Sørensen, Palle Duun Rohde & Peter Sørensen"
+author: "Palle Duun Rohde, Izel Fourie Sørensen & Peter Sørensen"
 date: "`r Sys.Date()`"
 output:
   bookdown::pdf_document2:
