@@ -23,8 +23,11 @@ set.seed(19)
 ```
 
 
-## Learning objective:  {-}    
-This section introduces the basic concepts of breeding value estimation such as: 
+
+
+
+# Introduction
+This section introduces the basic concepts of estimating genetic predisposition estimation such as: 
 
    * basic principle behind estimating genetic predisposition
    * accuracy of estimated genetic predisposition
@@ -32,9 +35,6 @@ This section introduces the basic concepts of breeding value estimation such as:
    * the connection between genetic parameters and estimated genetic predisposition
    * different methods, data sources and experimental designs for estimating genetic predisposition
 
-
-
-# Introduction
 Breeding value estimation is a fundamental component of breeding programmes, in which the breeding value of each individual is predicted to inform subsequent selection decisions. 
 The breeding value for an individual is the total additive genetic value which is passed on to the offspring. Thus the breeding value is not a measure of how good an individual is in itself, 
 but rather of the effect its genes will have in the population. Breeding values are used for:
