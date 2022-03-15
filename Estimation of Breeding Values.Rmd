@@ -27,7 +27,7 @@ set.seed(19)
 
 
 # Introduction
-This section introduces the basic concepts of estimating genetic predisposition estimation such as: 
+Estimation of genetic predisposition can play an important role in precision health. It can help inform diagnostic procedures and subsequent treatment decisions. The true genetic predisposition for an individual cannot be observed. It is only possible to measure its phenotypic value, which is influenced both by genotype and environment. Therefore, we need a way to infer the genetic predisposition from the phenotypic value. This section introduces the basic concepts of estimating genetic predisposition estimation such as: 
 
    * basic principle behind estimating genetic predisposition
    * accuracy of estimated genetic predisposition
@@ -35,11 +35,9 @@ This section introduces the basic concepts of estimating genetic predisposition 
    * the connection between genetic parameters and estimated genetic predisposition
    * different methods, data sources and experimental designs for estimating genetic predisposition
 
-Estimation of genetic predisposition can play an important role in precision health. It can help inform diagnostic procedures and subsequent treatment decisions. The true genetic predisposition for an individual cannot be observed. It is only possible to measure its phenotypic value, which is influenced both by genotype and environment. Therefore, we need a way to infer the genetic predisposition from the phenotypic value. This is the objective of genetic predisposition estimation. 
-
 
 # Basic principles for genetic predisposition estimation
-Genetic predisposition is estimated using information on phenotypes and genetic relationships for individuals in a study population. As introduced previously the phenotype for a quantitative trait is the sum of both genetic and environmental factors. In general the amount of information provided by the phenotype about the genetic predisposition is determined by the narrow sense heritability ($h^2$), which measures the proportion of additive genetic variance contained in the total phenotypic variance. Furthermore phenotypes collected from close relatives provide more information about the genetic predisposition of an individual. In this section we will illustrate these principles using phenotypic data and genetic relationships used for for estimating genetic predisposition. We will now try to derive a general approach for predicting genetic predisposition for any situation. Even though the procedure is general we will use a simple example to describe it. 
+Genetic predisposition is estimated using information on phenotypes and genetic relationships for individuals in a study population. As introduced previously the phenotype for a quantitative trait is the sum of both genetic and environmental factors. In general the amount of information provided by the phenotype about the genetic predisposition is determined by the heritability, which measures the proportion of genetic variance contained in the total phenotypic variance. Furthermore phenotypes collected from close relatives provide more information about the genetic predisposition of an individual. In this section we will illustrate these principles using phenotypic data and genetic relationships used for for estimating genetic predisposition. We will derive a general approach for predicting genetic predisposition for any situation. Even though the procedure is general we will use a simple example to describe it. 
 
 ## Genetic model
 
@@ -49,7 +47,7 @@ The genetic predisposition is based on an assumption of a specific genetic model
 	y &=\mu+a+d+i+\epsilon
 \end{align}
 
-where  $\mu$ is the population mean, $a$ is the genetic predisposition (i.e. additive effect), $d$ is the dominance effect, $i$ is the epistasis effect, and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. However, only the additive genetic effects are passed on to the offspring and therefore contributes to the genetic predisposition. In contrast non-additive genetic effects (dominance and epistasis) are degraded by recombination and are not inherited, even though they may be important for the individual's phenotype. Therefore we only consider the additive genetic model as the basis for genetic predisposition estimation:
+where  $\mu$ is the population mean, $a$ is the genetic predisposition (i.e. additive effect), $d$ is the dominance effect, $i$ is the epistasis effect, and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. However, only the additive genetic effects are passed on to the offspring and therefore contributes to the genetic predisposition. In contrast non-additive genetic effects (dominance and epistasis) are degraded by recombination and are not inherited, even though they may be important for the individual's phenotype. Furthermoe,additive genetic effects explain a majority of the total genetic variance. Therefore we only consider the additive genetic model as the basis for genetic predisposition estimation:
 
 \begin{align}
 			y=\mu+a+e	 \notag
@@ -80,8 +78,7 @@ E(a|y) &= Cov(a,y)[Var(y)]^{-1}(y-E(y))
 \end{align}
 The expression for the estimate of the genetic predisposition consists of two parts;
 The term $y-E(y)$ shows that the observed phenotypic values are corrected for the
-fixed effects represented by $\mu$.
-The term $b_{a|y}=Cov(a,y)[Var(y)]^{-1}$ often referred to as the regression coefficient is a weighting factor with which the corrected phenotypic values are multiplied. 
+fixed effects represented by $\mu$. The term $b_{a|y}=Cov(a,y)[Var(y)]^{-1}$ often referred to as the regression coefficient is a weighting factor with which the corrected phenotypic values are multiplied. 
 
 To be able to estimate the genetic predisposition we need to determine the values for the terms $E(a)$, $E(y)$, $Var(y)$, and $Cov(a,y)$ in the expression above. It is possible to derive simple formula's for these terms based on: 
 
@@ -96,7 +93,7 @@ a &= \text{additive genetic value = true genetic predisposition} \notag \\
 \end{align}
 
 
-### Estimated genetic predisposition are unbiased {-}
+### Estimated genetic predisposition are unbiased
 Below we show that $\hat{a}$ is an unbiased estimator of $a$.The expected value ($E(\hat{a})$) of the predicted genetic predisposition $\hat{a}$ can be computed
 as:
 \begin{align}
@@ -107,8 +104,7 @@ E(\hat{a}) &= E(Cov(a,y)[Var(y)]^{-1}(y-E(y))) \notag \\
 Because we have already specified that $E(\hat{a})=0$, it follows that $E(\hat{a})=E(a)=0$. This means that $\hat{a}$ is an unbiased estimator of $a$.
 
 
-
-### Variance of estimated genetic predisposition ($\hat{a}$) {-}
+### Variance of estimated genetic predisposition ($\hat{a}$)
 \begin{align}
 Var(\hat{a}) &= Var(Cov(a,y)[Var(y)]^{-1}(y-E(y))) \notag \\
            &= Cov(a,y)[Var(y)]^{-1}Var((y-E(y)))[Var(y)]^{-1}Cov(a,y) \notag \\
@@ -122,13 +118,9 @@ Cov(a,\hat{a}) &= Cov(a,Cov(a,y)[Var(y)]^{-1}(y-E(y))) \notag \\
            &= Var(\hat{a})\notag 
 \end{align}
 
-### Conditional density of estimated genetic predisposition ($\hat{a}$) {-}
+### Conditional density of estimated genetic predisposition ($\hat{a}$)
 
-In some cases, e.g., for specifying confidence intervals of true genetic predisposition,
-it might be interesting to have a look at the conditional density $f(a|\hat{a})$. This
-density is a multivariate normal density with expected value $E(a|\hat{a})$ and variance
-$Var(a|\hat{a})$. These values can be computed based on the theory of conditional
-multivariate normal densities.
+In some cases, e.g., for specifying confidence intervals of true genetic predisposition, it might be interesting to have a look at the conditional density $f(a|\hat{a})$. This density is a multivariate normal density with expected value $E(a|\hat{a})$ and variance $Var(a|\hat{a})$. These values can be computed based on the theory of conditional multivariate normal densities.
 \begin{align}
 E(a|\hat{a}) &= E(a) + Cov(a,\hat{a})[Var(\hat{a})]^{-1}(\hat{a}-E(\hat{a})) \notag \\
            &= 0 + Var(\hat{a})[Var(\hat{a})]^{-1}(\hat{a}-0) \notag \\
@@ -156,22 +148,23 @@ __Reliability__ is the squared correlation, $r_{a,\hat{a}}^2$, between the estim
 			r_{a,\hat{a}}^2 &= \frac{\Var(\hat{a})}{\Var(a)}
 \end{align}
 
+Therefore reliability ($r_{a,\hat{a}}^2$) can be interpreted as the part of the genetic variation that is explained by the estimated genetic predisposition whereas the remainder (1 - $r_{a,\hat{a}}^2$) is the uncertainty. 
+Reliability of the genetic predisposition ($r_{a,\hat{a}}^2$) is important because it determines how well we can predict an individual's genetic predisposition. It can be used to control the risk of decision making: for example, low $r_{a,\hat{a}}^2$ leads to greater "risk" for both lower and higher true genetic predisposition and we might consider more phenotypic records, in order to make better-informed precision health decisions.
+
+
 \begin{comment}
 \begin{align}
 Var(\hat{a}) &= Cov(a,y)[Var(y)]^{-1}Cov(a,y)\notag \\
 Cov(a,\hat{a}) &= Cov(a,y)[Var(y)]^{-1}Cov(a,y)\notag \\
            &= Var(\hat{a})\notag 
 \end{align}
-\end{comment}
-
-Therefore reliability ($r_{a,\hat{a}}^2$) can be interpreted as the part of the genetic variation that is explained by the estimated genetic predisposition whereas the remainder (1 - $r_{a,\hat{a}}^2$) is the uncertainty. 
-Reliability of the genetic predisposition ($r_{a,\hat{a}}^2$) is important because it determines how well we can predict an individual's genetic predisposition. It can be used to control the risk of decision making: for example, low $r_{a,\hat{a}}^2$ leads to greater "risk" for both lower and higher true genetic predisposition and we might consider more phenotypic records, in order to make better-informed precision health decisions. Lastly reliability is one of the crucial factors that determines the genetic progress (e.g., breeders equation which will be introduced later in the course).
 
 The variance of the estimated genetic predisposition ($\hat{a}$) can be computed as:
 \begin{align}
 			\sigma^2_{\hat{a}}=r_{a,\hat{a}}^2\sigma^2_{a} \notag
 \end{align}
 and from this expression it is clear that when the reliability increases, the variation in $\hat{a}$ increases (genetic predisposition estimates are more variable over values of $y$), and the estimation becomes more precise (the residual variability of $y$, the part left unexplained, has decreased). If the reliability is 0, then we know nothing and the variance of $\hat{a}$ is 0. If the reliability is 1, then we know everything and the variance of $\hat{a}$ is $\sigma^2_{\hat{a}}=\sigma^2_{a}$ and the error variance (uncertainty) is 0. 
+\end{comment}
 
 
 ## Prediction error variance (PEV) of estimated genetic predisposition
@@ -198,11 +191,94 @@ SEP(\hat{a}) &= \sqrt{Var(a-\hat{a})} \notag \\
 # Phenotypic data and genetic relationships are used to estimate genetic predisposition
 We will illustrate the basic principles of genetic predisposition estimation using some simple examples where the trait has been measured on the individuals themselves or close relatives. 
 
+## Estimation of breeding value and accuracy based on own phenotype:
+An estimate of the genetic predisposition (a) based on own phenotype (y) can be calculated as: 
+\begin{align}
+E(a|y) &= E(a) + Cov(a,y)[Var(y)]^{-1}(y-E(y)) \notag \\
+E(a|y) &= 0 + \sigma^2_{a}[\sigma^2_{a} + \sigma^2_{e}]^{-1}(y- \mu) \notag \\
+E(a|y) &= h^2(y-\mu) \notag
+\end{align}
+
+Thus the estimated genetic predisposition using own phenotypic record can be computed based on an estimate of the trait heritability ($h^2$) and the observed phenotype deviation ($y-\mu$).
+
+The expression for expected value terms ($E(a)$ and $E(y)$) in the equation above are based on rules for expected value of a sum of (normally distributed) random variables:
+\begin{align}
+\E(a) &=0 \notag \\
+\E(e) &=0 \notag \\
+\E(y) &=\E(\mu+a+e) \notag \\
+      &=\E(\mu)+\E(a)+\E(e)  \notag \\
+      &=\mu+0+0  \notag \\
+      &=\mu  \notag 
+\end{align}
+
+The expression for (co)variance terms ($Var(y)$, and $Cov(a,y)$ ) in the equation above are based on rules for the variance of a sum of (normally distributed) random variables:
+\begin{align}
+\Var(y) &= Var(a) + Var(e) + 2Cov(a,e)  \notag \\
+\Var(a) &=\sigma^2_{a}  \notag \\
+\Var(e) &=\sigma^2_{e}  \notag \\
+\Cov(a,e) &=0  \notag \\
+\Var(y) &= \sigma^2_{a} + \sigma^2_{e} \notag \\ 
+Cov(a,y) &= Cov(a,a+e) \notag \\
+         &= Cov(a,a) + Cov(a,e) \notag \\
+         &= \sigma^2_{a} + 0 \notag \\
+         &= \sigma^2_{a}  \notag
+\end{align}
+
+The accuracy for the genetic predispostion based on own phenotype ($y$) can be calculated as:
+\begin{align}
+			r_{a,\hat{a}} &= \frac{\Cov(a,\hat{a})}{\sqrt{\Var(a)} \sqrt{\Var(\hat{a})}} \notag \\
+			r_{a,\hat{a}} &= \frac{(h^2 )^2 \sigma_y^2}{\sqrt{h^2 \sigma_y^2}\sqrt{(h^2)^2 \sigma_y^2}} \notag \\
+			r_{a,\hat{a}} &= \sqrt{h^2} \notag
+\end{align}
+
+The variance of the estimated genetic predisposition, $Var(\hat{a})$, can be expressed as:
+\begin{align}
+		Var(\hat{a}) &=Var(h^2 (y-\mu)) \notag \\
+		Var(\hat{a}) &=(h^2)^2 Var(y-\mu)=(h^2)^2 Var(y)=(h^2)^2 \sigma_y^2 \notag
+\end{align}
+
+The variance of the true genetic predisposition, $Var(a)$, can be expressed by the heritability and phenotypic variance:
+\begin{align}
+		\sigma_a^2=(\sigma_a^2)/(\sigma_y^2 ) \sigma_y^2=h^2 \sigma_y^2 \notag
+\end{align}
+
+
+Estimation of genetic predisposition based on own phenotype is only possible when the trait in question can be measured (directly or indirectly) on the breeding individual, i.e., the candidate to be evaluated for selection. Sometimes this is not possible, e.g., traits that are sex-limited (milk production, female fertility, etc.) cannot be measured in male individuals. Traits like carcass composition and meat quality cannot be measured on live animals, unless an indirect method can be used (e.g. ultra-sonic measurement of carcass composition). In this situation it might be possible to use phenotypic information on relatives. 
+
+## Estimation of genetic predisposition and accuracy based on phenotypes of close relatives:
+
+In practice it may be possible to use phenotypic records from close relatives, such as, half-sibs, full-sibs, parents and grandparents. Phenotypes collected on close relatives (as compared to distant relatives) provide more information about the breeding value of an individual (as close relatives share more DNA in common). In the following we will provide a general formula for estimating genetic predisposition and their accuracies using phenotypic information on different types of relatives. 
+
+#### General formula for estimating genetic predisposition using different sources of information: {-}
+\begin{align}
+\hat{a}&=b_{a|y}(y-\mu) 
+\end{align}
+
+where the regression coefficient quantifies the weight (or importances) of the phenotypic information:
+\begin{align}
+b_{a|y}&=\frac{a'nh^2}{(1+(n-1)r} 
+\end{align}
+where $a'$ is the genetic relationship between a specific individual and individuals with phenotypes, $n$ is the number of phenotypic records, $h^2$ is the trait heritability, and $r$ is correlation between individuals with observations ($r = a^{''}h2  + c^2$, where $a^{''}$ = genetic relationship between individuals with records and target, $c^2$ = common environmental component).
+
+Thus the importance given to a specific source of information depends on the additive genetic relationship ($a'$) with the breeding candidate, the heritability of the trait ($h^2$), and the amount of information ($n$), i.e. the number of relatives (progenies or sibs, etc.). 
+
+#### General formula for reliability of estimated breeding value using different sources of information: {-}
+\begin{align}
+			r_{a,\hat{a}}^2=\frac{(a')^2nh^2}{1+(n-1)r}
+\end{align}
+
+Thus reliability depends on the same factors as the estimated breeding value except for the phenotypic value. Although the reliability depends on the number of records it does not depend on the numerical value of phenotypes. From this formula is it clear that higher reliability (and accuracy) can be achived when:
+
+ * genetic relationship to individuals with information (a') is high
+ * there are many records ($n$ is high)
+ * heritability ($h^2$) is high
+ * correlation between records ($r = a''h^2 + c^2$) is low (little redundancy in observations)
+
 ## Genetic relationship used for estimating genetic predisposition
 Related individuals share genes and thus resemble each other (have correlated phenotypes, to an extent that depends on additive genetic relationships). Consider a simple parent-offspring example. The offspring get half of the genes from each parent and therefore the genetic predisposition for the offspring is the average of the parents' genetic predisposition plus the Mendelian deviation (the part of the genetic predisposition that is due to random segregation of the genes from each parent):
 
 \begin{align}
-		a_{\text{offspring}}=\frac{1}{2}a_{\text{father}}+\frac{1}{2}a_{\text{mother}}+a_{\text{mendelian}} \notag 	
+		a_{\text{child}}=\frac{1}{2}a_{\text{father}}+\frac{1}{2}a_{\text{mother}}+a_{\text{mendelian}} \notag 	
 \end{align}
 	(a = additive genetic value = genetic predisposition
 
@@ -264,9 +340,7 @@ As already mentioned, all information available is usually utilized when an indi
 
 Genetic predisposition can bne estimated using the BLUP (Best Linear Unbiased Prediction) method. BLUP allows for estimation of genetic predisposition using phenotypic information for individuals from a general pedigree (with arbitrary relationships among them). BLUP is based on linear mixed model methodology, and estimates of genetic predisposition can be obtained by solving the mixed model equations. The BLUP method also require a genetic relationship matrix and estimates of variance components (e.g., $\sigma_a^2$ and $\sigma_e^2$). 
 
-The estimation of genetic predisposition based on multiple sources of information must correct for the redundancy between them (e.g., the redundant information provided by parents and grandparents). Moreover, they need to be adjusted for average effects in the populations, "fixed effects". So far we have referred to that fixed effect as the population mean and we have assumed this adjustment $\mu$ to be known. Indeed, we defined the true genetic predisposition $a$ and the non-identifiable environmental effects $e$ as deviations from a common mean, the average effect of all fixed genetic and environmental factors captured by the population mean $\mu$. But this is only true in a single idealized population where all individuals are from the same environment in which they deliver their performances at the same time. In practice the phenotypic records often need to be adjusted for systematic (fixed) environmental effects, such as age, year, season, region, etc. Several of those effects fluctuate very little over time, so accurate estimates of their effect may be obtained from previous (“historical”) sets of data. Effects of factors like year, season, and region fluctuate more and are therefore best estimated directly from the data to be used in the genetic evaluations.
-
-Compared to the idealized cases described in the previous section, a practical scenario poses two problems: accounting for heterogeneous sources of genetic information (different types of relatives); and adjusting for fixed effects in the study population(s) (fixed environmental or genetic effects). 
+The estimation of genetic predisposition based on multiple sources of information must correct for the redundancy between them (e.g., the redundant information provided by parents and grandparents). Moreover, they need to be adjusted for average effects in the populations, "fixed effects". 
 
 The BLUP solution to these problems was presented by Charles R. Henderson in several publications (e.g. Henderson1973a and Henderson1975). The key idea behind the solution is to estimate the identifiable environmental factors as fixed effects and to predict the genetic predisposition as random effects simultaneously in a linear mixed model. Here, mixed refers to the presence of two types of effects: fixed effects (identifiable effects from environmental or genetic factors) and random effects (non-identifiable effects from segregating genetic factors and fluctuating environmental conditions). The methodology developed by Henderson is called __BLUP__ and the properties of this methodology are directly incorporated into its name: 
 
@@ -275,7 +349,7 @@ The BLUP solution to these problems was presented by Charles R. Henderson in sev
 * __U__ stands for __unbiased__ which means that the expected values of the predicted genetic predisposition are equal to the true genetic predisposition
 * __P__ stands for __prediction__ 
 
-BLUP approaches are widely used in genetic evaluations, for both traditional predictions of genetic predisposition and also for predicting genomic genetic predisposition. The popularity of BLUP is not only due to the theoretical foundations behind BLUP, but also the efficient algorithms developed by Henderson for computing predicted genetic predisposition, even in very large study populations. 
+BLUP approaches are widely used for estimation of genetic predispostion. The popularity of BLUP is not only due to the theoretical foundations behind BLUP, but also the efficient algorithms developed by Henderson for computing predicted genetic predisposition, even in very large study populations. 
 
 
 ## Linear Mixed Model {#mixedlineareffectsmodel}
