@@ -1,0 +1,48 @@
+---
+title: "Introduction to Notes on Statistical Genetics"
+author: "Palle Duun Rohde, Izel Fourie Sørensen & Peter Sørensen"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    citation_package: natbib
+    toc: false
+    includes:
+      in_header: preamble.tex
+  html_document:
+    number_sections: yes
+    includes:
+      in_header: mathjax_header.html
+  word_document: default
+bibliography: [qg2021.bib, book.bib, packages.bib]
+link-citations: yes
+---
+
+# Main documents {-}
+* \textbf{Quantitative Genetics Theory}
+    + 
+* \textbf{Estimation of Genetic Parameters}
+    + Provides an introduction to the genetic model of complex traits, genetic parameters, and which statistical models that can be used to estimate genetic parameters of interest. 
+* \textbf{Estimation of Genetic Predisposition}
+    + 
+* \textbf{Gene Set Enrichment Analysis}
+    +     
+    
+# Supporting documents {-}
+* \textbf{Basic Concepts in Matrix Algebra} 
+    + 
+* \textbf{Basic concepts in Probability and Statistics}
+    + 
+* \textbf{Restricted Maximum Likelihood}
+    + 
+* \textbf{Linear Mixed Models used in Quantitative Genomics}
+    + 
+* \textbf{Best Linear Unbiased Prediction used in Quantitative Genomics}
+    + 
+* \textbf{Bayesian Linear Regression}
+    + 
+* \textbf{Gene Set Enrichment Analysis}
+    + 
+* \textbf{Prediction accuracy}
+    + 
+
+
