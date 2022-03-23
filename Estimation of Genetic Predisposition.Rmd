@@ -432,8 +432,54 @@ The solutions shown in \@ref(eq:hatublup) for $\hat{a}$ and in \@ref(eq:hatbetah
 
 The above shown equations are called __mixed model equations__ (MME). They no longer contain the inverse $V^{-1}$ and hence these MME are much simpler to solve. Instead, the MME contain the inverses $R^{-1}$ and $G^{-1}$, which are easier to invert: $R=I\sigma_e^2$ is often a very simple matrix, and $G=A\sigma_a^2$ is usually smaller than (or the same size as) V. As a consequence, whenever we have to estimate genetic predisposition using BLUP we will usually use the mixed model equations shown in \@ref(eq:mixedmodeleq).
 
-In order to solve the mixed model equations (or BLUP equations), the additive genetic relationship matrix $A$ and estimates of the variance components (i.e. $\sigma_{a}^2$ and $\sigma_{e}^2$) are required. The additive genetic relationship matrix $A$ can be computed using a recursive method from a pedigree of the individuals in the study population. The variance components can be estimated using the REML method based on phenotypes and genetic relationships for individuals in the study population.
+## Prediction error variance (PEV), reliability and accuracy
+The precision of estimates of genetic predisposition can be calculated from the inverse of left hand side of the mixed model equations: 
 
+\begin{equation}
+\left[
+  \begin{array}{lr}
+  X'X  &  X'Z \\
+  Z'X  &  Z'Z + G^{-1}\lambda
+  \end{array}
+\right]^{-1}
+=
+\left[
+  \begin{array}{lr}
+  C^{11}  &  C^{12} \\
+  C^{21}  &  C^{22}
+  \end{array}
+\right]
+(\#eq:coefficientmatrix)
+\end{equation}
+
+where $\lambda=\frac{\sigma_e^2}{\sigma_2^2}=\frac{1-h^2}{h^2}$, $C^{11}$ corresponds to the fixed effects part ($X’X$) and $C^{22}$ to the random part ($Z’Z+A^{-1}\lambda$). The prediction error variance ($PEV$) for the genetic predisposition can be calculated as: 
+
+\begin{align}
+PEV = C^{22}\sigma_e^2 
+\end{align}
+
+or expressed for individual $i$ is: 
+
+\begin{align}
+PEV_i = C_{ii}^{22}\sigma_e^2 
+\end{align}
+
+i.e. the diagonal element of the inverse of the coefficient matrix corresponding to indivial $i$, multiplied by the residual variance. 
+
+The reliability, $r_{\hat{a},a}^2$, we can use the following relationship: 
+
+\begin{align}
+PEV_i = (1-r_{\hat{a},a}^2)\sigma_a^2=C_{ii}^{22}\sigma_e^2 
+\end{align}
+
+\begin{align}
+r_{\hat{a},a}^2 &= 1-C_{ii}^{22}\frac{\sigma_e^2}{\sigma_a^2} \\
+                &= 1-C_{ii}^{22}\lambda
+\end{align}
+
+\begin{align}
+r_{\hat{a},a} &= \sqrt{1-C_{ii}^{22}\lambda}
+\end{align}
 
 ## BLUP genetic predisposition are useful for ranking and decision making in precision helath
 BLUP estimates of genetic predisposition (EVBs), especially from the linear mixed model including all relationships, are useful tools in precision health. Identification of individuals with an extreme genetic predisposition based on BLUP estimates maximizes the probability for correct ranking of individuals and decisions in precision health. . There are many factors that 
