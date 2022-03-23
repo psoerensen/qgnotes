@@ -26,6 +26,10 @@ set.seed(19)
 # Introduction to genetic parameters
 Estimation of genetic parameters is an important discipline in studying the genetics of complex traits and multifactorial diseases. First of all, estimating additive genetic variance, and possible non-additive genetic variances, contributes to a better understanding of the underlying genetic mechanisms of complex phenotypes.  Secondly, estimates of phenotypic and genetic variances, and their covariances, are essential for prediction of genetic predisposition, \textit{e.g.}, animal breeding values or an individuals genetic liability towards a common complex disease. Parameters that are of great interest are heritability, genetic and phenotypic correlation and repeatability, which all can be computed from the estimated variance components. Genetic parameters are estimated using information on phenotypes and genetic relationships among individuals in the study population. In this section, we will illustrate how different phenotypic sources and genetic relationships are used for estimating genetic parameters.
 
+\begin{comment}
+In modern genetic studies of complex phenotypes, genome-wide association studies (GWAS) are commonly conducted to investigate the underlying genetic basis of the trait in question. From such studies, the SNP-heritability ($h_{SNP}^2$) can be estimated (\textcolor{red}{see section on 'Summary statistics'}), which is the proportion of the total phenotypic variation that can be explain by \textit{common} genetic variants (\textit{i.e.}, typically single nucleotide polymorphisms (SNPs) with a minor allele frequency $>0.01$). 
+\end{comment}
+
 ## The genetic model
 The phenotype for a quantitative trait is the sum of both genetic ($g$) and environmental factors ($e$). In general, the total genetic effect ($g$) for an individual is the sum of both additive and non-additive effects: 
 
@@ -41,15 +45,11 @@ d \sim N(0,\sigma^2_{d}), \notag \\
 e \sim N(0,\sigma^2_{e}), \notag 
 \end{align}
 
-where $\sigma^2_{a}$ is the additive genetic variance, $\sigma^2_{d}$ is the dominance variance, and $\sigma^2_{e}$ is the residual variance. This entails that the observed phenotype ($y$) is also normally distributed $y \sim N( \mu,\sigma^2_{y})$ with the overall phenotypic variance:
-
-\begin{align}
-\sigma^2_{y} &=  \sigma^2_{a} + \sigma^2_{d} + \sigma^2_{e}. \notag
-\end{align}
+where $\sigma^2_{a}$ is the additive genetic variance, $\sigma^2_{d}$ is the dominance variance, and $\sigma^2_{e}$ is the residual variance. This entails that the observed phenotype ($y$) is also normally distributed $y \sim N( \mu,\sigma^2_{y})$ with the overall phenotypic variance $\sigma^2_{y} =  \sigma^2_{a} + \sigma^2_{d} + \sigma^2_{e}$. 
 
 
 ## Genetic parameters {#section:param}
-Heritability and genetic correlations are the key genetic parameters used in estimating an individuals' genetic predisposition to a complex trait. They are defined in terms of the variance components ($\sigma^2_{a}$ and $\sigma^2_{e}$) as presented in the section above.    
+Heritability and genetic correlations are the key genetic parameters used in estimating an individuals' genetic predisposition to a complex trait. They are defined in terms of the variance components ($\sigma^2_{a}$, $\sigma^2_{d}$ and $\sigma^2_{e}$) as presented in the section above.    
     
 __Heritability__ estimates the degree of variation in a phenotypic trait in a population that is due to genetic variation among individuals in that specific population. It quantifies how much of the phenotypic variation that can be attributed to variation in genetic factors, and how much that is attributed to variation in environmental factors. 
 
@@ -64,7 +64,7 @@ h^2 &= \sigma^2_{a}/(\sigma^2_a+\sigma^2_d+\sigma^2_e).
 
 A heritability of 0 implies that no genetic effects contributes to the observed variation in the trait, while a heritability of 1 implies that all of the variation in the trait is explained by the genetic effects. Importantly, the heritability is population-specific and a heritability of 0 does not necessarily imply that there is no genetic determinism for the trait. The trait might be highly influenced by genetic factors. Yet, the observed variation for the trait might not be due to genetic factors, because all alleles contributing to the trait are fixed, and there are no segregating causal alleles for the trait, in the population. Therefore, observed variation may only be due to environmental factors, and the heritability in that population might be 0. The proportion of phenotypic variance explained by additive genetic variance also sets the limit for the accuracy of genetic predisposition.
 
-In modern genetic studies of complex phenotypes, genome-wide association studies (GWAS) are commonly conducted to investigate the underlying genetic basis of the trait in question. From such studies, the SNP-heritability ($h_{SNP}^2$) can be estimated (\textcolor{red}{see section on 'Summary statistics'}), which is the proportion of the total phenotypic variation that can be explain by \textit{common} genetic variants (\textit{i.e.}, typically single nucleotide polymorphisms (SNPs) with a minor allele frequency $>0.01$). In case-control GWAS, heritability estimates might be biased because the scale at which the phenotype is measured at is different from the scale at which the heritability is expressed at. Also, often the proportion of cases is larger than the disease prevalence in the population leading to ascertainment bias. Therefore, the observed genomic heritability ($h_o^2$) can be transformed to the liability scale ($h_l^2$) \citep{Lee2011}:
+If the phenotype is binary then heritability estimates might be biased. This is because the scale at which the phenotype is measured is different from the scale at which the heritability is expressed. Also, often the proportion of cases is larger than the disease prevalence in the population leading to ascertainment bias. Therefore, the observed genomic heritability ($h_o^2$) can be transformed to the liability scale ($h_l^2$) \citep{Lee2011}:
 \begin{equation}
 h_l^2 = h_o^2\frac{K(1-K)}{z^2}\frac{K(1-K)}{P(1-P)},
 \end{equation}
@@ -96,21 +96,8 @@ For estimating genetic parameters we need to specify a statistical model that de
 \begin{align}
 			\text{phenotype}=\text{mean} + \text{systematic effect} + \text{genetic effect}  + \text{residual}	 \notag
 \end{align}
-Here, we make a distinction between fixed effects, that determine the level (expected mean) of observations, and random effects that determine the variance. A model consists of at least one fixed effect (\textit{i.e.}, the mean) and one random effect (the residual error variance). If observations also are influenced by a genetic effect, then a genetic variance component exists as well^[Multiple genetic variance components may be defined, \textit{e.g.}, by partitioning the total genetic variance by functional groups. See the document \textcolor{red}{Estimation-of-Genomic-Breeding-Values.pdf} for additional details.]. In that situation, we have two components contributing to the total variance of the observations: a genetic and a residual variance component. 
+Here, we make a distinction between fixed effects, that determine the level (expected mean) of observations, and random effects that determine the variance. A model consists of at least one fixed effect (\textit{i.e.}, the mean) and one random effect (the residual error variance). If observations also are influenced by a genetic effect, then a genetic variance component exists as well. In that situation, we have two components contributing to the total variance of the observations: a genetic and a residual variance component. 
 
-<!--- Out commented section -->
-\begin{comment}
-A statistical model is usually specified as a mathematical relationship between one or more random variables and other non-random variables. In quantitative genetics it is often based on the additive genetic model specified above with inclusion of additional factors that may affect the trait of interest: 
-
-\begin{align}
-			y=\mu + \text{...systematic effect....} + a + e	 \notag
-\end{align}
-
-where  $\mu$ is the population mean, $a$ is the additive effect, and $e$ is the environmental deviation (or residual) not explained by the systematic effects and the genetic effects in the model. 
-
-We assume that the additive genetic effect, a, and the residual term, e, are normally distributed such that $a \sim N(0,\sigma^2_{a})$ and $e \sim N(0,\sigma^2_{e})$. The goal is to derive estimates for the variance components that is the additive genetic variance $\sigma^2_{a}$, and the residual variance $\sigma^2_{e}$ the residual variance. 
-\end{comment}
-<!--- Out commented section -->
 
 The statistical model is a formal representation of our quantitative genetic theory, but it is important to realize that all models are simple approximations of how genetic and non-genetic factors influence a trait. The goal of the statistical analysis is to find the best practical model that explains most of the variation in the data. The methods used for estimating genetic parameters is based on statistical concepts such as random variables, matrix algebra, multivariate normal theory, and linear (mixed) models. These concepts and their use will be explained in the following sections. 
 
@@ -145,11 +132,6 @@ X &: \text{is a known design matrix that relates the elements of b to their corr
 Z &: \text{is a known design matrix that relates the elements of a to their corresponding element in y.} \notag 
 \end{align}
 
-<!--- Out commented section -->
-\begin{comment}
-The __observation vector__ contains elements resulting from measurements, either subjective or objective, on the experimental units (usually individuals) under study. The elements in the observation vector are random variables that have a multivariate distribution, and if the form of the distribution is known, then advantage should be taken of that knowledge. Usually $y$ is assumed to have a multivariate normal distribution, but that is not always true. The elements of $y$ should represent random samples of observations from some defined population. If the elements are not randomly sampled, then bias in the estimates of $b$ and $a$ can occur, which would lead to errors in ranking individuals based on genetic predisposition.
-\end{comment}
-<!--- Out commented section -->
 
 The factors (or 'variables') which describe fixed and random effects, may be either continuous or categorical. 
 
@@ -164,7 +146,7 @@ __Fixed effect:__ If the number of levels of a categorical variables is small or
 
 __Random effect:__ If the number of levels of a categorical variable is large, then that factor may be random. If the inferences about that factor are going to be made for an entire population of levels, and if the levels of the factor are a sample from an infinitely large population, then that factor is usually random. In other words, if a new sample of observations are made (from a new experiment), and the levels are completely different between the two samples, then the factor is usually random.
 
-## Expectation and variance of variables in the linear mixed model
+### Model parameters and assumptions
 In the statistical model (specified above) the random effects ($a$ and $e$) and the phenotypes ($y$) are considered to be random variables which follow a multivariate normal distribution. In general terms, the expectations of these random variables are:  
 \begin{align}
 E(y) &= E(Xb) + E(Za) + E(e) \notag \\
@@ -179,113 +161,18 @@ and the variance-covariance matrices are defined as:
 \end{align}
 where $A$ is the additive genetic relationship matrix, and $I$ is an identity matrix. The matrices $Var(y)$, $Var(a)$ and $Var(e)$ are square matrices of the phenotypic, genetic, residual (co)variances among the individuals, respectively. 
 
-For a multiple trait model:
+### Genetic relationship matrices
+The genetic relationship can be inferred from general pedigrees (e.g., $A$ numerator relationship matrix) or estimated from genetic markers (e.g., $G$ genomic relationship matrix). The main difference between the two types of genetic relationship matrices ($A$ and $G$) is that $A$ is based on the concept of identity by descent (sharing of the same alleles, transmitted from common ancestors) whereas $G$ is based on the concept of identity by state (sharing of the same alleles, regardless of their origin). 
+
+
+### Advanced linear mixed models
+The linear mixed model framework is very flexible and can be expanded in a number of ways. First, additional effects can be included to describe the data more accurately: maternal, permanent environmental, or QTL effects. These effects may be fitted as additional random effects. Second, non-additive genetic effects can be included in the model such as dominance (i.e., modeled by $D$ a dominance relationship matrix) or additive by additive interaction effects (i.e., modeled by $A \circ A$ an epistatic relationship matrix).
+Third, the multiple genetic variance components may be defined, by partitioning the total genetic variance   using genomic relationship matrices computed from different marker sets defined by different functional marker categories. Fourth, multiple trait models can be fitted:
 \begin{align}
  Var(a) &= A\otimes V_a \notag \\
  Var(e) &= I\otimes V_e \notag
 \end{align}
-where $V_a$ and $V_e$ are square matrcies of genetic and residual (co)variances among traits, respectively. To simplify, we assumed one observation per individual per trait and therefore the $Z$-matrix reduces to an identity matrix which can be left out of the equation system.
-
-
-## Genetic relationships among individuals 
-Estimating narrow sense heritability ($h^2$) using REML (similar to the parent-offspring regression and ANOVA methods) requires that the phenotypic covariance between related individuals can be expressed by their additive genetic relationship ($A$) and the additive genetic variance ($\sigma_a^2$). Related individuals share more alleles and thus resemble each other (have correlated phenotypes, to an extent that depends on additive genetic relationships). 
-
-The genetic covariance between individuals depends on the additive genetic relationship. Examples of different types of additive genetic relationships can be found in the table below. The additive genetic relationship ($A_{ij}$) between the various sources ($j$) and the individual itself ($i$) can be seen in the table below.
-
-\begin{table}[h!]
-\begin{center}
-\caption{Examples on additive genetic relationship ($A_{ij}$) between individual $i$ and $j$.}
-\begin{tabular}{lc}
-  \hline
-  \textbf{Type of relative}  &  \textbf{$A_{ij}$}\\
-  \hline
-  Self  &  1.0    \\
-  Unrelated  &  0    \\
-  Mother  &  0.5 \\
-  Father  &  0.5 \\
-  Grandparent  &  0.25 \\
-  Child  &  0.5 \\
-  Full-sib  &  0.5 \\
-  Half-sib  &  0.25 \\
-  Twins (MZ/DZ)  &  1/0.5 \\
-  Cousin  &  0.0625 \\
-  \hline
-\end{tabular}
-\end{center}
-\end{table}
-
-The $A$ matrix expresses the additive genetic relationship among individuals in a population, and is called the \textbf{numerator relationship matrix $A$}. The matrix $A$ is symmetric, where the diagonal elements (\textit{i.e.}, $A_{ii}$) are equal to $1 + F_i$ where $F_i$ is the \textbf{coefficient of inbreeding} of individual $i$. $F_i$ is defined as the probability that two alleles taken at random from individual $i$ are identical by descent (\textit{i.e.}, that the two alleles originate from the same common ancestor). As such, $F_i$ is also the kinship coefficient of its parents (half their genetic relationship).
-
-Each off-diagonal elements $(A_{ij})$ is the genetic relationship between individuals $i$ and $j$. Multiplying the matrix $A$ by the additive genetic variance $\sigma_a^2$ leads to the covariance among the individual genetic values. Thus, if $a_i$ is the genetic value of individual $i$ then,
-
-\begin{equation}
-Var(a_i) = A_{ii} \sigma_a^2 = (1 + F_i) \sigma_a^2.
-\end{equation}
-
-
-### Algorithm to compute the numerator relationship matrix $A$ {#algorithmtocomputea} 
-The matrix $A$ can be computed using a recursive method. In what follows, the recursive method to compute the components of $A$ is described. Initially, individuals in a pedigree are numbered from $1$ to $n$ and ordered such that parents precede their children. The following rules are then  used to compute the components of $A$. 
-
-* If both parents $s$ and $d$ of individual $i$ are known, then 
-    + the diagonal element $A_{ii}$ corresponds to: $A_{ii} = 1 + F_i = 1 + \frac{1}{2} A_{sd}$ and
-    + the off-diagonal element $A_{ji}$ is computed as:  $A_{ji} = \frac{1}{2} (A_{js} + A_{jd})$
-    + because $A$ is symmetric $A_{ji} = A_{ij}$
-    
-* If only one parent $s$ of individual $i$ is known and assumed unrelated to the mate
-    + $A_{ii} = 1$
-    + $A_{ij} = A_{ji} = \frac{1}{2} (A_{js})$
-    
-* If both parents are unknown    
-    + $A_{ii} = 1$
-    + $A_{ij} = A_{ji} = 0$
-  
-
-#### A numeric example {-}
-```{r pedexamplesetup, echo=FALSE, results='hide'}
-suppressPackageStartupMessages( library(pedigreemm) )
-n_nr_ani_ped <- 6
-n_nr_parent <- 2
-tbl_ped <- tibble::tibble(Child = c((n_nr_parent+1):n_nr_ani_ped),
-                             Father = c(1, 1, 4, 5),
-                             Mother  = c(2, NA, 3, 2))
-ped <- pedigree(sire = c(rep(NA, n_nr_parent), tbl_ped$Father), dam = c(rep(NA, n_nr_parent), tbl_ped$Mother), label = as.character(1:n_nr_ani_ped))
-matA <- as.matrix(getA(ped = ped))
-matAinv <- as.matrix(getAInv(ped = ped))
-```
-
-We are given a pedigree as described in Table \@ref(tab:tabpedexample) and we want to compute the matrix $A$ using the recursive algorithm described in section \@ref(algorithmtocomputea). 
-
-```{r tabpedexample, echo=FALSE, results='asis'}
-knitr::kable(tbl_ped,
-             format = 'latex',
-             booktabs = TRUE,
-             longtable = TRUE,
-             caption = "Example pedigree to compute additive genetic relationship matrix.")
-```
-
-The first step of the computations of $A$ is the numbering and the ordering of all the individuals. This is already done in the pedigree shown in Table \@ref(tab:tabpedexample). The components of $A$ are then computed row-by-row starting with $A_{11}$. 
-
-\begin{align}
-A_{11} &= 1 + F_1 = 1 + 0 = 1 \notag \\
-A_{12} &= 0 = A_{21} \notag \\
-A_{13} &= \frac{1}{2} (A_{11} + A_{12}) = 0.5 = A_{31} \notag \\
-A_{14} &= \frac{1}{2} A_{11} = 0.5 = A_{41}  \notag \\
-A_{15} &= \frac{1}{2} (A_{14} + A_{13}) = 0.5 = A_{51} \notag \\
-A_{16} &= \frac{1}{2} (A_{15} + A_{12}) = 0.25 \notag
-\end{align}
-
-The same computations are done for all the other components of the matrix $A$. The final result for the matrix looks as follows:
-
-```{r displaymatrixa, echo=FALSE, results='asis'}
-cat("$$\n")
-# cat("A = \\left[")
-# cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = matA, pnDigits = 4), sep = "\n"), "\n")
-# cat("\\right]\n")
-cat(paste(rmdhelp::bmatrix(pmat = matA, ps_name = 'A'), sep = '\n'), '\n')
-cat("$$\n")
-```
-
-As a result, we can see from the components of the above shown matrix $A$ that individuals $1$ and $2$ are not related to each other. Furthermore, from the diagonal elements of $A$, it follows that individuals $5$ and $6$ are inbred while individuals $1$ to $4$ are not inbred. Finally, we can see that different types of relationships were included in this data. In comparison, only two types of relationships could exist in regression and ANOVA analyses: unrelated (e.g., $A_{ij}$=0 between individuals from different families) or not (e.g., $A_{ij}$=0.5 between individuals from the same full-sib family). 
+where $V_a$ and $V_e$ are square matrices of genetic and residual (co)variances among traits, respectively. To simplify, we assumed one observation per individual per trait and therefore the $Z$-matrix reduces to an identity matrix which can be left out of the equation system.
 
 
 ## Estimating variance components using REML
@@ -320,7 +207,7 @@ where $l(\hat{\theta}|{y})$ is the log-likelihood of the full model, and $l(\hat
 For example, a high likelihood ratio shows that the full model with two (different) variance components is better at explaining the observed phenotypic variance than the reduced model with only one variance component. It is fundamental for the reduced model to be nested within the full model, otherwise this approach does not make any sense. When the REML procedure is used, it is also important for the two models being compared to have the same fixed effects, otherwise the two likelihoods are not comparable, as can be easily understood by looking at the concept of restricted likelihood.  
 
 
-## Advantages of using REML for estimating genetic parameters
+### Advantages of using REML for estimating genetic parameters
 Although REML does not produce unbiased estimates, it is still the method of choice due to the fact that this source of bias is also present but higher in ML estimates \citep{LynchWalsh1998}.
 
 REML requires that $y$ have a multivariate normal distribution 
@@ -332,8 +219,6 @@ all genetic relationships and all data used for selection is included (Sorensen 
 
 There is obviously an advantage in using (RE)ML methods that are more flexible in 
 handling several (overlapping) generations (and possibly several random effects). However, the use of such methods are "dangerous" in the sense we no longer need to think explicitly about the data structure. For example, to estimate additive genetic variance, we need to have a data set that contains a certain family structure which allows us to separate differences between families from differences within families. Or in other words, we need to differentiate genetic and residual effects, so the structure due to genetic relationships must be different from the structure due to residual effects (i.e., the G and R matrices must be different enough). 
-
-Today, heritability can be estimated based on genetic relationships, inferred from general pedigrees or estimated from genetic markers. Linear mixed models are also used in genetic evaluation, allowing information on all known relationships between individuals to be incorporated simultaneously in the analysis. Linear mixed models can include additional effects to describe the data more accurately: maternal, permanent environmental, cytoplasmic or dominance effects and QTL effects. These effects may be fitted as additional random effects. 
 
 
 
