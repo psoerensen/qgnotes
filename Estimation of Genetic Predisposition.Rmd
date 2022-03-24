@@ -154,27 +154,8 @@ Therefore reliability ($r_{a,\hat{a}}^2$) can be interpreted as the part of the 
 Reliability of the genetic predisposition ($r_{a,\hat{a}}^2$) is important because it determines how well we can predict an individual's genetic predisposition. If $r_{a,\hat{a}}^2$ is low then we might consider more phenotypic records, in order to make better-informed precision health decisions.
 
 
-\begin{comment}
-\begin{align}
-Var(\hat{a}) &= Cov(a,y)[Var(y)]^{-1}Cov(a,y)\notag \\
-Cov(a,\hat{a}) &= Cov(a,y)[Var(y)]^{-1}Cov(a,y)\notag \\
-           &= Var(\hat{a})\notag 
-\end{align}
-
-The variance of the estimated genetic predisposition ($\hat{a}$) can be computed as:
-\begin{align}
-			\sigma^2_{\hat{a}}=r_{a,\hat{a}}^2\sigma^2_{a} \notag
-\end{align}
-and from this expression it is clear that when the reliability increases, the variation in $\hat{a}$ increases (genetic predisposition estimates are more variable over values of $y$), and the estimation becomes more precise (the residual variability of $y$, the part left unexplained, has decreased). If the reliability is 0, then we know nothing and the variance of $\hat{a}$ is 0. If the reliability is 1, then we know everything and the variance of $\hat{a}$ is $\sigma^2_{\hat{a}}=\sigma^2_{a}$ and the error variance (uncertainty) is 0. 
-\end{comment}
-
-
-## Prediction error variance (PEV) of estimated genetic predisposition
-Because every prediction is associated with an error, the same is true for the estimated genetic predisposition $\hat{a}$. The variability of the error for the predicted genetic predisposition are quantified by the prediction error variance (PEV). This is computed as:
-
-\begin{align}
-Var(a-\hat{a}) &= Var(a) (1 - r_{a,\hat{a}}^2) 
-\end{align}
+## Prediction error variance of estimated genetic predisposition
+Because every prediction is associated with an error, the same is true for the estimated genetic predisposition $\hat{a}$. The variability of the error for the predicted genetic predisposition are quantified by the prediction error variance (PEV) computed as:
 
 \begin{align}
 Var(a-\hat{a}) &= Var(a) - 2Cov(a,\hat{a}) + Var(\hat{a})= Var(a-\hat{a})\notag \\
@@ -250,7 +231,7 @@ Estimation of genetic predisposition based on own phenotype is only possible whe
 
 ## Estimation of genetic predisposition and accuracy based on phenotypes of close relatives:
 
-It may be possible to use phenotypic records from close relatives, such as, half-sibs, full-sibs, parents and grandparents. Phenotypes collected on close relatives (as compared to distant relatives) provide more information about the genetic predisposition of an individual (as close relatives share more DNA in common). In the following we will provide a general formula for estimating genetic predisposition and their accuracies using phenotypic information on different types of relatives. 
+It may be possible to use phenotypic records from close relatives, such as, half-sibs, full-sibs, parents and grandparents. Phenotypes collected on close relatives (as compared to distant relatives) provide more information about the genetic predisposition of an individual (as close relatives share more DNA in common). In the following we will provide a general formula for estimating genetic predisposition and their accuracies using phenotypic information on a single type of relatives. 
 
 #### General formula for estimating genetic predisposition using different sources of information: {-}
 \begin{align}
@@ -324,8 +305,6 @@ Several factors influence which sources of information to use when estimating
 genetic predisposition for a trait: what information is available, the heritability of the 
 trait, and how and on which individuals the trait can be measured. Therefore in practice it is common to combine information from several sources. 
 As already mentioned, all information available is usually utilized when an individual’s genetic predisposition is predicted. The weight given to a specific source of information depends on the additive genetic relationship with the individual, the heritability and the amount of information, i.e. the number of progenies or sibs, etc. 
-
-
  * Phenotypic records on the individual’s sibs, half-sibs and full-sibs, are often 
 used in addition to other information, or to give supplementary information, 
 for example on traits that cannot be measured on the individual itself. The accuracy of sib testing depends on the number of sibs that have records. Common-environment effects (e.g. full-sibs raised in the same family) may bias the estimation of genetic predisposition, unless we are able to adjust for them. 
@@ -337,16 +316,16 @@ As already mentioned, all information available is usually utilized when an indi
 
 # BLUP a general approach for estimation of genetic predisposition using pedigree information
 
-Genetic predisposition can bne estimated using the BLUP (Best Linear Unbiased Prediction) method. BLUP allows for estimation of genetic predisposition using phenotypic information for individuals from a general pedigree (with arbitrary relationships among them). BLUP is based on linear mixed model methodology, and estimates of genetic predisposition can be obtained by solving the mixed model equations. The BLUP method also require a genetic relationship matrix and estimates of variance components (e.g., $\sigma_a^2$ and $\sigma_e^2$). 
+Genetic predisposition can be estimated using the BLUP (Best Linear Unbiased Prediction) method. BLUP allows for estimation of genetic predisposition using phenotypic information for individuals from a general pedigree (with arbitrary relationships among them). The estimation of genetic predisposition based on multiple sources of information must correct for the redundancy between them (e.g., the redundant information provided by parents and grandparents). Moreover it is necessary to adjust for environmental factors that may affect the phenotypes in the populations. 
 
-The estimation of genetic predisposition based on multiple sources of information must correct for the redundancy between them (e.g., the redundant information provided by parents and grandparents). Moreover, they need to be adjusted for average effects in the populations, "fixed effects". 
-
-The BLUP solution to these problems was presented by Charles R. Henderson in several publications (e.g. Henderson1973a and Henderson1975). The key idea behind the solution is to estimate the identifiable environmental factors as fixed effects and to predict the genetic predisposition as random effects simultaneously in a linear mixed model. Here, mixed refers to the presence of two types of effects: fixed effects (identifiable effects from environmental or genetic factors) and random effects (non-identifiable effects from segregating genetic factors and fluctuating environmental conditions). The methodology developed by Henderson is called __BLUP__ and the properties of this methodology are directly incorporated into its name: 
+The key idea behind BLUP is to estimate the identifiable environmental factors as fixed effects and to predict the genetic predisposition as random effects simultaneously in a linear mixed model. Here, mixed refers to the presence of two types of effects: fixed effects (identifiable effects from environmental or genetic factors) and random effects (non-identifiable effects from segregating genetic factors and fluctuating environmental conditions). The methodology developed by Henderson (e.g. Henderson1973a and Henderson1975) is called __BLUP__ and the properties of this methodology are directly incorporated into its name: 
 
 * __B__ stands for __best__ which means that the correlation between the true ($a$) and the predicted genetic predisposition ($\hat{a}$) is maximal or the prediction error variance ($Var(a - \hat{a})$) is minimal.
 * __L__ stands for __linear__ which means the predicted genetic predisposition are linear functions of the observations ($y$)
 * __U__ stands for __unbiased__ which means that the expected values of the predicted genetic predisposition are equal to the true genetic predisposition
 * __P__ stands for __prediction__ 
+
+BLUP is based on linear mixed model methodology, and estimates of genetic predisposition can be obtained by solving the mixed model equations. The BLUP method also require a genetic relationship matrix and estimates of variance components (e.g., $\sigma_a^2$ and $\sigma_e^2$). 
 
 BLUP approaches are widely used for estimation of genetic predisposition. The popularity of BLUP is not only due to the theoretical foundations behind BLUP, but also the efficient algorithms developed by Henderson for computing predicted genetic predisposition, even in very large study populations. 
 
@@ -405,7 +384,7 @@ The BLUP equation for the estimate of the genetic predisposition consists of thr
 
 
 ## Mixed Model Equations
-The solutions shown in \@ref(eq:hatublup) for $\hat{a}$ and in \@ref(eq:hatbetahatblue) for $\hat{b}$ are not suitable for practical purposes. Both solutions contain the inverse $V^{-1}$ of matrix $V$. The matrix $V$ corresponds to the variance-covariance matrix of all observations $y$. The inverse matrix $V^{-1}$ is not easy to compute. Furthermore, procedures to invert general matrices are computationally expensive and are prone to rounding errors. In one of his many papers, Henderson has shown that the results for $\hat{a}$ and $\hat{b}$ are the same when solving the following system of equations simultaneously:
+Estimates of the fixed and random effects in the linear mixed model (i.e. $\hat{b}$ and $\hat{a}$) can also be obtained by solving the following system of equations simultaneously:
 
 \begin{equation}
 \left[
@@ -432,7 +411,8 @@ The solutions shown in \@ref(eq:hatublup) for $\hat{a}$ and in \@ref(eq:hatbetah
 
 The above shown equations are called __mixed model equations__ (MME). They no longer contain the inverse $V^{-1}$ and hence these MME are much simpler to solve. Instead, the MME contain the inverses $R^{-1}$ and $G^{-1}$, which are easier to invert: $R=I\sigma_e^2$ is often a very simple matrix, and $G=A\sigma_a^2$ is usually smaller than (or the same size as) V. As a consequence, whenever we have to estimate genetic predisposition using BLUP we will usually use the mixed model equations shown in \@ref(eq:mixedmodeleq).
 
-## Prediction error variance (PEV), reliability and accuracy
+
+## Prediction error variance, reliability and accuracy
 The precision of estimates of genetic predisposition can be calculated from the inverse of left hand side of the mixed model equations: 
 
 \begin{equation}
@@ -452,7 +432,9 @@ The precision of estimates of genetic predisposition can be calculated from the 
 (\#eq:coefficientmatrix)
 \end{equation}
 
-where $\lambda=\frac{\sigma_e^2}{\sigma_2^2}=\frac{1-h^2}{h^2}$, $C^{11}$ corresponds to the fixed effects part ($X’X$) and $C^{22}$ to the random part ($Z’Z+A^{-1}\lambda$). The prediction error variance ($PEV$) for the genetic predisposition can be calculated as: 
+where $\lambda=\frac{\sigma_e^2}{\sigma_2^2}=\frac{1-h^2}{h^2}$, $C^{11}$ corresponds to the fixed effects ($X’X$) and $C^{22}$ to the random genetic effects ($Z’Z+A^{-1}\lambda$). 
+
+The prediction error variance ($PEV$) for the genetic predisposition can be calculated as: 
 
 \begin{align}
 PEV = C^{22}\sigma_e^2 
@@ -466,33 +448,33 @@ PEV_i = C_{ii}^{22}\sigma_e^2
 
 i.e. the diagonal element of the inverse of the coefficient matrix corresponding to indivial $i$, multiplied by the residual variance. 
 
-The reliability, $r_{\hat{a},a}^2$, we can use the following relationship: 
+To compute the reliability, $r_{\hat{a},a}^2$, we use the following relationship: 
 
 \begin{align}
 PEV_i = (1-r_{\hat{a},a}^2)\sigma_a^2=C_{ii}^{22}\sigma_e^2 
 \end{align}
+
+Therefore the reliability can computed as:
 
 \begin{align}
 r_{\hat{a},a}^2 &= 1-C_{ii}^{22}\frac{\sigma_e^2}{\sigma_a^2} \\
                 &= 1-C_{ii}^{22}\lambda
 \end{align}
 
+and accuracy: 
+
 \begin{align}
 r_{\hat{a},a} &= \sqrt{1-C_{ii}^{22}\lambda}
 \end{align}
 
 ## BLUP genetic predisposition are useful for ranking and decision making in precision helath
-BLUP estimates of genetic predisposition (EVBs), especially from the linear mixed model including all relationships, are useful tools in precision health. Identification of individuals with an extreme genetic predisposition based on BLUP estimates maximizes the probability for correct ranking of individuals and decisions in precision health. . There are many factors that 
-contribute to this: 
+BLUP estimates of genetic predisposition (EVBs), especially from the linear mixed model including all relationships is a useful tool in precision health. Identification of individuals with an extreme genetic predisposition based on BLUP estimates maximizes the probability for correct ranking of individuals and decisions in precision health . There are many factors that contribute to this: 
 
- * The linear mixed model which makes full use of information from all relatives increases accuracy (precision) of the estimated genetic predisposition
- * The genetic predisposition are adjusted for systematic environmental effects in an optimal way. This means that individuals can also be compared across environments, age classes, assuming the data is connected 
- * Several traits can be analyzed simultanously 
+ * The linear mixed model which makes full use of information from all relatives increases accuracy (precision) of the estimated genetic predisposition.
+ * The genetic predisposition are adjusted for systematic environmental effects in an optimal way.  
+ * Several traits can be analyzed simultanously. 
  
-It should, however, be noted that the genetic evaluation is based on phenotypic 
-observations, and that regardless of how great the BLUP procedure may be, it 
-cannot compensate for bad data. So a good health recording system is necessary for a reliable genetic evaluation. It should also not be forgotten 
-that BLUP assumes that the genetic parameters used 
+However estimation of genetic predispostion is based on phenotypic observations, and that regardless of how great the BLUP procedure may be, it cannot compensate for bad data. So a good health recording system is necessary for a reliable genetic evaluation. Furthermoe BLUP assumes that the genetic parameters used 
 are the true ones. In practice that means that genetic predisposition will only be accurate if the estimated genetic parameters are close enough to their true value.  
 
 \newpage
@@ -500,31 +482,9 @@ are the true ones. In practice that means that genetic predisposition will only 
 # Estimation of genetic predisposition using phenotypic data and genomic information
 In recent years much attention has been given to genomic information due to the dramatic development in genotyping technologies. Today dense genetic maps are available for based on DNA markers in the form of single nucleotide polymorphisms (SNP) and they enable us to divide the entire genome into thousands of relatively small chromosome segments. 
  
-## Genomic markers
-The different locations in the genome that are considered in genomic selection are called __markers__. When looking at the complete set of markers making up the genomic information in a population, the so-called __Single Nucleotide Polymorphisms__ (SNPs) have been shown to be the most useful types of markers. These SNPs correspond to differences of single bases at a given position in the genome. Based on empirical analyses of very many SNP-loci, almost all SNP just take two different states. Furthermore it is important that these SNPs are more or less evenly spread over the complete genome. Some SNPs may be located in coding regions and some my be placed in regions of unknown function. 
-
-
-## Quantitative Trait Loci and linkage disequilibrium
-The loci that are relevant for the trait are called __Quantitative Trait Loci__ (QTL). Any given SNP-Marker can only be informative for a given QTL, if a certain __linkage disequilibrium__ between the QTL and the marker locus exists. The idea behind linkage disequilibrium is that a certain positive QTL-allele evolved in a certain genetic neighborhood of a number of SNP loci. As a result of that the positive QTL-allele is very often inherited with the same SNP-allele. Over the generations, recombination between the QTL and the neighboring SNP-loci can happen and thereby weaken the statistical association between the positive QTL-allele and the given SNP-allele. This recombination effect is smaller when the QTL and the SNP-loci are physically closer together on the chromosome. The non-random association between QTL and SNP-markers is called linkage disequilibrium.
-
-The marker locus is called $M$ and the QTL is called $Q$, then the LD can be measured by 
-
-\begin{align}
-D &= p(M_1Q_1) * p(M_2Q_2) - p(M_1Q_2) * p(M_2Q_1)
-(\#eq:linkagediseq)
-\end{align}
-
-where $p(M_xQ_y)$ corresponds to the frequency of the combination of marker allele $M_x$ and QTL allele $Q_y$. Very often the LD measure shown in \@ref(eq:linkagediseq) is re-scaled to the interval between $0$ and $1$ which leads to 
-
-\begin{align}
-r^2 &= \frac{D^2}{p(M_1)*p(M_2) * p(Q_1) * p(Q_2)}
-(\#eq:linkagediseqrescaled)
-\end{align}
-
-In \@ref(eq:linkagediseqrescaled) $r^2$ describes the proportion of the variance at the QTL which is explained by the marker $M$. Hence the LD must be high such that the marker can explain a large part of the variance at the QTL. For humans more than $500,000$ SNP markers are required to get a sufficient coverage of the complete genome.
+Estimation of genetic predispositions is conceptually simple to calculate from genomic information. First, the entire genome is divided into small chromosome segments by dense markers. Second, the additive effects of each chromosome segment are estimated simultaneously. Finally, the genetic predisposition is calculated as the sum of all chromosome segment effects. The chromosome segment effects are estimated for a group of individuals (i.e. a reference or training population). For any remaining individual, only a blood or tissue sample is needed to determine its genetic predisposition. For use in precision health, it is desirable that the genetic predisposition can be estimated accurately, and early in the individual's life. The effect of each of these small chromosome segments can be estimated if we have phenotypes and genotypes from many individuals (from several hundreds to hundreds of thousands or even millions). With sufficiently dense marker maps, the chromosome segment effects capture the genomic variability in the population in which they were estimated, because markers are in linkage disequilibrium with the causal gene that they bracket. 
 
 # BLUP a general approach for estimation of genetic predisposition using genomic information
-Estimation of genetic predispositions is conceptually simple to calculate from genomic information. First, the entire genome is divided into small chromosome segments by dense markers. Second, the additive effects of each chromosome segment are estimated simultaneously. Finally, the genetic predisposition is calculated as the sum of all chromosome segment effects. The chromosome segment effects are estimated for a group of individuals (i.e. a reference or training population). For any remaining individual, only a blood or tissue sample is needed to determine its genetic predisposition. For use in precision health, it is desirable that the genetic predisposition can be estimated accurately, and early in the individual's life. The effect of each of these small chromosome segments can be estimated if we have phenotypes and genotypes from many individuals (from several hundreds to hundreds of thousands or even millions). With sufficiently dense marker maps, the chromosome segment effects capture the genomic variability in the population in which they were estimated, because markers are in linkage disequilibrium with the causal gene that they bracket. 
 
 We will present two approaches that are commonly used to estimate genetic predisposition using genomic information. The first approach is referred to as MBLUP. In this approach marker effects are estimated from observed phenotypic and genomic marker data recorded in the reference (or training) population. Genetic predisposition is estimated from the marker effects and genomic marker data for individuals in the test population. 
 The second approach is referred to as GBLUP. In this approach genetic predisposition is estimated from observed phenotypic and genomic marker data for individuals in the reference (or training) population. Genetic predisposition for individuals in the test population estimated based on their __genomic relationship__ to individuals in the reference population.
