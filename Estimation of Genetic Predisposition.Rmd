@@ -223,6 +223,7 @@ The variance of the true genetic predisposition, $Var(a)$, can be expressed by t
 
 Estimation of genetic predisposition based on own phenotype is only possible when the trait in question can be measured (directly or indirectly) on the individual. 
 
+\begin{comment}
 ## Estimation of genetic predisposition and accuracy based on phenotypes of close relative
 
 It may be possible to use phenotypic records from close relatives, such as, half-sibs, full-sibs, parents and grandparents. Phenotypes collected on close relatives (as compared to distant relatives) provide more information about the genetic predisposition of an individual (as close relatives have more DNA in common than distant relations has). In the following, we will provide a general formula for estimating genetic predisposition and their accuracies using phenotypic information on a single type of relatives. 
@@ -249,6 +250,7 @@ Thus, reliability depends on the same factors as the estimated genetic predispos
  * There are many individuals with phenotypic records ($n$ is high).
  * The heritability ($h^2$) is high.
  * The correlation between records ($r = a''h^2 + c^2$) is low (little redundancy in observations).
+\end{comment}
 
 ## Genetic relationship used for estimating genetic predisposition
 Related individuals share genes and thus resemble each other (have correlated phenotypic values to an extent that depends on additive genetic relationships). Consider a simple parent-offspring example. The offspring get one copy of the genome (\textit{i.e.}, half of the diploid genome) from each parent, and therefore the genetic predisposition for the offspring is the average of the parents' genetic predisposition ($a$), plus Mendelian deviation ($a_{\text{mendelian}}$), which is the part of the genetic predisposition that is due to random segregation of the genes from each parent:
