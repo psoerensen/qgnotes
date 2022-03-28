@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.18)  28 MAR 2022 15:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.18)  28 MAR 2022 16:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**Estimation-of-Genetic-Predisposition.tex
-(./Estimation-of-Genetic-Predisposition.tex
+**LMM.tex
+(./LMM.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-02-24> (c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
@@ -599,9 +599,9 @@ Package: capt-of 2009/12/29 v0.2 standard captions outside of floats
 Package: makeidx 2021/10/04 v1.0m Standard LaTeX package
 )
 \@indexfile=\write5
-\openout5 = `Estimation-of-Genetic-Predisposition.idx'.
+\openout5 = `LMM.idx'.
 
-Writing index file Estimation-of-Genetic-Predisposition.idx
+Writing index file LMM.idx
 (c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/enumitem/enumitem.sty
 Package: enumitem 2019/06/20 v3.9 Customized lists
 \labelindent=\skip83
@@ -694,21 +694,12 @@ Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
 File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count335
 \l__pdf_internal_box=\box91
-) (./Estimation-of-Genetic-Predisposition.aux
+) (./LMM.aux
 
-LaTeX Warning: Label `eq:hatbetahatblue' multiply defined.
-
-
-LaTeX Warning: Label `eq:hatublup' multiply defined.
-
-
-LaTeX Warning: Label `eq:hatbetahatblue' multiply defined.
-
-
-LaTeX Warning: Label `eq:hatublup' multiply defined.
+LaTeX Warning: Label `stat:1' multiply defined.
 
 )
-\openout1 = `Estimation-of-Genetic-Predisposition.aux'.
+\openout1 = `LMM.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 181.
 LaTeX Font Info:    ... okay on input line 181.
@@ -747,9 +738,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 181.
 LaTeX Info: Redefining \pageref on input line 181.
 LaTeX Info: Redefining \nameref on input line 181.
-(./Estimation-of-Genetic-Predisposition.out) (./Estimation-of-Genetic-Predisposition.out)
+(./LMM.out) (./LMM.out)
 \@outlinefile=\write6
-\openout6 = `Estimation-of-Genetic-Predisposition.out'.
+\openout6 = `LMM.out'.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -816,7 +807,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 183.
 (c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) (./Estimation-of-Genetic-Predisposition.toc
+) (./LMM.toc
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10> on input line 3.
 LaTeX Font Info:    External font `lmex10' loaded for size
@@ -825,65 +816,68 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 3.
 )
 \tf@toc=\write7
-\openout7 = `Estimation-of-Genetic-Predisposition.toc'.
+\openout7 = `LMM.toc'.
+
+
+LaTeX Warning: Reference `ch:lmm2' on page 1 undefined on input line 191.
+
+
+LaTeX Warning: Reference `sec:model.comparison' on page 1 undefined on input line 191.
+
+
+LaTeX Warning: Reference `ch:lmm2' on page 1 undefined on input line 198.
 
 [1
 
-{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 196.
-(c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [2] [3] [4] [5] [6] Excluding 'comment' comment.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 454.
-(c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
+{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+Underfull \hbox (badness 10000) in paragraph at lines 364--366
+
+ []
+
+[4]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 460.
-Excluding 'comment' comment. [7]
-Underfull \hbox (badness 10000) in paragraph at lines 539--540
+(Font)              <14.4> on input line 398.
 
- []
-
-[8] Excluding 'comment' comment. [9]
-
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 630.
+Package natbib Warning: Citation `StrandenChristensen2011' on page 5 undefined on input line 406.
 
 
-LaTeX Warning: Command \textquoteright invalid in math mode on input line 630.
+Package natbib Warning: Citation `StrandenChristensen2011' on page 5 undefined on input line 406.
 
+[5]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 464.
 
-Underfull \hbox (badness 10000) in paragraph at lines 675--677
+Package natbib Warning: Citation `StrandenChristensen2011' on page 6 undefined on input line 478.
 
- []
+[6]
+Package hyperref Info: bookmark level for unknown tcolorbox defaults to 0 on input line 533.
+(./LMM.bbl)
 
-[10] [11] [12] [13]
-Underfull \hbox (badness 10000) in paragraph at lines 813--814
+Package natbib Warning: There were undefined citations.
 
- []
+[7] (./LMM.aux)
 
-[14] [15] Excluding 'comment' comment.
-No file Estimation-of-Genetic-Predisposition.bbl.
-[16] (./Estimation-of-Genetic-Predisposition.aux)
+LaTeX Warning: There were undefined references.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package rerunfilecheck Info: File `Estimation-of-Genetic-Predisposition.out' has not changed.
-(rerunfilecheck)             Checksum: 7731F1C9D96DC2D3721DE571F8194C85;6524.
+Package rerunfilecheck Info: File `LMM.out' has not changed.
+(rerunfilecheck)             Checksum: 5FECB23C6B663B414DC1F61AF4BE8A51;2056.
  ) 
 Here is how much of TeX's memory you used:
- 27152 strings out of 480236
- 525236 string characters out of 5893968
- 784130 words of memory out of 5000000
- 44500 multiletter control sequences out of 15000+600000
- 535784 words of font info for 79 fonts, out of 8000000 for 9000
+ 27116 strings out of 480236
+ 522110 string characters out of 5893968
+ 783131 words of memory out of 5000000
+ 44495 multiletter control sequences out of 15000+600000
+ 562709 words of font info for 90 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 83i,13n,80p,1336b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
-{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}<c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx9.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi5.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi9.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr5.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on Estimation-of-Genetic-Predisposition.pdf (16 pages, 365814 bytes).
+ 83i,14n,80p,837b,616s stack positions out of 5000i,500n,10000p,200000b,80000s
+{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}<c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx7.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx9.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi5.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi9.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr5.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy5.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb><c:/Users/au223366/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy9.pfb>
+Output written on LMM.pdf (7 pages, 425967 bytes).
 PDF statistics:
- 389 PDF objects out of 1000 (max. 8388607)
- 326 compressed objects within 4 object streams
- 106 named destinations out of 1000 (max. 500000)
- 173 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 356 PDF objects out of 1000 (max. 8388607)
+ 288 compressed objects within 3 object streams
+ 73 named destinations out of 1000 (max. 500000)
+ 93 words of extra memory for PDF output out of 10000 (max. 10000000)
 
