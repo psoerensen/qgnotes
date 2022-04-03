@@ -33,7 +33,7 @@ Estimation of genetic predisposition can play an important role in precision hea
 
 
 # Basic principles for genetic predisposition estimation
-Genetic predisposition is estimated using information on phenotypes and genetic relationships for individuals in a study population. As introduced previously, the phenotype for a quantitative trait (can be with continuous, categorical or dichotomous variation) is the sum of both genetic and environmental factors. The amount of information provided by the phenotype about the genetic predisposition is determined by the heritability, which measures the proportion of genetic variance contained in the total phenotypic variance. Furthermore, phenotypes collected from close relatives provide more information about the genetic predisposition of an individual. In this section, we will illustrate these principles using phenotypic data and genetic relationships used for for estimating genetic predisposition. We will derive a general approach for predicting genetic predisposition for any situation. Even though the procedure is general we will use a simple example to describe it. 
+Genetic predisposition is estimated using information on phenotypes and genetic relationships for individuals in a study population. As introduced previously, the phenotype for a quantitative trait (can be with continuous, categorical or dichotomous variation) is the sum of both genetic and environmental factors. The amount of information provided by the phenotype about the genetic predisposition is determined by the heritability, which measures the proportion of genetic variance contained in the total phenotypic variance. Furthermore, phenotypes collected from close relatives provide more information about the genetic predisposition of an individual. In this section, we will illustrate these principles using phenotypic data and genetic relationships used for estimating genetic predisposition. We will derive a general approach for predicting genetic predisposition and illustrate it with different examples.
 
 ## Genetic model
 The genetic predisposition is based on an assumption of a specific genetic model. The total genetic effect for an individual is the sum of both additive and non-additive effects: 
@@ -53,7 +53,7 @@ The true genetic predisposition for an individual, is the sum of all additive ge
 		a=\sum_{j=1}^{q}a_{j}, \notag
 \end{align}
 
-where $a$ is the total additive genetic effect and $a_{j}$ is the additive genetic effect for locus $j$. We assume (based on the central limit theory) that the true genetic predisposition, $a$, and the residual term, $e$, are normally distributed which means that the observed phenotype, $y$, is also normally distributed:
+where $a$ is the total additive genetic effect, and $a_{j}$ is the additive genetic effect for locus $j$. We assume (based on the central limit theory) that the true genetic predisposition, $a$, and the residual term, $e$, are normally distributed which means that the observed phenotype, $y$, is also normally distributed:
 \begin{align}
 a \sim N(0,\sigma^2_{a}), \notag \\
 e \sim N(0,\sigma^2_{e}), \notag \\
@@ -62,7 +62,7 @@ y \sim N( \mu,\sigma^2_{a} + \sigma^2_{e}). \notag
 
 
 ## Expected genetic predisposition conditional on observed phenotype
-The genetic predisposition cannot be observed but must be estimated from phenotypic data and genetic relationships between individuals from the study population. Estimation of an unknown parameter using statistical modelling expresses the estimated quantity as a mathematical function of the observed data. The question is how this function should look like and what properties the estimated genetic predisposition should fulfill. 
+The genetic predisposition cannot be observed but must be estimated from phenotypic data and genetic relationships between individuals from the study population. Estimation of an unobserved parameter using statistical modelling expresses the estimated quantity as a mathematical function of the observed data. The question is how this function should look like and what properties the estimated genetic predisposition should fulfill. 
 Under the assumption of multivariate normality for $a$ and $y$ (which are justified under the central limit theorem and the assumptions of many genetic and environmental factors), the expected value of the genetic predisposition conditional on the observed phenotype $y$ can be written as:
 \begin{align}
 E(a|y) &= E(a) + Cov(a,y)[Var(y)]^{-1}(y-E(y))
