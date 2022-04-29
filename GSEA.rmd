@@ -1,6 +1,6 @@
 ---
 title: "Gene Set Enrichment Analysis"
-author: "Palle Duun Rohde, Stefan McKinnon Høj-Edwards, Izel Fourie Sørensen, & Peter Sørensen"
+author: "Palle Duun Rohde, Stefan McKinnon Høj-Edwards, Izel Fourie Sørensen & Peter Sørensen"
 date: "`r Sys.Date()`"
 output:
   bookdown::pdf_document2:
@@ -16,37 +16,38 @@ output:
 bibliography: [qg2021.bib, book.bib, packages.bib]
 link-citations: yes
 ---
+# Introduction
+From association studies it have been shown that the markers associated with trait variation are not uniformly distributed throughout the genome, but are enriched in genes that are connected in biological pathways \citep{Allen2010,Lage2012,Maurano2012,ORoak2012}. This knowledge could be used to construct a statistical modelling framework which quantifies the joint effect of a set of markers located within \textit{e.g.} genes, sequence ontology, biological pathways, protein interactions, or any other type of externally, prior biological knowledge. Such SNP sets can be termed \textbf{genomic features}.
 
-# Gene Set Enrichment Analysis
+The methodology that collectively test a set of genome-wide genetic markers for association with phenotypic variation is known as \textbf{gene set enrichment analyses} (GSEA) \citep{Wang2007,Listgarten2013}. The idea of aggregating smaller units into larger sets, was originally inspired by gene expression microarray analyses, where individually differential expressed genes are of minor interest, instead the focus is on identifying patterns of differentially expression by aggregating genes exhibiting similarity in their functional annotation \citep{Goeman2004,Subramanian2005, Goeman2007}. Various GSEA approaches have been developed through the years, and have been reviewed extensively, see \textit{e.g.} \citep{Wang2010,Fridley2011,Mooney2014,DeLeeuw2016}. Common for all approaches is the test for association between trait variation and the joint contribution of multiple genetic variants aggregated within predefined sets, \textit{i.e.}, genomic features.
 
-After setting up a linear mixed model (chapter \ref{ch:lmm1}) and fitting the model with data (chapter \ref{ch:lmm2}), it is now time to evaluate  whether the parameters of the model and the estimated effects are significant. For this chapter, we assume the variance components are estimated, and the relevant algorithm for fitting a model has successfully converged.
+Genomic features are collections of genetic variants grouped together based on common biological- or molecular functions, or other characteristics. The aggregation of genetic variants rely on prior biological knowledge from external sources such as protein-protein interactions (\textit{e.g.}, STRING \citep{VonMering2005}), biological pathways (\textit{e.g.}, KEGG \citep{Kanehisa2000}), gene functions (\textit{e.g.}, gene ontology (GO) terms \citep{Ashburner2000}), sequence ontologies (\textit{e.g.}, introns, exon and binding sites \citep{Eilbeck2005}), drug targets (\textit{e.g.}, drug bank \citep{Wishart2006}), genome-wide expression patterns (\textit{e.g.}, GTEx \citep{GTEx2015}), or prior trait associations (\textit{e.g.}, human GWAS catalog \citep{Buniello2019}).  In addition, feature sets can be created from other types of omic data such as metabolomic, proteomic or epigenetic variation.
 
-The chapter starts with a quick introduction of the different aspects that need to be considered while evaluating an outcome,followed by a quick brush up of the G-BLUP model and, more importantly here, the likelihood. We then finally immerse ourselves in the test statistics used in gene set enrichment analysis (GSEA).
+Naturally, only genetic markers located within the genomic features can be considered in the analysis, thus, an important step is the mapping of variants to the genomic features (Figure \ref{fig:GF}). This is typically done by grouping all markers within known gene regions. To capture regulatory regions for each gene, upstream and downstream regions are often included, and potentially also any regions in linkage disequilibrium (LD) with the gene. Therefore, some markers may be linked to multiple feature sets.
 
-\section{Statistical modelling approaches}
+\begin{figure}[h]
+\centering
+\includegraphics[width=.95\textwidth]{genomic_features_updated_2}
+\caption{Graphical representation of genomic feature classes. First, all SNPs located within the same gene region (\textit{e.g.}~the transcribed region, dark-blue SNPs) are aggregated. Gene regions can be extended such that SNPs within regulatory regions are included (light-blue SNPs). Second, genes can then be grouped based on prior biological information, \textit{genomic features}, such as genes connected in pathways, or based on other similarities, such as protein networks or common metabolite signatures. The genomic feature classes are thus collections of SNPs that has been aggregated based on shared biological or molecular characteristics.}
+\label{fig:GF}
+\end{figure}
 
-The test statistics are categorised as belonging to either the \emph{Single-step} or \emph{Two-step} approaches. In the single-step approaches, a genomic feature is modelled by a single model. The estimated effects or variance components are then evaluated, either by the properties of this model (e.g.\ score based statistics) or by comparing to null hypothesis models.
+The degree of new knowledge obtained from the genomic feature analysis strongly depend on the quality and complexity of the genomic feature class. The more reliable the resource is, the more accurate the following results will be. However, if the degree of feature complexity is low, and the quality is high, the outcome might be of minor interests, \textit{e.g.} chromosomal regions are a well-defined feature, but enrichment of certain chromosomes or chromosomal regions might be of less interest. It is therefore important prior to the feature analysis to clearly formulate the scope of the analysis. 
 
-In the two-step approaches, a single model is used to calculate test statistics on all the markers' effects. These statistics are then aggregated by various means for each genomic feature to test. \citet{Goeman2007} refer to these as \emph{post hoc} methods, and are similar to popular Gene-set enrichment tests.
-
-
-In our setting, a genomic feature is basically a set of markers, defined by any external information, and can refer to genes, QTL regions, sequence ontologies (SNPs within genes, in upstream regions, known regulators, etc.), or even chromosomes. The information can be layered, such as when using biological pathways that map to multiple genes that each map to multiple markers.
-
-The two approaches differ in how a genomic feature is modelled. For the single-step approaches, the set of markers are modelled as a \emph{joint} contribution to a phenotypic trait, by including them as an extra random effect (e.g.\ eq.\ \ref{eq:M_set}). In the two-step approaches, the markers are modelled independently, and test statistics are calculated for each marker. The test statistics for the genomic features are then different aggregations of the marker-based test statistics.
-
-
-The test statistics described here all attempt to determine whether a given set of genetic variants contributes to the observed phenotypic trait with anything than mere noise.
+Genomic feature models have the prospect to contribute with novel knowledge, but they highly depend upon the availability and specificity of the prior biological information. Unfortunately, such information is not readily available across the tree of life. For model organisms and humans, much information is available, but even for well-studies organisms, such as livestock species, the amount and level of detail is limited. However, the definitions of genomic features are constantly evolving, and new knowledge will continuously be added, also for those organisms which currently are lacking good feature information.
 
 
-\subsection{Null hypotheses} \index{Null hypothesis}
+## Different GSEA modelling approaches
+The GSEA test can be categorized as belonging to either a \emph{Single-step} or a \emph{Two-step} approach. In the single-step approaches, a genomic feature is modeled by a single model. The estimated effects are then evaluated, either by the properties of the model (\textit{e.g.}, score based statistics) or by comparing the model to a null hypothesis. The set of markers are modeled as a \emph{joint} contribution to a phenotypic trait, by including them as an extra random effect. In the two-step approaches, a single model is used to calculate test statistics on all the markers' effects (\textit{i.e.}, from linear regression or linear mixed models). The test statistics described below all attempt to determine whether a given set of genetic variants contributes to the observed phenotypic trait.
 
+### Null hypotheses
 We distinguish between two types of null hypotheses, the \emph{competitive} and the \emph{self-contained} \citep{Goeman2007,Maciejewski2013}. The self-contained is the easiest and corresponds to determining whether a genomic feature, by it self, does not display  any association to the phenotypic trait. This is usually done by defining that the variance component or predicted effect equals zero.
 
 The competitive corresponds to determining whether the degree of association within a genomic feature is the same as outside the genomic feature.
 
 Naturally, the choice of null hypothesis affects the choice of test statistic, but also the biological interpretation of the significance of a finding. The self-contained may be preferable over a competitive, as it has more power \citep{Goeman2007}, and the biological interpretation is simpler, as it determines whether there is or there is no association.
 
-\subsection{Evaluating the test statistics}
+### Evaluating the test statistics
 Once a test statistic has been calculated, it needs to be evaluated to determine whether the genomic feature of interest is significant. This is done by finding the test statistic's position within a distribution, allowing us to evaluate the probability of finding a test statistic of the given magnitude by chance
 
 We distinguish between three types of distributions;
@@ -60,108 +61,14 @@ The \indx{approximate distributions} (e.g.\ $\chi^2$) relies on that some distri
 
 The \indx{empirical distributions} are the brute-force `when-all-else-fails' solutions we attend to, when the other distributions are too computational demanding, or the conditions for approximating seem to strongly bent. Usual methods for obtaining these are bootstrapping or permutation routines, but caution should be taken under which conditions the routines are performed.
 
+# Single-step approaches
+In the single-step approaches, the data is fitted to the model with AI-REML to obtain estimates of the variance components ($\hat{\theta}$) and the likelihood, which is used to compare nested models with a likelihood ratio test (LRT). 
 
-\section{Linear Mixed Models, revisited}
-
-We will now refresh our memory on G-BLUP. The ordinary G-BLUP as displayed in \eqref{eq:gblup.full} will be referred to as the null model ($M_0$), and all assumptions and properties as detailed in section \ref{sec:gblup} and \ref{sec:predicting.values.and.effects} still hold.
-
-
-We also introduce the expanded models (see section \ref{sec:model.expansion}, page \pageref{sec:model.expansion}), where the second random factor model the contribution from a subset of markers. 
-
-Recall that $\vect{g} = \matr{W}\vect{b}$, and that G-BLUP and M-BLUP are equivalent (see section \ref{sec:SNP-G-BLUP}, page \pageref{sec:SNP-G-BLUP}).
-
-\begin{align}
-  &M_0:      &  \vect{y} &= \matr{X}\bfbeta + \matr{Z}\vect{g} + \vect{e} & \\
-  &M_{GWAS}: &  \vect{y} &= \matr{X}\bfbeta + \matr{Z}\vect{g} + \matr{Z}\vect{w}_i \vect{b}_i + \vect{e} & \\
-  &M_{Set}:  &  \vect{y} &= \matr{X}\bfbeta + \matr{Z}\vect{g} + \matr{Z}\vect{g}_i + \vect{e} &  \label{eq:M_set}
-\end{align}  
-
-where $\matr{W}_i$ is the column vector of $\matr{W}$ corresponding to the {i\th} marker,
-$\vect{b}_i$ the {i\th} marker effect, and $\vect{g}_s = \matr{W}_{s}\vect{b}_{s}$ are the genetic effects modelled exclusively on a subset of markers.
-
-We assume that $\Var(\vect{g}) = \vect{g}\sigma^2_g$, $\Var(\vect{b}_i) = \sigma^2_{b_i}$, 
-$\Var(\vect{g}_i) = \vect{g}_i\sigma^2_i$, and $\Var(\vect{e}) = \matr{R} = \matr{I}\sigma^2_e$ (note that this differs slightly from previous assumptions).
-
-The random effects are assumed uncorrelated.
-
-\subsection{The likelihood, and the first and second derivatives.}
-
-As stated in the previous chapter, the log-transformed \emph{ordinary} likelihood can be expressed as 
-
-\begin{equation}
-	l(\bfbeta, \matr{V}|\matr{X}, \vect{y}) = 
-	-\frac{n}{2} \ln(2\pi)
-	-\frac{1}{2}\ln|\matr{V}|
-	-\frac{1}{2}(\vect{y}-\matr{X}\bfbeta)'\matr{V}^{-1}(\vect{y}-\matr{X}\beta)
-	\tag{\ref{eq:maximum.likelihood}}
-\end{equation}
-
-where $\matr{V} = \sum_{i=1}^{r-1}{\matr{Z}\vect{g}_i\matr{Z}'\sigma^2_i} + \matr{I}\sigma^2_e$ and $\vect{g}_i = \frac{\matr{W}_i \matr{W}'_i}{m_i}$.
-
-\begin{align}
-  &M_0:      & &V_0 &  &= ZGZ'\sigma^2_g + I\sigma^2_e & \\
-  &M_{GWAS}  & &V   &  &= ZGZ'\sigma^2_g + ZZ' w_i w_i' \sigma^2_{b_i} +  I\sigma^2_e & \\
-  &M_{Set}   & &V   &  &= ZGZ'\sigma^2_g + ZG_sZ' \sigma^2_s +  I\sigma^2_e 
-  .
-\end{align}
-
-We note that $\frac{W_sW'_s}{m_s} = G_s$ \eqref{eq:G.matrix}.
-
-The \emph{first} derivative of the full model with respect to the variance component of interest is written as a function of the {i\th} element of $\theta$, a vector listing the variance components:
-\begin{align}
-  l'(\theta_i) &= \frac{\partial l(\bfbeta, \matr{V} | \matr{X}, \vect{y})}{\partial \theta_i}  = -\half \Tr(\matr{PZG}_i\matr{Z}') + \half \vect{y}'\matr{ZG}_i\matr{Z'P}\vect{y} \notag \\
-   &= -\half \Tr(\matr{V}^{-1} \matr{Z}\vect{g}_i\matr{Z}') \notag \\
-   &~~~ + \half (\vect{y}- \matr{X}\bfbeta)'\matr{V}^{-1}\matr{Z}\vect{g}_i\matr{Z'V}^{-1}(\vect{y}-\matr{X}\bfbeta) \label{eq:gfm:first_derivative}
-\end{align}
-
-where the projection matrix $\matr{P} = \matr{V}^{-1} - \matr{V}^{-1} \matr{X} (\matr{X'V}^{-1}\matr{X})^{-1} \matr{X' V}^{-1}$.
-
-
-For the \emph{second} derivatives, we have the \emph{observed} and \emph{expected} information matrix, respectively, as
-\begin{align}
-  \matr{I}_O &= \frac{\partial^2 l(\theta | \vect{y})}{\partial \theta_i \partial \theta_j} \\
-  \matr{I}_E &= -\E\left[ \matr{I}_O \right]
-\end{align}  
-
-The inverse of the expected information matrix details the uncertainty of the variance components in $\theta$,
-and we can write $\thetahat \sim N \left(\theta_0, \left[ \matr{I}_E(\theta_0) \right]^{-1} \right)$ \citep[p.179]{SorensenGianola2002}, 
-where $\thetahat$ is the vector of estimated variance components and $\theta_0$ is the vector of true (but unknown) variance components.
- 
-
-The \indx{average information matrix}, as derived from the second derivations, can be calculated as the average of the observed and expected observation matrix:
-\begin{align}
-	\label{eq:IA}
-  \matr{I}_A(\theta_i, \theta_j) &= \half \vect{y}'\matr{V}^{-1}\matr{Z}\vect{g}_i\matr{Z'V}^{-1} \matr{Z}\vect{g}_j\matr{Z'V}^{-1}\vect{y} \\
-  \matr{I}_A(\theta_i, \theta_e) &= \half \vect{y}'\matr{V}^{-1}\matr{ZGZ'V}^{-1}\matr{V}^{-1}\vect{y} \\
-  \matr{I}_A(\theta_e, \theta_e) &= \half \vect{y}'\matr{V}^{-1}\matr{V}^{-1}\matr{V}^{-1}\vect{y}
-  .
-\end{align}  
-Although these definitions differ from \eqref{eq:dmu.ai.matrix}, 
-the similarity to \eqref{eq:observed.information.matrix} and \eqref{eq:expected.information.matrix} should be evident, if you keep \eqref{eq:app:Py} in mind.
-As the second derivative is central to the following scores, an interpretation is described in stat box \ref{stat:derivatives}.
-
-In the case of the restricted likelihood, then $\matr{V}$ and $\matr{V}^{-1}$ are replaced with $\matr{P}$.
-
-
-
-
-
-
-
-\section{Single-step approaches}
+The LRT, Wald's test, and Rao's Score test, can be referred to as `The Holy Trinity' \citep{Rao2009}, and are all related to the likelihood and the first and second derivation (Figure \ref{fig:gfm:trinity}). The first derivative gives the slope of the function \footnote{The first derivative of the likelihood is also referred to as the 'score', which is the basis of the Score based statistic.}, and the second derivative is related to the uncertainty of the estimated variance component.
 
 \begin{figure}
   \centering
-	\includegraphics[width=10cm]{trinity}
-  %\begin{overpic}[tics=10,width=10cm]{gfx/images/Trinity}
-    %\put (5,76) {\footnotesize{$l$}}
-    %\put (96,4) {\footnotesize{$\theta$}}
-    %\put (55,78) {\footnotesize{Wald's test}}
-    %\put (71, 61) {\footnotesize{Likelihood ratio test}}
-    %\put (75, 43) {\footnotesize{Rao's Score test}}
-    %\put (49, 1) {\footnotesize{$\theta_0$}}
-    %\put (60, 1) {\footnotesize{$\thetahat$}}
-  %\end{overpic}
+	\includegraphics[width=.5\textwidth]{trinity}
   \caption[The Holy Trinity]{
     \figcap{
     The Holy Trinity of Likelihood Ratio, Wald's and Rao's Score test.}
@@ -170,63 +77,19 @@ In the case of the restricted likelihood, then $\matr{V}$ and $\matr{V}^{-1}$ ar
   \label{fig:gfm:trinity}
 \end{figure}  
 
+The LRT compares the model fit between the full model and the reduced model. In Wald's test, the model parameters are fitted using the full model, and test if the estimated variance component is significantly different from a particular value (usually zero). Rao's Score test uses the reduced model (\textit{i.e.}, null model), and estimates the size of improvement in model fit, if an additional variance component was added to the model. Both the Wald and the Rao's score tests are asymptotically equivalent to the LRT, that is, as the sample size becomes infinitely large, the values of the Wald and Rao's score test statistics will become increasingly close to the test statistic from the LRT. A few additional details on the different approaches are given below.
 
-
-
-In the single-step approaches, we fit the data to the model with AI-REML and get estimates of the variance components, as well as the likelihood.
-In other words, we only need to fit the data once per model.
-For likelihood ratio (LR) testing, two models are required; the full model and a reduced model.
-
-The LR test, Wald's test, and Rao's Score test, can be referred to as `The Holy Trinity' \citep{Rao2009},
-and are all related to the likelihood and the first and second derivation.
-For a graphical comparison, see figure \ref{fig:gfm:trinity}.
-When reviewing these tests, keep in mind that the first derivative gives the slope of the function, 
-and the second derivative is related to the uncertainty of the estimated variance component.
-
-Shortly, the LR test compares the model fit between the full model and the reduced model.
-In Wald's test, the model parameters are fitted using the full model, and we ask if an estimated variance component is significantly different from a particular value (usually zero).
-Rao's Score test uses the reduced model (i.e.\ null model), and estimates the size of improvement in model fit, if we were to plug an additional variance component into the model.
-Both the Wald and the Rao's score tests are asymptotically equivalent to the LR test, that is, as the sample size becomes infinitely large, 
-the values of the Wald and Rao's score test statistics will become increasingly close to the test statistic from the LR test. 
-
-
-The first derivative of the likelihood is also referred to as the `score', which is the basis of the Score based statistic.
-It differs from the previous tests by relying on a simplified expression of the first derivative.
-The advantage of the score test is that it can be used to search for omitted variables when the number of candidate variables is large. 
-
-We conclude this section with test statistics based on estimated effects.
-The subscript $i$ corresponds to each marker or set of markers.
-
-
-
-
-
-
-\subsection{Likelihood Ratio Test}
-
-
-The concept of likelihood also provides a framework for testing hypotheses regarding, for example, goodness of fit of models. 
-In particular, the so-called likelihood ratio tests are used to assess whether a reduced model fits the data better than a full model
-by comparing the likelihoods of the two models.
-A high likelihood ratio shows that the full model with two (different) variance components is better at explaining the observed genomic variance
-than the reduced model with only one variance component.
-
-It is fundamental for the reduced model to be nested in the full model, otherwise this approach does not make any sense. When the REML procedure is used, it is also important for the two models being compared to have the same fixed effects, otherwise the two likelihoods are not comparable, as can be easily understood by looking at the concept of restricted likelihood (see section \ref{sec:reml}).  The LR test statistic can be derived by using the following formula:
+## Likelihood Ratio Test
+The likelihood ratio tests (LRT) are used to assess whether a reduced model fits the data better than the full model
+by comparing the likelihoods of the two models. A high LR indicates that the full model is better at explaining the observed genomic variance than the reduced model with one less variance component. The reduced model has to be nested within the full model, and when REML is used, the two models being compared has to have the same fixed effects, otherwise the two likelihoods are not comparable. The LRT statistic can be derived as:
 
 \begin{equation}
 T_\textrm{LRT} = 2 \ln\left[\frac{L(\hat{\theta}|\vect{y})}{L(\hat{\theta}_r|\vect{y})}\right] 
-		= -2\left[l(\hat{\theta}_r|\vect{y})-l(\hat{\theta}|\vect{y})\right]
+		= -2\left[l(\hat{\theta}_r|\vect{y})-l(\hat{\theta}|\vect{y})\right],
 \end{equation}
+where $l(\hat{\theta}|{y})$ is the log-likelihood for the full model, and $l(\hat{\theta}_r|{y})$ is the log-likelihood for the reduced model. When the sample size is sufficiently large, the LRT statistic is $\chi^2$ distributed with $\kappa$ degrees of freedom, where $\kappa$ is the difference in parameters between the two comparable models.
 
-where $l(\hat{\theta}|{y})$ is the log-likelihood for the full model, and $l(\hat{\theta}_r|{y})$ is the log-likelihood for the reduced model.
-
-When the sample size is sufficiently large, the LR statistic is $\chi^2$ distributed with $\kappa$ degrees of freedom, where $\kappa$ parameters that were free in the full model, have been assigned fixed values in the reduced.
-
-At least in theory.We must bear in mind that the above description applies to the reduced model having a parameter \emph{fixed}, i.e. the reduced model has a variance component set to zero.
-\citet{SelfLiang1987} has shown that when the estimated variance components are on the border of the parameter space (i.e.\ close to zero), the LR statistic distribution is no longer $\chi^2$ distributed, but instead a \emph{mixture} of $\chi^2$ distributions. \citet{Visscher2006} comments on a alternative method of estimating the significance, that includes permuting the linkage between the observations and the random variables. But as this might be computational demanding in numerous repeated REML analysis, Visscher suggest permuting the linkage, setting the variance component to a very small value, and then simply calculate the likelihood, and compare this to the model with the variance component set to zero.
-
-
-\subsection{Wald's test}
+## Wald's test
 The Wald's test is a parametric test that compares an estimated variance component to some particular value, $\theta_0$, based on some null hypothesis:
 
 \begin{equation}
@@ -234,165 +97,64 @@ The Wald's test is a parametric test that compares an estimated variance compone
   \label{eq:walds.test.basic}
 \end{equation}
 
-The test statistic is assumed $\chi^2$-distributed with one degree of freedom. In our current framework, if our null hypothesis was that the {i\th} variance component was equal to zero, the above can be expressed as a quadratic form by
+The test statistic is assumed $\chi^2$-distributed with one degree of freedom. If the null hypothesis was that the {i\th} variance component was equal to zero, the above can be expressed as a quadratic form by
 
 \begin{equation}
   T_\textrm{Wald} = (\thetahat_i - 0)' \left[ \matr{I}_E (\thetahat) ^{-1} \right]^{ii} (\thetahat_i - 0)
   \label{eq:walds.test}
 \end{equation}
 
-where $\left[ \matr{I}_E (\thetahat) ^{-1} \right]^{ii}$ is the {i\th} diagonal element of the inverse expected information matrix. Wald's test has the advantage, that it only requires fitting and estimating the parameters under the full model. If the test fails to reject the null hypothesis, this suggests that removing the corresponding variance component from the model will not substantially harm the fit of that model.
+where $\left[ \matr{I}_E (\thetahat) ^{-1} \right]^{ii}$ is the {i\th} diagonal element of the inverse expected information matrix. Wald's test has the advantage, that it only requires fitting and estimating the parameters under the full model. If the test fails to reject the null hypothesis, this suggests that removing the corresponding variance component from the model will not substantially harm the fit of that model. 
 
-Asymptotically under the null hypothesis ($\thetahat = 0$) the large-sample distribution of the maximum likelihood estimates of the parameters is multivariate normal with mean vector $\vect{0}$ and variance-covariance matrix $\matr{V} = \matr{I}_E(\thetahat = 0)^{-1}$ \citep[p. 179]{SorensenGianola2002}. Consequently, the large-sample distribution of the quadratic form of $T_\textrm{Wald}$ is $\chi^2$ with number of parameters in $\thetahat_i$ as degrees of freedom. 
-This is evident if we consider $(\thetahat_i - 0)$ as a random variable and apply the theorem in section \ref{sec:app:quad.forms}, page \pageref{sec:app:quad.forms}, and assuming that $[ \matr{I}_E (\thetahat) ^{-1} ]^{ii}$ is full rank. It is important to note that Wald's test can be applied to both variance components, as above, and predicted marker effects.
+Wald's test is computed as the parameter estimate divided by its asymptotic standard error. The asymptotic standard errors are computed from the inverse of the second derivative matrix of the likelihood with respect to each of the covariance parameters. The Wald's test is valid for large samples, but it can be unreliable for small data sets. When used on correlated variance components, $I_E$ might not be full rank and therefore not invertible. 
 
-The Wald's test is computed as the parameter estimate divided by its asymptotic standard error. 
-The asymptotic standard errors are computed from the inverse of the second derivative matrix of the likelihood with respect to each of the covariance parameters. The Wald's test is valid for large samples, but it can be unreliable for small data sets. When used on correlated variance components, $I_E$ might not be full rank and therefore not invertible. If one of the variance components is close to zero, we may also experience issues with the information matrix. Which are known to have a skewed or bounded sampling distribution (which be the case for REML). 
+## Rao's Score test
+Rao's score test requires estimating only a single model that does not include the parameter(s) of interest. Thus, one can test if adding the variance component to the model will result in a significant improvement in model fit, without fitting additional models.  The test statistic is based on the slope (or score) of the likelihood function, using model parameters estimated under the null model. If the null model is true, then the slope of the likelihood function is close to zero. If the null model is not true, fixing a variance component to a value will penalise the likelihood.
 
-
-\subsection{Rao's Score test}
-
-The Rao's score test requires estimating only a single model that does not include the parameter(s) of interest. This means we can test whether adding the variance component to the model will result in a significant improvement in model fit, without fitting additional models. 
-The test statistic is based on the slope (or score) of the likelihood function, using model parameters estimated under the null model. If the null model is true, then we would expect that the slope of the likelihood function is close to zero. If the null model is not true, fixing a variance component to a value will penalise the likelihood.
-
-Instead of calculating likelihoods for both the null and the full model, we can utilise the first and second derivatives in the same way as in the Newton-Raphson method \eqref{eq:newton.raphson}, page \pageref{eq:newton.raphson}, to get an indication of the produced change. The Rao's Score test statistic can therefore be formulated as
+Instead of calculating likelihoods for both the null and the full model,  the first and second derivatives is used to get an indication of the produced change. The Rao's Score test statistic can be formulated as:
 
 \begin{equation}
-  T_\textrm{Rao} = \left(l'(\theta_i = 0, \thetahat_{-1}) \right)' \left[ \matr{I}_E (\theta_i = 0, \thetahat_{-1}) ^{-1} \right]^{ii} \left(l'(\theta_i = 0, \thetahat_{-1}) \right)
+  T_\textrm{Rao} = \left(l'(\theta_i = 0, \thetahat_{-1}) \right)' \left[ \matr{I}_E (\theta_i = 0, \thetahat_{-1}) ^{-1} \right]^{ii} \left(l'(\theta_i = 0, \thetahat_{-1}) \right),
 \end{equation}
 
-where $\left(l'(\theta_i = 0, \thetahat_{-i}) \right)$ is the first derivative of the \emph{full model's} likelihood function, calculated using the parameters estimated with the \emph{null model} and the parameter of interest ($\theta_i$) fixed cf.\ null model. $\left[ \matr{I}_E (\theta_i = 0, \thetahat_{-1}) ^{-1} \right]^{ii}$ is the {i\th} diagonal element of the inverse expected information matrix, under same conditions as the first derivative. It is possible to use the average between the expected and observed information matrix, i.e.\ the average information matrix, as it may be easier to compute, cf.\ section \ref{sec:AI-REML} \citep{Freedman2007,Johnson1995,Madsen1994,Jensen1997}.
+where $\left(l'(\theta_i = 0, \thetahat_{-i}) \right)$ is the first derivative of the \emph{full model's} likelihood function, calculated using the parameters estimated with the \emph{null model} and the parameter of interest ($\theta_i$) fixed cf.\ null model. $\left[ \matr{I}_E (\theta_i = 0, \thetahat_{-1}) ^{-1} \right]^{ii}$ is the {i\th} diagonal element of the inverse expected information matrix, under same conditions as the first derivative. It is possible to use the average between the expected and observed information matrix, i.e.\ the average information matrix, as it may be easier to compute \citep{Freedman2007,Johnson1995,Madsen1994,Jensen1997}.
 
 The Rao's Score test has an asymptotic distribution of $\chi^2$ with number of parameters in $\thetahat_i$ as degrees of freedom when the null hypothesis is true. Some issues related to the test statistic may occur if the information matrix is not positive definite which can happen if the null hypothesis is true \citep{Freedman2007}.
 
-\subsection{Score based statistics}
-
-There are several alternate score based statistics that are also derived from the first derivative of the likelihood \eqref{eq:gfm:first_derivative}. The last term form the basis of a number of score based test statistics \citep{Goeman2004,Wu2011,Wang2013} from an argument that this is the only part that involves the data \citep{Huang2013}. The score statistic can therefore be written as
+## Score based statistics
+There are several different score-based statistics that also are derived from the first derivative of the likelihood. The score statistic can be written as
 
 \begin{equation}
-  T_\textrm{Score} = \half (\vect{y} - \matr{X}\bfbeta)' \matr{V}^{-1}\matr{Z}\vect{g}_i\matr{Z'V}^{-1}(\vect{y}-\matr{X}\bfbeta)
+  T_\textrm{Score} = \half (\vect{y} - \matr{X}\bfbeta)' \matr{V}^{-1}\matr{Z}\vect{g}_i\matr{Z'V}^{-1}(\vect{y}-\matr{X}\bfbeta),
 \end{equation}  
 
-which under the null hypothesis $H_0: \sigma^2_i = 0$ should be close to zero. If the parameters are estimated under the null model, we have the score statistic for a group of markers $i$ as
+which under the null hypothesis $H_0: \sigma^2_i = 0$ should be close to zero. If the parameters are estimated under the null model,the score statistic for a group of markers $i$ is:
 
 \begin{equation}
-  T_\textrm{Score} = \half (\vect{y} - \matr{X}\betahat)' \Vhat^{-1}_0\matr{Z}\vect{g}_i\matr{Z}'\Vhat^{-1}_0(\vect{y}-\matr{X}\betahat)
+  T_\textrm{Score} = \half (\vect{y} - \matr{X}\betahat)' \Vhat^{-1}_0\matr{Z}\vect{g}_i\matr{Z}'\Vhat^{-1}_0(\vect{y}-\matr{X}\betahat).
 \end{equation}  
 
-and by utilizing $\Phat\vect{y} = \Vhat^{-1}_0 (\vect{y}-\matr{X}\betahat) = \ehat$, $T_i$ can be computed as
+Utilizing that $\Phat\vect{y} = \Vhat^{-1}_0 (\vect{y}-\matr{X}\betahat) = \ehat$, $T_i$ can be computed as:
 
 \begin{equation}
-  T_{Score} = \half \ehat' \matr{Z G}_i \matr{Z}' \ehat = \half \ehat' \matr{Z} \frac{\matr{W}_i \matr{W}_i'}{m_i} \matr{Z}' \ehat
+  T_{Score} = \half \ehat' \matr{Z G}_i \matr{Z}' \ehat = \half \ehat' \matr{Z} \frac{\matr{W}_i \matr{W}_i'}{m_i} \matr{Z}' \ehat,
   \label{eq:Ti}
 \end{equation}
 
-where the latter expansion is done cf.\ \eqref{eq:G.matrix}, page \pageref{eq:G.matrix}, for the subset of markers. This is computational simple, and also easy to derive an empirical distribution of the score statistic under both the competitive and self-contained null hypothesis. For a subject-randomisation, where the link between observations and genotyped animals are permuted, this can be obtained by shuffling $\ehat$. For gene-randomisation that approximates the competitive null hypothesis, only $\vect{g}_i$ needs to be recalculated.
-In both cases, the `randomised' test statistic is re-calculated by a series of sums without the inconveniences of matrix inversions.
-
-\subsection{Approximate distribution for \texorpdfstring{$T_\textrm{Score}$}{T\_Score}}
-
-As an alternative to an empirical distribution of the score based test statistics, it is possible to derive an approximate distribution of $T_i$ as follows \citep{Wang2013}. We can rewrite \eqref{eq:Ti} as
-
-\begin{equation}
-  T_\textrm{Score} = \half \tilde{\vect{y}}' \matr{V}^{\half}_0 \matr{M V}^{\half}_0 \tilde{\vect{y}}
-\end{equation}	
-
-where $\matr{M} = \matr{V}^{-1}_0 \matr{Z}\vect{g}_i\matr{Z' V}^{-1}_0$, and $\tilde{\vect{y}} = \matr{V}^{-\half}_0(\vect{y}-\matr{X}\betahat)$ which entails $\tilde{\vect{y}} \sim N(\vect{0}, \matr{I})$.
-
-We consider Satterthwaite's procedure of moment matching to approximate the null distribution of $T_\textrm{Score}$ by a Gamma distribution $\distr{Gamma}(a, b)$. The two parameters in the approximate distribution are calculated by matching the first and second moments (mean and variance) with those of the score statistic. Taking a Gamma distribution as an example,  
-we attempt to obtain the mean, $\mu_T=ab$, and the variance $\nu_T=ab^2$.  $\Rightarrow a={\mu_T^2}/{\nu_T}$ and $b=\nu_T/\mu_T$. Due to its quadratic form, it is easy to obtain the mean and variance of $T_\textrm{Score}$:
-
-\begin{align*}
-  \mu_T &= \half \Tr(\matr{V}^{-1}_0 \matr{Z}\vect{g}_i \matr{Z}') \\
-  \nu_T &= \half \Tr \left( (\matr{V}^{-1}_0 \matr{Z}\vect{g}_i \matr{Z}')^2 \right)
-\end{align*}  
-
-The derivation of this is shown in appendix section \ref{sec:app:quad.forms}.
-
-\subsection{Decomposing the score based statistic}
-
-\citet{Goeman2004,Goeman2006} showed that the score based statistics have a number of interpretations. This can be illustrated by rewriting the test statistic. First, the influence of the markers can be seen by rewriting \eqref{eq:Ti} as 
-
-\begin{align}
-  T_\textrm{Score} &=  \half \frac{1}{m_i} \sum_{j=1}^{m_i} \left( \matr{W}'_i \matr{Z}' \Vhat^{-1}_0 (\vect{y}- \matr{X}\betahat) \right)^2 \notag \\
-      &=  \half \frac{1}{m_i} \sum_{j=1}^{m_i} \left( \matr{W}'_i \matr{Z}' \ehat \right)^2   \label{eq:Ti.genetic.marker.influence}
-\end{align}
-
-where the expression $T_{ij}=(\matr{W}_{ij} Z' \Vhat_0^{-1} (\vect{y}-\matr{X}\betahat))^2$  is the contribution of the {j\th}  marker to the test statistic. Therefore the test statistic $T_i$ for a set of $m_i$  markers is just the average of the statistics $T_1, ..., T_{m_i}$ calculated for the $m_i$ single  markers that the genomic feature consists of. From this expression it can also be seen that each $T_i$ can again be written as (a multiple of) the squared covariance between the genetic markers and the adjusted phenotype. Because the averaging is done at this squared covariance level, markers with a large variance have much more influence on the outcome of the test statistic $T_i$ than genetic markers with a small variance. 
-
-Second, the influence from each of the $q$ subjects can be seen by  rewriting $T_i$ as
-
-\begin{equation}
-	T_i =  \half \frac{1}{m_i} \sum_{j=1}^{q} \sum_{k=1}^{q} \left( (\vect{g}_i\matr{Z}')_{jk} \ehat_j \ehat_k\right)^2
-\end{equation}
-
-The statistic $T_i$ therefore has a high value whenever the terms of these two matrices are correlated, that is when the covariance structure of the genetic markers between subject resembles the covariance structure between their phenotypes. The score test can therefore be seen as a test to see whether subjects with similar genetic profiles also have similar phenotypes.
+where the latter expansion is done for the subset of markers. This is computational simple, and also easy to derive an empirical distribution of the score statistic under both the competitive and self-contained null hypothesis. 
 
 
-\subsection{Deriving a set test statistic for predicted marker effects}
+# Two-step approaches
+In the first step, a test statistic for the association (\textit{e.g.}, t-statistics) of individual markers with the trait phenotype is obtained from traditional single-marker regression (can also be from a  mixed model or a Bayesian linear regression). In the second step, for each set of markers being tested, a summary statistic is obtained. For each set an appropriate summary statistic measuring the degree of association between the set of markers and the phenotypes is computed. 
 
-As we can evaluate the significance of a model fit by using properties of the likelihood ratio, 
-it is also possible to evaluate whether a predicted marker effect is significant. By using G-BLUP, it is possible to `backsolve'\index{backsolve} the predicted marker effects from predicted genetic values, by using \eqref{eq:backsolve}, page \pageref{eq:backsolve}:
-
-\begin{equation}
-  \bhat = \matr{W}'(\matr{WW}')^{-1} \ghat
-  \tag{\ref{eq:backsolve}}
-\end{equation}
-  
-and we can derive the variance in a similar fashion as
-
-\begin{equation}
-  \Var(\bhat) = \matr{W}'(\matr{WW}')^{-1} \Var(\ghat) (\matr{WW}')^{-1} \matr{W}'
-  \label{eq:Var.bhat}
-\end{equation}  
-
-where $\Var(\ghat) = \vect{g} - \matr{C}^{gg}$ \eqref{eq:var.ghat}. By solving G-BLUP (instead of M-BLUP) it is now possible to predict the marker effects, as well as estimates of the variance of the predicted effects. Assuming a null hypothesis $H_0: \bhat_j = 0$, i.e.\ that the marker effects are equal to zero, we can simply apply Wald's test \eqref{eq:walds.test.basic}, this time as
-
-\begin{equation}
-  T_{\bhat_j} = \frac{\bhat^2_j}{\Var(\bhat_j)}
-  \label{eq:T.bhat}
-\end{equation}  
-
-where $\Var(\bhat_j)$ is the estimate of variance of the {j\th} element of $\bhat$, obtained from the {j\th} diagonal of \eqref{eq:Var.bhat}. We previously defined this to be $\chi^2$-distributed with one degree of freedom (p. \pageref{eq:walds.test.basic}). For a set of markers, the predicted effects is a vector, $\bhat_{set}$, and the above equation is rewritten to
-
-\begin{equation}
-  T_{\bhat_{Set}} = \bhat_{Set}' \left( \Var(\bhat_{Set}) \right)^{-1} \bhat_{Set}
-\end{equation}
-  
-and for large sets of genetic markers would require inverting a large matrix which may be computationally difficult. An alternative to \eqref{eq:T.bhat} is 
-
-\begin{equation}
-  T_{\bhat_j} = \frac{\bhat_j}{\sqrt{\Var(\bhat_j)}}
-\end{equation}
-
-which follows a Student $t$-distribution with $(n - m)$ degrees of freedom \citep{Cule2011}\footnote{ When the number of degrees of freedom approaches infinity, the Student $t$-distribution approximates the standard normal distribution.}. However, in our scenarios $m \gg n$, so we refer to an alternate calculation to obtain the effective number of degrees of freedom for ordinary linear regressions \citep{Cule2011}:
-
-\begin{equation}
-  \kappa = n - \Tr(\matr{H})
-\end{equation}
-
-where $\matr{H}$ is the hat matrix for the conditional prediction as defined in \eqref{eq:H_C}. As a final comment on the hat matrix, \citet{Cule2011} wrote:
-\begin{quote} Hastie and Tibshirani define $\Tr(\matr{H})$ as the degrees of freedom taken up by the penalised model fit. (...) In the case of large sample size, as is typically the case in genetic data, the distribution of the test statistic under the null hypothesis is asymptotically (standard) normal. 
-\end{quote}
-
-
-\section{Two-step approaches}
-
-
-In the first step, a test statistic for the association (e.g.\ t-statistics) of individual markers with the trait phenotype is obtained from traditional single-marker ($M_\textrm{GWAS}$), or all-marker statistical models (e.g.\ $M_\textrm{Set}$). In the second step, for each set of markers being tested, a summary statistic is obtained. For each set we construct an appropriate summary statistic that measures the degree of association between the set of markers and the phenotypes. 
-
-\subsection{Summary statistics}
-The first summary statistic is based on the idea to identify the association between two types of classification of the markers: 
-1) being in a predefined set of markers, and 2) being associated to the trait phenotype. 
-The test is then based on counting the number of markers that are in and outside the set as well as the number of markers that are associated or not. 
-
+## Gene set statistics
 Determination of association of individual markers is based on a single marker test statistic such as the t-statistics and a threshold for this statistic.
 
 Let $m$ denote the total number of markers tested, $m_F$ is the total number of markers belonging to the set of interest, $m_A$ is the number of associated markers, and $m_{AF}$ is the number of associated markers belonging to the feature. Thus $m$, $m_A$, and $m_{AF}$ are fixed. 
 
 We consider two properties of a marker; 1) to be associated to the phenotypic trait, and 2) belong to the genomic feature of interest. Let $H_0$ denote the null hypothesis, that the two properties of a marker are independent, or equivalently that the associated markers are picked at random from the total population of tested markers. \citet{Rivals2007} show that this can be formulated and tested in a number of ways.The different tests can be evaluated using an exact (Hypergeometric), approximate ($\chi^2$), or empirical distribution ($T_{Sum}$) under the null hypothesis.
 
-\subsection{Hypergeometric test}
+### Hypergeometric test
 
 The total number of markers that belong to the genomic feature of interest and that are associated to the trait phenotype can be computed as
 
@@ -408,10 +170,9 @@ having a hypergeometric distribution with parameters $m$, $m_A$, and $M_F$, whic
 
 However, the hypergeometric test assumes that the markers being sampled are independent, a rather strong assumption in genetic data. Therefore, the hypergeometric test might not correctly identify significant association, but instead associated markers that are strongly correlated \citep{Goeman2007}.
 
-\subsection{\texorpdfstring{$\chi^2$ test}{Chi-square test}}
+### \texorpdfstring{$\chi^2$ test}{Chi-square test}
 The second summary statistic is based on a $\chi^2$ test. Let the observed data be presented in a contingency table where each observation is allocated to one cell of a two-dimensional array of cells according to the values of the two outcomes:
 
-%\begin{table}%
 \begin{center}
 \begin{threeparttable}
 \caption{Contingency table for $\chi^2$ test in two-step approach.}
@@ -430,7 +191,6 @@ The second summary statistic is based on a $\chi^2$ test. Let the observed data 
 	%  $m_A$: Associated; $m_NA$
 	%\end{tablenotes}
 \end{threeparttable}
-%\end{table}
 \vspace{1em}
 \end{center}
 
@@ -456,7 +216,7 @@ However, there is the arbitrariness of the threshold for determining `significan
 no matter how it is chosen and markers whose test statistics differ by a tiny amount may be treated completely differently. By design this test will have high power to detect association if the genomic feature harbour markers with large effects, but it will not detect a situation where there are many markers with small to moderate effects \citep{Newton2007}. In this case, it is more powerful to use a summary statistic such as the mean or sum of the test statistics for all markers belonging to the same genomic feature. 
 
 
-\subsection{\texorpdfstring{$T_\textrm{Sum}$}{T\_Sum}}
+###  \texorpdfstring{$T_\textrm{Sum}$}{T\_Sum}
 As noted above, if the phenotypic trait of interest is governed by many markers with small to moderate effects, counting `significantly associated' markers neglects a lot of information. We therefore consider the third summary statistic
 
 \begin{equation}
@@ -466,17 +226,27 @@ As noted above, if the phenotypic trait of interest is governed by many markers 
 where $t_i$ is a test statistic for the {i\th} marker. There are number of choices for $t_i$ such as likelihood ratio, the score based statistic, or the predicted marker effects, and they might be transformed by e.g.squaring. The nature of $T_\textrm{Sum}$ is therefore difficult to describe in terms of exact or approximate distributions, and is included here as an intuitive example where empirical distributions are useful.
 
 
-\section{Permutation versus exact and asymptotic test}
+## Permutation versus exact and asymptotic test
 If we can derive an exact distribution of test statistic under the null hypothesis then we can  use this to determine the level of statistical significance for the observed test statistic. The advantage of this is that it is computationally fast and that it works better if the sample size (i.e.\ $n$ number of observation) is small. However, many of the test statistics are derived based on an asymptotic distribution. If the sample size is small the asymptotic formula's used to calculate the p-value may not be correct. In this case a different approach could be to find the p-value using a permutation method. 
 
-A drawback of the permutation method is that it is hard to demonstrate very low p-values. 
-Showing that a p-value is lower than $10^{-7}$ for example, needs at least $10^7$ permutations. 
-Often if the sample size is small, the total number of permutations is not large enough to attain very low significance levels. 
+A drawback of the permutation method is that it is hard to demonstrate very low p-values.  Showing that a p-value is lower than $10^{-7}$ for example, needs at least $10^7$ permutations. Often if the sample size is small, the total number of permutations is not large enough to attain very low significance levels. 
 
 The manner of which we permute the data is not arbitrary, but depends on the nature of the null hypothesis being tested. \citet{Goeman2007} classified the null hypotheses as either \emph{self-contained} or \emph{competitive}.
 
-A self-contained null hypothesis assumes that the marker, or set of markers, is not associated to the phenotypic trait, or has an effect without comparison to other markers of sets. I.e. the similarity between observations and genetics is incidental. To obtain an empirical distribution of the test statistic under a self-contained null hypothesis, we can shuffle the observations thus breaking the link between observations and genetics. This can be referred to as a subject-randomisation approach \citep{Goeman2007}, but we refer to it as a `permutation' approach. However, if using models with multiple random effects (such as $M_{Set}$, eq. \ref{eq:M_set}), where the association between only one of the random effects is in question,
-shuffling the observations would break the link for all random effects, rendering the permutations useless. In this case, care should be taken to permute the link between the observations and the random effect in question.
+A self-contained null hypothesis assumes that the marker, or set of markers, is not associated to the phenotypic trait, or has an effect without comparison to other markers of sets. I.e. the similarity between observations and genetics is incidental. To obtain an empirical distribution of the test statistic under a self-contained null hypothesis, we can shuffle the observations thus breaking the link between observations and genetics. This can be referred to as a subject-randomisation approach \citep{Goeman2007}, but we refer to it as a `permutation' approach. However, if using models with multiple random effects, where the association between only one of the random effects is in question, shuffling the observations would break the link for all random effects, rendering the permutations useless. In this case, care should be taken to permute the link between the observations and the random effect in question.
 
-A competitive null hypothesis assumes that the marker, or set of markers, is not \emph{more} associated than any other marker or set of markers. An empirical distribution for a competitive null hypothesis is then obtained by sampling random sets of markers. However, all parameters that might influence the test statistic must be the same. I.e. if the number of markers influence the test statistic, the same number of markers must be sampled repetitively to form the random sets.
-And if there is an inherent structure between the markers in the set, this structure should be present for the random sets.
+A competitive null hypothesis assumes that the marker, or set of markers, is not \emph{more} associated than any other marker or set of markers. An empirical distribution for a competitive null hypothesis is then obtained by sampling random sets of markers. However, all parameters that might influence the test statistic must be the same. I.e. if the number of markers influence the test statistic, the same number of markers must be sampled repetitively to form the random sets. And if there is an inherent structure between the markers in the set, this structure should be present for the random sets.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
