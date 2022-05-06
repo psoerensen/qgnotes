@@ -62,17 +62,17 @@ y \sim N( \mu,\sigma^2_{a} + \sigma^2_{e}). \notag
 
 
 ## Expected genetic predisposition conditional on observed phenotype
-The genetic predisposition cannot be observed but must be estimated from phenotypic data and genetic relationships between individuals from the study population. Estimation of an unobserved parameter using statistical modelling expresses the estimated quantity as a mathematical function of the observed data. The question is how this function should look like and what properties the estimated genetic predisposition should fulfill. 
-Under the assumption of multivariate normality for $a$ and $y$ (which are justified under the central limit theorem and the assumptions of many genetic and environmental factors), the expected value of the genetic predisposition conditional on the observed phenotype $y$ can be written as:
+The genetic predisposition cannot be observed but must be estimated from phenotypic data and genetic relationships between individuals from the study population. Estimation of an unobserved parameter using statistical modelling expresses the estimated quantity as a mathematical function of the observed data. [The question is what this function should look like and what properties the estimated genetic predisposition should fulfill. - I AM NOT SURE THE ANSWER OF "which properties the estimated genetic predisposition should fulfill" IS ANSWERED IN THE FOLLOWING TEXT. NOT SURE THIS SENTENCE SHOULD BE INCLUDED] 
+Under the assumption of multivariate normality for $a$ and $y$ (which is justified under the central limit theorem and the assumptions of many genetic and environmental factors), the expected value of the genetic predisposition, [$E(a)$], conditional on the observed phenotype, $y$, can be written as:
 \begin{align}
 E(a|y) &= E(a) + Cov(a,y)[Var(y)]^{-1}(y-E(y))
 \end{align}
-The genetic predisposition is defined as deviation from the general mean which means that the expected value $E(a)$ of the true genetic predisposition $a$ is $E(a)=0$. Therefore, the expected value of the genetic predisposition is:
+The genetic predisposition is defined as deviation from the general mean which means that the expected value $E(a)$ of the true genetic predisposition $a$ is $E(a)=0$. Therefore, the expected value of the genetic predisposition is :["is" or "becomes"?]
 \begin{align}
 E(a|y) &= Cov(a,y)[Var(y)]^{-1}(y-E(y))
 \end{align}
 The expression for the estimate of the genetic predisposition consists of two parts. The term $y-E(y)$ shows that the observed phenotypic values are corrected for the
-fixed effects represented by $\mu$. The term $b_{a|y}=Cov(a,y)[Var(y)]^{-1}$ often referred to as the regression coefficient is a weighting factor with which the corrected phenotypic values are multiplied. 
+fixed effects represented by $\mu$ [where is the description of $\mu$? - where does it fit in the above equation? Earlier on $\mu$ was called the population mean - is that the same as fixed effects?]. The term $b_{a|y}=Cov(a,y)[Var(y)]^{-1}$ often referred to as the regression coefficient is a weighting factor with which the corrected phenotypic values are multiplied. 
 
 To be able to estimate the genetic predisposition we need to determine the values for $E(a)$, $E(y)$, $Var(y)$, and $Cov(a,y)$ from the expression above. It is possible to derive simple formula's for these terms based on: 
 
@@ -124,6 +124,7 @@ Var(a|\hat{a}) &= Var(a) (1- Cov(a,\hat{a})^2Var(a)^{-1}Var(\hat{a})^{-1}) \nota
 Var(a|\hat{a}) &= Var(a) (1-r_{a,\hat{a}}^2) \notag
 \end{align}
 
+[in the beginning of this section "we need to determine the values for $E(a)$, $E(y)$, $Var(y)$, and $Cov(a,y)$" it looks like you will show how to determine these values - but I can only see the calculation of E(a), the variance of a and the covariance of a and hat{a}]
 
 ## Accuracy of genetic predisposition estimates
 
@@ -144,7 +145,7 @@ To be able to compute the accuracy or reliability of the estimated genetic predi
 			r_{a,\hat{a}}^2 &= \frac{\Var(\hat{a})}{\Var(a)}
 \end{align}
 
-The reliability ($r_{a,\hat{a}}^2$) can be interpreted as the part of the genetic variation that is explained by the estimated genetic predisposition whereas the remainder (1 - $r_{a,\hat{a}}^2$) is the uncertainty. 
+[where did the square root of the denominator go?] The reliability ($r_{a,\hat{a}}^2$) can be interpreted as the part of the genetic variation that is explained by the estimated genetic predisposition whereas the remainder (1 - $r_{a,\hat{a}}^2$) is the uncertainty. 
 Reliability of the genetic predisposition ($r_{a,\hat{a}}^2$) is important because it determines how well we can predict an individual's genetic predisposition. If  $r_{a,\hat{a}}^2$ is low then we might consider more phenotypic records, in order to make better-informed precision health decisions.
 
 
