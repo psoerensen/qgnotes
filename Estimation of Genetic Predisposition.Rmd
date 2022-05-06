@@ -48,7 +48,7 @@ where $\mu$ is the population mean, $a$ is the genetic predisposition (\textit{i
 			y=\mu+a+e	 \notag.
 \end{align}
 			
-The true genetic predisposition for an individual, is the sum of all additive genetic effects that affect the quantitative trait:
+[numbering of equations are not consistent] The true genetic predisposition for an individual, is the sum of all additive genetic effects that affect the quantitative trait:
 \begin{align}
 		a=\sum_{j=1}^{q}a_{j}, \notag
 \end{align}
@@ -145,12 +145,12 @@ To be able to compute the accuracy or reliability of the estimated genetic predi
 			r_{a,\hat{a}}^2 &= \frac{\Var(\hat{a})}{\Var(a)}
 \end{align}
 
-[where did the square root of the denominator go?] The reliability ($r_{a,\hat{a}}^2$) can be interpreted as the part of the genetic variation that is explained by the estimated genetic predisposition whereas the remainder (1 - $r_{a,\hat{a}}^2$) is the uncertainty. 
+[where did the square root of the denominator go? - see equation 4 above] The reliability ($r_{a,\hat{a}}^2$) can be interpreted as the part of the genetic variation that is explained by the estimated genetic predisposition whereas the remainder (1 - $r_{a,\hat{a}}^2$) is the uncertainty. 
 Reliability of the genetic predisposition ($r_{a,\hat{a}}^2$) is important because it determines how well we can predict an individual's genetic predisposition. If  $r_{a,\hat{a}}^2$ is low then we might consider more phenotypic records, in order to make better-informed precision health decisions.
 
 
-## Prediction error variance of estimated genetic predisposition
-Because every prediction is associated with an error, the same is true for the estimated genetic predisposition $\hat{a}$. The variability of the error for the predicted genetic predisposition are quantified by the prediction error variance (PEV) computed as:
+## Prediction error variance of the estimated genetic predisposition
+Every prediction is associated with an error, and the same is true for the estimated genetic predisposition $\hat{a}$. The variability of the error for the predicted genetic predisposition is quantified by the prediction error variance (PEV) computed as:
 
 \begin{align}
 Var(a-\hat{a}) &= Var(a) - 2Cov(a,\hat{a}) + Var(\hat{a})= Var(a-\hat{a})\notag \\
@@ -158,7 +158,7 @@ Var(a-\hat{a}) &= Var(a) - 2Cov(a,\hat{a}) + Var(\hat{a})= Var(a-\hat{a})\notag 
                &= Var(a) (1 - r_{a,\hat{a}}^2)\notag
 \end{align}
 
-The standard error of prediction (SEP) can be a useful quantity. SEP corresponds just to the square root of PEV. Hence,
+The standard error of prediction (SEP) can be a useful quantity. SEP corresponds just to the square root of PEV. Therefore,
 \begin{align}
 SEP(\hat{a}) &= \sqrt{Var(a-\hat{a})} \notag \\
                &= \sqrt{Var(a) (1 - r_{a,\hat{a}}^2))} \notag \\
@@ -179,9 +179,9 @@ E(a|y) &= 0 + \sigma^2_{a}[\sigma^2_{a} + \sigma^2_{e}]^{-1}(y- \mu) \notag \\
 E(a|y) &= h^2(y-\mu) \notag
 \end{align}
 
-Thus, the estimated genetic predisposition using own phenotypic record can be computed based on an estimate of the trait heritability ($h^2$) and the observed phenotype deviation ($y-\mu$).
+Thus, the estimated genetic predisposition using own phenotypic records can be computed based on an estimate of the trait heritability ($h^2$) and the observed phenotype deviation ($y-\mu$).
 
-The expression for expected value terms ($E(a)$ and $E(y)$) in the equation above are based on rules for expected value of a sum of (normally distributed) random variables:
+The expression for expected value terms ($E(a)$ and $E(y)$) in the equation above is based on rules for expected value of a sum of (normally distributed) random variables:
 \begin{align}
 \E(a) &=0 \notag \\
 \E(e) &=0 \notag \\
@@ -191,7 +191,7 @@ The expression for expected value terms ($E(a)$ and $E(y)$) in the equation abov
       &=\mu  \notag 
 \end{align}
 
-The expression for (co)variance terms ($Var(y)$, and $Cov(a,y)$ ) in the equation above are based on rules for the variance of a sum of (normally distributed) random variables:
+The expression for (co)variance terms ($Var(y)$, and $Cov(a,y)$ ) in the equation above is based on rules for the variance of a sum of (normally distributed) random variables:
 \begin{align}
 \Var(y) &= Var(a) + Var(e) + 2Cov(a,e)  \notag \\
 \Var(a) &=\sigma^2_{a}  \notag \\
@@ -254,14 +254,14 @@ Thus, reliability depends on the same factors as the estimated genetic predispos
 \end{comment}
 
 ## Genetic relationship used for estimating genetic predisposition
-Related individuals share genes and thus resemble each other (have correlated phenotypic values to an extent that depends on additive genetic relationships). Consider a simple parent-offspring example. The offspring get one copy of the genome (\textit{i.e.}, half of the diploid genome) from each parent, and therefore the genetic predisposition for the offspring is the average of the parents' genetic predisposition ($a$), plus Mendelian deviation ($a_{\text{mendelian}}$), which is the part of the genetic predisposition that is due to random segregation of the genes from each parent:
+Related individuals share genes and thus resemble each other, i.e., they have correlated phenotypic values to an extent that depends on additive genetic relationships. Consider a simple parent-offspring example. The offspring get one copy of the genome (\textit{i.e.}, half of the diploid genome) from each parent, and therefore the genetic predisposition for the offspring is the average of the parents' genetic predisposition ($a$), plus Mendelian deviation ($a_{\text{mendelian}}$), which is the part of the genetic predisposition that is due to random segregation of the genes from each parent:
 \begin{align}
 		a_{\text{child}}=\frac{1}{2}a_{\text{father}}+\frac{1}{2}a_{\text{mother}}+a_{\text{mendelian}} \notag 	
 \end{align}
 
-The term $a_{\text{mendelian}}$ is necessary, because two fullsibs $i$ and $j$ both having parents \texttt{father} and \texttt{mother} receive different random samples of parental alleles. Hence, the genetic predisposition $a_i$ and $a_j$ of fullsibs $i$ and $j$ are not going to be the same. The Mendelian deviation reflects that random contribution of (Mendelian) segregation to genetic predisposition of individuals.  
+The term $a_{\text{mendelian}}$ is necessary, because two fullsibs $i$ and $j$, both having the same parents, receive different random samples of parental alleles. Hence, the genetic predisposition, $a_i$ and $a_j$, of fullsibs, $i$ and $j$, are not going to be the same. The Mendelian deviation reflects the random contribution of (Mendelian) segregation to genetic predisposition of individuals.  
 
-In this example, the $\frac{1}{2}$ refers to the additive genetic relationship which in this example indicates that the offspring receives half of its alleles from each parent. The weight given to a specific source of information depends on the additive genetic relationship with the individual. Examples of different types of additive genetic relationships ($A_{ij}$) between the various sources ($j$) and the individual itself, \textit{i.e.}, the individual to be evaluated ($i$), can be seen in the table below.
+In this example, the $\frac{1}{2}$ refers to the additive genetic relationship which indicates that the offspring receives half of its alleles from each parent. The weight given to a specific source of information depends on the ["its" may be a better word - then it becomes: The weight given to a specific source of information depends on its additive genetic relationship with the individual] additive genetic relationship with the individual. Examples of different types of additive genetic relationships ($A_{ij}$) between the various sources ($j$) and the individual itself, \textit{i.e.}, the individual to be evaluated ($i$), can be seen in the table below.
 \begin{table}[h!]
 \begin{center}
 \caption{Examples on additive genetic relationship ($A_{ij}$) between individual $i$ and $j$.}
@@ -300,24 +300,24 @@ for example on traits that cannot be measured on the individual itself. The accu
 As already mentioned, all information available is usually utilized when an individual’s genetic predisposition is predicted. The weight given to a specific source of information depends on the additive genetic relationship with the individual, the heritability and the amount of information, i.e. the number of relatives (progenies, sibs, parents, etc.). In the following sections we will show how genetic predisposition can be calculated when different types of phenotypic information (from different types of relatives) are available. 
 \end{comment}
 \newpage
-# BLUP for estimating genetic predisposition using pedigree information
+# Best Linear Unbiased Prediction for estimating genetic predisposition using pedigree information
 
-Genetic predisposition can be estimated using the BLUP (Best Linear Unbiased Prediction) method. BLUP  estimate genetic predisposition using phenotypic information for individuals from a general pedigree (with arbitrary relationships among them). The estimation of genetic predisposition based on multiple sources of information must correct for the redundancy between them (\textit{e.g.}, the redundant information provided by parents and grandparents). Moreover, it is necessary to adjust for environmental factors that may affect the phenotypes in the study populations. 
+Genetic predisposition can be estimated using the Best Linear Unbiased Prediction (BLUP) method. BLUP estimates genetic predisposition using phenotypic information for individuals from a general pedigree (with arbitrary relationships among them). The estimation of genetic predisposition based on multiple sources of information must correct for the redundancy between the different sources of information (\textit{e.g.}, redundant information provided by parents and grandparents). Moreover, it is necessary to adjust for environmental factors that may affect the phenotypes in the study populations. 
 
-The key idea behind BLUP is to estimate the identifiable environmental factors as fixed effects and to predict the genetic predisposition as random effects simultaneously in a linear mixed model. Here, mixed refers to the presence of two types of effects: fixed effects (identifiable effects from environmental or genetic factors) and random effects (non-identifiable effects from segregating genetic factors and fluctuating environmental conditions). The methodology developed by Henderson (e.g. Henderson1973a and Henderson1975) is called __BLUP__ and the properties of this methodology are directly incorporated into its name: 
+The key idea behind BLUP is to estimate the identifiable environmental factors as fixed effects and to predict the genetic predisposition as random effects simultaneously in a linear mixed model. Here, mixed refers to the presence of two types of effects: fixed effects (identifiable effects from environmental or genetic factors) and random effects (non-identifiable effects from segregating genetic factors and fluctuating environmental conditions). The __BLUP__ method was developed by Henderson (e.g. Henderson 1973a and Henderson 1975) and the properties of this method are directly incorporated into its name: 
 
 * __B__ stands for __best__ which means that the correlation between the true ($a$) and the predicted genetic predisposition ($\hat{a}$) is maximal or the prediction error variance ($Var(a - \hat{a})$) is minimal.
 * __L__ stands for __linear__ which means the predicted genetic predisposition are linear functions of the observations ($y$)
 * __U__ stands for __unbiased__ which means that the expected values of the predicted genetic predisposition are equal to the true genetic predisposition
 * __P__ stands for __prediction__ 
 
-BLUP is based on linear mixed model methodology, and estimates of genetic predisposition can be obtained by solving the mixed model equations. The BLUP method also require a genetic relationship matrix and estimates of variance components (e.g., $\sigma_a^2$ and $\sigma_e^2$). 
+BLUP is based on a linear mixed model methodology, and estimates of genetic predisposition can be obtained by solving mixed model equations. The BLUP method also requires a genetic relationship matrix and estimates of variance components (e.g., $\sigma_a^2$ and $\sigma_e^2$). 
 
-BLUP approaches are widely used for estimation of genetic predisposition. The popularity of BLUP is not only due to the theoretical foundations behind BLUP, but also the efficient algorithms developed by Henderson for computing predicted genetic predisposition, even in very large study populations. 
+BLUP approaches are widely used for estimation of genetic predisposition. The popularity of BLUP is not only due to the theoretical foundations of the method, but also the efficient algorithms developed by Henderson for computing predicted genetic predisposition, even in very large study populations. 
 
 
 ## Linear mixed model {#mixedlineareffectsmodel}
-The linear mixed model contains the observation vector for the trait(s) of interest ($y$), the __fixed effects__ that explain systematic differences in $y$, and the __random genetic effects__ $a$ and __random residual effects__ $e$.
+The linear mixed model contains the observation vector for the trait(s) of interest ($y$), the __fixed effects__ [should there be added ($b$)?] that explain systematic differences in $y$, and the __random genetic effects__ $a$ and __random residual effects__ $e$.
 
 A matrix formulation of a general model equation is:
 \begin{align}
@@ -333,7 +333,7 @@ e &: \text{is a vector of random residual effects,} \notag \\
 X &: \text{is a known design matrix that relates the elements of $b$ to their corresponding element in $y$.} \notag 
 \end{align}
 
-In the statistical model (specified above) the random effects ($a$ and $e$) and the phenotypes ($y$) are considered to be random variables which follow a multivariate normal (MVN) distribution. In general terms the expectations of these random variables are:  
+In this statistical model the random effects ($a$ and $e$) and the phenotypes ($y$) are considered to be random variables which follow a multivariate normal (MVN) distribution. In general terms the expectations of these random variables are:  
 \begin{align}
 a \sim MVN(0,G) \notag \\
 e \sim MVN(0,R) \notag \\
@@ -342,7 +342,7 @@ y \sim MVN(Xb,V) \notag \\
 where $G=A\sigma_a^2$, and $R=I\sigma_e^2$ are square matrices of genetic and residual (co)variances among the individuals, respectively, and $V=A\sigma_a^2+I\sigma_e^2$ is the overall phenotypic covariance matrix. 
 
 ## Estimating fixed and random effects in the linear mixed model
-The goal of the BLUP analysis is the estimate the fixed effect $b$, and random genetic effects, $a$, in the linear mixed model specified above. This can be done using the BLUE and BLUP equations shown below.
+The goal of the BLUP analysis is to estimate the fixed effects, $b$, and random genetic effects, $a$, in the linear mixed model specified above. This can be done using the BLUE and BLUP equations shown below.
 
 The best linear unbiased estimator (BLUE) of $\hat{b}$ is:
 
