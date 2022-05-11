@@ -342,7 +342,7 @@ y \sim MVN(Xb,V) \notag \\
 where $G=A\sigma_a^2$, and $R=I\sigma_e^2$ are square matrices of genetic and residual (co)variances among the individuals, respectively, and $V=A\sigma_a^2+I\sigma_e^2$ is the overall phenotypic covariance matrix. 
 
 ## Estimating fixed and random effects in the linear mixed model
-The goal of the BLUP analysis is to estimate the fixed effects, $b$, and random genetic effects, $a$, in the linear mixed model specified above. This can be done using the BLUE and BLUP equations shown below.
+The goal of linear mixed model analysis is to estimate the fixed effects, $b$, and random genetic effects, $a$. This can be done using the BLUE and BLUP equations shown below.
 
 The best linear unbiased estimator (BLUE) of $\hat{b}$ is:
 
@@ -353,20 +353,20 @@ The best linear unbiased estimator (BLUE) of $\hat{b}$ is:
 \begin{comment}
 The matrix $(X' V^{-1} X)^{-1}$ denotes the inverse of the matrix $(X' V^{-1} X)$.  
 \end{comment}
-The best linear unbiased prediction (BLUP) of $\hat{a}$ is:
+The BLUP of ${a}$ is:
 
 \begin{equation}
-\hat{a} = GV^{-1}(y - X\hat{b})
+\hat{a} = GV^{-1}(y - X\hat{b}).
 (\#eq:hatublup)
-\end{equation}
+\end{equation}.
 
+The BLUP equation for the estimate of the genetic predisposition consists of three parts: the term, $y - X\hat{b}$, which shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$; $G=Cov(a,y)$ which is the covariance between the true genetic predisposition ($a$) and phenotypes ($y$); and $V^{-1}=[Var(y)]^{-1}$ which is the inverse of the phenotypic covariance matrix.
 which is similar to the expression shown earlier for the expected value of the genetic predisposition conditional on the observed phenotype $y$:
 
 \begin{align}
-E(a|y) &= Cov(a,y)[Var(y)]^{-1}(y-E(y))
+E(a|y) &= Cov(a,y)[Var(y)]^{-1}(y-E(y)).
 \end{align}
 
-The BLUP equation for the estimate of the genetic predisposition consists of three parts; The term, $y - X\hat{b}$, shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$. The covariance between the true genetic predisposition ($a$) and phenotypes ($y$) is $Cov(a,y)=G$. The inverse of the phenotypic covariance matrix is $[Var(y)]^{-1}=V^{-1}$.
 
 
 ## Mixed model equations
@@ -391,15 +391,15 @@ Estimates of the fixed and random effects in the linear mixed model (\textit{i.e
   X^T R^{-1} y \\
   Z^T R^{-1} y
   \end{array}
-\right]
+\right].
 (\#eq:mixedmodeleq)
 \end{equation}
 
-The expression above is called __mixed model equation__ (MME). They no longer contain the inverse $V^{-1}$ and hence these MME are much simpler to solve. Instead, the MME contain the inverses $R^{-1}$ and $G^{-1}$, which are easier to invert: $R=I\sigma_e^2$ is often a very simple matrix, and $G=A\sigma_a^2$ is usually smaller than (or the same size as) V. As a consequence, whenever we have to estimate genetic predisposition using BLUP we will usually use the mixed model equations shown in Eq. \@ref(eq:mixedmodeleq).
+The expression above is called a __mixed model equation__ (MME). It no longer contains the inverse $V^{-1}$ and hence the MME is much simpler to solve. Instead, the MME contains the inverses $R^{-1}$ and $G^{-1}$, which are easier to invert: $R=I\sigma_e^2$ is often a very simple matrix, and $G=A\sigma_a^2$ is usually smaller than (or the same size as) $V$. As a consequence, whenever we have to estimate genetic predisposition using BLUP we will usually use the mixed model equation shown in [NB NB here is a reference to an equation - should be removed if equations in this document no longer are numbered] - Eq. \@ref(eq:mixedmodeleq).
 
 
 ## Prediction error variance, reliability and accuracy
-The precision of estimates of genetic predisposition can be calculated from the inverse of left hand side of the mixed model equations (Eq. \@ref(eq:mixedmodeleq)): 
+The precision of estimates of genetic predisposition can be calculated from the inverse of the left hand side of the mixed model equation (Eq. \@ref(eq:mixedmodeleq)): 
 
 \begin{equation}
 \left[
@@ -429,10 +429,10 @@ PEV = C^{22}\sigma_e^2,
 or expressed for individual $i$ is: 
 
 \begin{align}
-PEV_i = C_{ii}^{22}\sigma_e^2.
+PEV_i = C_{ii}^{22}\sigma_e^2,
 \end{align}
 
-\textit{i.e.}, the diagonal element of the inverse of the coefficient matrix corresponding to individual $i$, multiplied by the residual variance. 
+which is the diagonal element of the inverse of the coefficient matrix corresponding to individual $i$, multiplied by the residual variance. 
 
 To compute the reliability, $r_{\hat{a},a}^2$, we use the following relationship: 
 
@@ -447,14 +447,14 @@ r_{\hat{a},a}^2 &= 1-C_{ii}^{22}\frac{\sigma_e^2}{\sigma_a^2} \\
                 &= 1-C_{ii}^{22}\lambda,
 \end{align}
 
-and accuracy: 
+and the accuracy computed as: 
 
 \begin{align}
 r_{\hat{a},a} &= \sqrt{1-C_{ii}^{22}\lambda}.
 \end{align}
 
-## BLUPs are useful for ranking and decision making in precision helath
-BLUP estimates of genetic predisposition (EVBs), especially from the linear mixed model including all relationships, is a useful tool in precision health. Identification of individuals with an extreme genetic predisposition based on BLUP estimates maximizes the probability for correct ranking of individuals and decisions in precision health. There are many factors contributing to this: 
+## [consider moving this section - or change the heading] BLUPs are useful for ranking and decision making in precision health
+[I didn't look at this section] BLUP estimates of genetic predisposition, especially from the linear mixed model including all relationships, is a useful tool in precision health. Identification of individuals with an extreme genetic predisposition based on BLUP estimates maximizes the probability for correct ranking of individuals and decisions in precision health. There are many factors contributing to this: 
 
  * The linear mixed model which makes full use of information from all relatives increases accuracy (precision) of the estimated genetic predisposition.
  * The genetic predisposition are adjusted for systematic environmental effects in an optimal way.  
@@ -468,7 +468,7 @@ are the true ones. In practice, this means that genetic predisposition will only
 # Estimation of genetic predisposition using genomic information
 In recent, years much attention has been given to genomic information due to the technological advancements in genotyping platforms. Today, dense genetic maps of single nucleotide polymorphisms (SNP) are available, and they enable us to divide the entire genome into thousands of relatively small chromosome segments. 
  
-Estimation of genetic predispositions is conceptually simple to calculate. First, the entire genome is divided into small chromosome segments by dense markers. Second, the additive effects of each chromosome segment are estimated simultaneously. Finally, the genetic predisposition is calculated as the sum of all chromosome segment effects. The chromosome segment effects are estimated for a group of individuals (\textit{i.e.}, a reference or training population). For any remaining individual, only a blood or tissue sample is needed to determine its genetic predisposition. For use in precision health, it is desirable that the genetic predisposition can be estimated accurately, and early in the individual's life. The effect of each of these small chromosome segments can be estimated if we have phenotypes and genotypes from many individuals (from several hundreds to hundreds of thousands or even millions). With sufficiently dense marker maps, the chromosome segment effects capture the genomic variability in the population in which they were estimated, because markers are in linkage disequilibrium with the causal gene that they bracket. 
+Genetic predisposition is conceptually simple to calculate. First, the entire genome is divided into small chromosome segments by dense markers. Second, the additive effects of each chromosome segment are estimated simultaneously. Finally, the genetic predisposition is calculated as the sum of all chromosome segment effects. The chromosome segment effects are estimated for a group of individuals (\textit{i.e.}, a reference or training population). For any remaining individual, only a blood or tissue sample is needed to determine its genetic predisposition. For use in precision health, it is desirable that the genetic predisposition can be estimated accurately and early in the individual's life. The effect of each of these small chromosome segments can be estimated if we have phenotypes and genotypes from many individuals (from several hundreds to hundreds of thousands or even millions). With sufficiently dense marker maps, the chromosome segment effects capture the genomic variability in the population in which they were estimated, because markers are in linkage disequilibrium with the causal gene that they bracket. 
 
 # BLUP for estimating genetic predisposition using genomic information
 
@@ -478,7 +478,7 @@ We will present two approaches that are commonly used to estimate genetic predis
 ## A linear mixed model for estimating marker effects (MBLUP) {#linear-model-pgbv}
 The linear mixed model for estimating marker effects contains the observation vector for the trait(s) of interest ($y$), the fixed effects $b$, which explain systematic differences in $y$, the random marker effects $s$, and the random residual effects $e$. A matrix formulation of a general linear mixed model for estimating marker effects is:
 \begin{align}
-y &= Xb + Ms + e 
+y &= Xb + Ms + e, 
 (\#eq:mblup)
 \end{align}
 
@@ -496,7 +496,7 @@ In the linear mixed model specified above, the marker and residual effects ($s$ 
 \begin{align}
 s \sim MVN(0,S) \notag \\
 e \sim MVN(0,R) \notag \\
-y \sim MVN(Xb,V) \notag
+y \sim MVN(Xb,V), \notag
 \end{align}
 where $S=I_s\sigma_s^2$ is a square matrix of (co)variances among marker effects (usually assumed independent), and $R=I\sigma_e^2$ is a square matrix of residual (co)variances among residuals (also assumed independent, most of the times), and $V=MM'\sigma_s^2+I\sigma_e^2$ is the overall phenotypic covariance matrix. 
 
