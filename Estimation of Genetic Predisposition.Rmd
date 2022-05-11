@@ -511,23 +511,23 @@ where $\sigma_a^2$ is the total additive genetic variance, $m$ is the number of 
 
 
 ### Estimation of marker effects in MBLUP
-Estimates of the fixed effect $b$, and random marker effects, $s$, in the linear mixed model specified above can be done using the BLUE and BLUP equations shown below.
+Estimates of the fixed effects, $b$, and random marker effects, $s$, in the linear mixed model specified above can be done using the BLUE and BLUP equations shown below.
 
-The best linear unbiased estimator (BLUE) of the fixed effects $\hat{b}$ is:
+The best linear unbiased estimator (BLUE) of the fixed effects, $\hat{b}$, is:
 
 \begin{equation}
 \hat{b} = (X'V^{-1} X)^{-1} X' V^{-1} y
 (\#eq:hatbetahatblue)
 \end{equation}
 
-The best linear unbiased prediction (BLUP) of the marker effects $\hat{s}$ is:
+The best linear unbiased prediction (BLUP) of the marker effects, $\hat{s}$, is:
 
 \begin{equation}
 \hat{s} = SM'V^{-1}(y - X\hat{b})
 (\#eq:hatublup)
 \end{equation}
 
-The BLUP equation for the estimate of the marker effects consists of three parts; The term, $y - X\hat{b}$, shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$. The covariance between the true marker effects ($s$) and phenotypes ($y$) is $Cov(s,y)=SM'=M'\sigma_s^2$. The inverse of the phenotypic covariance matrix is $[Var(y)]^{-1}=V^{-1}$. Alternatively, estimates of the (fixed and random) effects in the model can be obtained by solving the mixed model equations. The mixed-model equations for the model given in \@ref(eq:mblup) have the following structure:
+The BLUP equation for estimating marker effects consists of three parts; The term, $y - X\hat{b}$, shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$. The covariance between the true marker effects ($s$) and phenotypes ($y$) is $Cov(s,y)=SM'=M'\sigma_s^2$. The inverse of the phenotypic covariance matrix is $[Var(y)]^{-1}=V^{-1}$. Alternatively, estimates of the (fixed and random) effects in the model can be obtained by solving the mixed model equations. The mixed-model equations for the model given in \@ref(eq:mblup) have the following structure:
 
 \begin{equation}
 \left[
