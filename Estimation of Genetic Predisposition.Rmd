@@ -53,7 +53,7 @@ where $\mu$ is the population mean, $a$ is the genetic predisposition (\textit{i
 		a=\sum_{j=1}^{q}a_{j}, \notag
 \end{align}
 
-where $a$ is the total additive genetic effect, and $a_{j}$ is the additive genetic effect for locus $j$. We assume (based on the central limit theory) that the true genetic predisposition, $a$, and the residual term, $e$, are normally distributed which means that the observed phenotype, $y$, is also normally distributed:
+where $a$ is the total additive genetic effect, and $a_{j}$ is the additive genetic effect for locus $j$. We assume (based on the central limit theory) that the true genetic predisposition, $a$, and the residual term, $e$, are normally distributed which means that the observed phenotype ($y$) is also normally distributed:
 \begin{align}
 a \sim N(0,\sigma^2_{a}), \notag \\
 e \sim N(0,\sigma^2_{e}), \notag \\
@@ -63,7 +63,7 @@ y \sim N( \mu,\sigma^2_{a} + \sigma^2_{e}). \notag
 
 ## Expected genetic predisposition conditional on observed phenotype
 The genetic predisposition cannot be observed but must be estimated from phenotypic data and genetic relationships between individuals from the study population. Estimation of an unobserved parameter using statistical modelling expresses the estimated quantity as a mathematical function of the observed data. [The question is what this function should look like and what properties the estimated genetic predisposition should fulfill. - I AM NOT SURE THE ANSWER OF "which properties the estimated genetic predisposition should fulfill" IS ANSWERED IN THE FOLLOWING TEXT. NOT SURE THIS SENTENCE SHOULD BE INCLUDED] 
-Under the assumption of multivariate normality for $a$ and $y$ (which is justified under the central limit theorem and the assumptions of many genetic and environmental factors), the expected value of the genetic predisposition, [$E(a)$], conditional on the observed phenotype, $y$, can be written as:
+Under the assumption of multivariate normality for $a$ and $y$ (which is justified under the central limit theorem and the assumptions of many genetic and environmental factors), the expected value of the genetic predisposition, [$E(a)$], conditional on the observed phenotype ($y$) can be written as:
 \begin{align}
 E(a|y) &= E(a) + Cov(a,y)[Var(y)]^{-1}(y-E(y))
 \end{align}
@@ -476,7 +476,7 @@ We will present two approaches that are commonly used to estimate genetic predis
 
 
 ## A linear mixed model for estimating marker effects (MBLUP) {#linear-model-pgbv}
-The linear mixed model for estimating marker effects contains the observation vector for the trait(s) of interest ($y$), the fixed effects $b$, which explain systematic differences in $y$, the random marker effects $s$, and the random residual effects $e$. A matrix formulation of a general linear mixed model for estimating marker effects is:
+The linear mixed model for estimating marker effects contains the observation vector for the trait(s) of interest ($y$), the fixed effects ($b$) which explain systematic differences in $y$, the random marker effects ($s$), and the random residual effects ($e$). A matrix formulation of a general linear mixed model for estimating marker effects is:
 \begin{align}
 y &= Xb + Ms + e, 
 (\#eq:mblup)
@@ -516,14 +516,14 @@ Estimates of the fixed effects, $b$, and random marker effects, $s$, in the line
 The best linear unbiased estimator (BLUE) of the fixed effects, $\hat{b}$, is:
 
 \begin{equation}
-\hat{b} = (X'V^{-1} X)^{-1} X' V^{-1} y
+\hat{b} = (X'V^{-1} X)^{-1} X' V^{-1} y.
 (\#eq:hatbetahatblue)
 \end{equation}
 
 The best linear unbiased prediction (BLUP) of the marker effects, $\hat{s}$, is:
 
 \begin{equation}
-\hat{s} = SM'V^{-1}(y - X\hat{b})
+\hat{s} = SM'V^{-1}(y - X\hat{b}).
 (\#eq:hatublup)
 \end{equation}
 
@@ -548,7 +548,7 @@ The BLUP equation for estimating marker effects consists of three parts; The ter
   X^TR^{-1}y \\
   M^TR^{-1}y
   \end{array}
-\right]
+\right].
 (\#eq:mmegpbv)
 \end{equation}
 
@@ -556,14 +556,14 @@ The BLUP equation for estimating marker effects consists of three parts; The ter
 The estimates of the marker effects $\hat{s}$ in \@ref(eq:mmegpbv) can be used to estimate genetic predisposition $\hat{a}$ for any individual with genomic information (\textit{i.e.}, genotypes for the same set of markers used in the reference population) by:
 
 \begin{equation}
-\hat{a} = \sum_{j=1}^m M_j \hat{s}_j
+\hat{a} = \sum_{j=1}^m M_j \hat{s}_j,
 (\#eq:genomicpbv)
 \end{equation}
 
 where $M_j$ corresponds to the vector of observed marker genotypes of an individual. 
 
 ### Encoding of the marker genotype matrix $M$
-The elements in the matrix $M$ can be encoded in different ways. The results from the genotyping laboratory represents the nucleotides found at a given genome position. To be used in the linear model the nucleotides (genotypes) at each position (marker locus) must be encoded numerically. Let us assume that at a given SNP-position, the bases $G$ or $C$ are observed and $G$ corresponds to the allele with the positive effect on our trait of interest. Based on the two observed alleles, the possible genotypes are $GG$, $GC$ or $CC$. One possible code for this SNP in the matrix $M$ might be the number of $G$-alleles which corresponds to $2$, $1$ and $0$. Alternatively, it is also possible to use the codes $1$, $0$ and $-1$ instead which corresponds to the factors with which $a$ is multiplied to get the genotypic values in the single locus model.
+The elements in the matrix $M$ can be encoded in different ways. The results from the genotyping laboratory represents the nucleotides found at a given genome position. The nucleotides (genotypes) at each position (marker locus) must be encoded numerically for it to be used in the linear model. Let us assume that at a given SNP-position, the bases $G$ or $C$ are observed and $G$ corresponds to the allele with the positive effect on our trait of interest. Based on the two observed alleles, the possible genotypes are $GG$, $GC$ or $CC$. One possible code for this SNP in the matrix $M$ might be the number of $G$-alleles, which corresponds to $2$, $1$ and $0$. Alternatively, it is also possible to use the codes $1$, $0$ and $-1$ instead, which corresponds to the factors with which $a$ is multiplied to get the genotypic values in the single locus model.
 
 
 ## A linear mixed model for estimating genetic predisposition (GBLUP) {#gblup}
@@ -583,30 +583,30 @@ X &: \text{is a known design matrix that relates the elements of $b$ to their co
 Z &: \text{is a known design matrix that relates the elements of $a$ to their corresponding element in $y$.} \notag 
 \end{align}
 
-In the linear mixed model (specified above) the genomic and residual effects ($a$ and $e$) and the phenotypes ($y$) are considered to be random variables which follow a multivariate normal (MVN) distribution:  
+In the linear mixed model (specified above) the genomic and residual effects ($a$ and $e$) and the phenotypes ($y$) are considered to be random variables that follow a multivariate normal (MVN) distribution:  
 \begin{align}
 a \sim MVN(0,\tilde{G}) \notag \\
 e \sim MVN(0,R) \notag \\
-y \sim MVN(Xb,V) \notag
+y \sim MVN(Xb,V), \notag
 \end{align}
 where $\tilde{G}=G\sigma_a^2$, and $R=I\sigma_e^2$ are square matrices of genomic and residual (co)variances among the individuals, respectively, and $V=G\sigma_a^2+I\sigma_e^2$ is the overall phenotypic covariance matrix. 
-The genomic relationship matrix $G$ is estimated from genomic marker data instead of pedigree information. 
+The genomic relationship matrix ($G$) is estimated from genomic marker data instead of pedigree information. 
 
 
 ### Estimation of genomic effects in GBLUP
-Estimates of the fixed effect $b$, and random genomic effects, $a$, in the linear mixed model specified above can be done using the BLUE and BLUP equations shown below.
+Estimates of the fixed effect ($b$) and random genomic effects ($a$) in the linear mixed model specified above are obtained using the BLUE and BLUP equations shown below.
 
-The best linear unbiased estimator (BLUE) of the fixed effects $\hat{b}$ is:
+The best linear unbiased estimator (BLUE) of the fixed effects ($\hat{b}$) is:
 
 \begin{equation}
-\hat{b} = (X'V^{-1} X)^{-1} X' V^{-1} y
+\hat{b} = (X'V^{-1} X)^{-1} X' V^{-1} y.
 (\#eq:hatbetahatblue)
 \end{equation}
 
 The best linear unbiased prediction (BLUP) of the genomic effects $\hat{a}$ is:
 
 \begin{equation}
-\hat{a} = \tilde{G}Z'V^{-1}(y - X\hat{b})
+\hat{a} = \tilde{G}Z'V^{-1}(y - X\hat{b}).
 (\#eq:hatublup)
 \end{equation}
 
