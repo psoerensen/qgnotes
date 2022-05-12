@@ -603,7 +603,7 @@ The best linear unbiased estimator (BLUE) of the fixed effects ($\hat{b}$) is:
 (\#eq:hatbetahatblue)
 \end{equation}
 
-The best linear unbiased prediction (BLUP) of the genomic effects $\hat{a}$ is:
+The best linear unbiased prediction (BLUP) of the genomic effects ($\hat{a}$) is:
 
 \begin{equation}
 \hat{a} = \tilde{G}Z'V^{-1}(y - X\hat{b}).
