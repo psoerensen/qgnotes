@@ -21,6 +21,7 @@ link-citations: yes
 knitr::opts_chunk$set(echo = TRUE)
 set.seed(19)
 ```
+[there needs to be consistency regarding ", $a$, vs. ($a$), vs just $a$ and also consider whether defining an abbreviation the first time e.g. "genomic relationship matrix $G$" should be followed by only using $G$ further on in the text]
 
 # Introduction
 Estimation of genetic predisposition can play an important role in precision health. It can help inform diagnostic procedures and subsequent treatment decisions. The true genetic predisposition for an individual cannot be observed. It is only possible to measure its phenotypic value, which is influenced by variation in genotypes and the environment. Therefore, we need a way to infer the genetic predisposition from the phenotypic value. This section introduces the basic concepts in estimating genetic predisposition, including: 
@@ -527,7 +528,7 @@ The best linear unbiased prediction (BLUP) of the marker effects, $\hat{s}$, is:
 (\#eq:hatublup)
 \end{equation}
 
-The BLUP equation for estimating marker effects consists of three parts; The term, $y - X\hat{b}$, shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$. The covariance between the true marker effects ($s$) and phenotypes ($y$) is $Cov(s,y)=SM'=M'\sigma_s^2$. The inverse of the phenotypic covariance matrix is $[Var(y)]^{-1}=V^{-1}$. Alternatively, estimates of the (fixed and random) effects in the model can be obtained by solving the mixed model equations. The mixed-model equations for the model given in \@ref(eq:mblup) have the following structure:
+The BLUP equation for estimating marker effects consists of three parts: (1) the term $y - X\hat{b}$ shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$, (2) the covariance between the true marker effects ($s$) and phenotypes ($y$) described as $Cov(s,y)=SM'=M'\sigma_s^2$ and (3) the inverse of the phenotypic covariance matrix described as $[Var(y)]^{-1}=V^{-1}$. Alternatively, estimates of the (fixed and random) effects in the model can be obtained by solving the mixed model equations. The mixed-model equations for the model given in \@ref(eq:mblup) have the following structure:
 
 \begin{equation}
 \left[
@@ -563,7 +564,7 @@ The estimates of the marker effects $\hat{s}$ in \@ref(eq:mmegpbv) can be used t
 where $M_j$ corresponds to the vector of observed marker genotypes of an individual. 
 
 ### Encoding of the marker genotype matrix $M$
-The elements in the matrix $M$ can be encoded in different ways. The results from the genotyping laboratory represents the nucleotides found at a given genome position. The nucleotides (genotypes) at each position (marker locus) must be encoded numerically for it to be used in the linear model. Let us assume that at a given SNP-position, the bases $G$ or $C$ are observed and $G$ corresponds to the allele with the positive effect on our trait of interest. Based on the two observed alleles, the possible genotypes are $GG$, $GC$ or $CC$. One possible code for this SNP in the matrix $M$ might be the number of $G$-alleles, which corresponds to $2$, $1$ and $0$. Alternatively, it is also possible to use the codes $1$, $0$ and $-1$ instead, which corresponds to the factors with which $a$ is multiplied to get the genotypic values in the single locus model.
+The elements in the matrix $M$ [perhaps rather: "The elements in the $M$ matrix" - perhaps it should be repeated that the $M$ matrix is the marker genotype matrix? - similar to Genomic Relationship Matrix - see below] can be encoded in different ways. The results from the genotyping laboratory represents the nucleotides found at a given genome position. The nucleotides (genotypes) at each position (marker locus) must be encoded numerically for it to be used in the linear model. Let us assume that at a given SNP-position, the bases $G$ or $C$ are observed and $G$ corresponds to the allele with the positive effect on our trait of interest. Based on the two observed alleles, the possible genotypes are $GG$, $GC$ or $CC$. One possible code for this SNP in the matrix $M$ might be the number of $G$-alleles, which corresponds to $2$, $1$ and $0$. Alternatively, it is also possible to use the codes $1$, $0$ and $-1$ instead, which corresponds to the factors with which $a$ is multiplied to get the genotypic values in the single locus model.
 
 
 ## A linear mixed model for estimating genetic predisposition (GBLUP) {#gblup}
@@ -594,7 +595,7 @@ The genomic relationship matrix ($G$) is estimated from genomic marker data inst
 
 
 ### Estimation of genomic effects in GBLUP
-Estimates of the fixed effect ($b$) and random genomic effects ($a$) in the linear mixed model specified above are obtained using the BLUE and BLUP equations shown below.
+Estimates of fixed effects ($b$) and random genomic effects ($a$) in the linear mixed model specified above are obtained using the BLUE and BLUP equations shown below.
 
 The best linear unbiased estimator (BLUE) of the fixed effects ($\hat{b}$) is:
 
@@ -610,7 +611,7 @@ The best linear unbiased prediction (BLUP) of the genomic effects ($\hat{a}$) is
 (\#eq:hatublup)
 \end{equation}
 
-The BLUP equation for the estimate of the genomic effects consists of three parts; The term, $y - X\hat{b}$, shows that the observed phenotypic values are corrected for the fixed effects represented by $X\hat{b}$. The covariance between the true genomic effects ($a$) and phenotypes ($y$) is $Cov(a,y)=\tilde{G}Z'=GZ'\sigma_a^2$. The inverse of the phenotypic covariance matrix is $[Var(y)]^{-1}=V^{-1}$. Alternatively, estimates of the (fixed and random) effects in the model can be obtained by solving the mixed model equations which have the following structure:
+The BLUP equation for the estimate of the genomic effects consists of three parts: (1) the term $y - X\hat{b}$ shows that the observed phenotypic values are corrected for the fixed effects as represented by $X\hat{b}$, (2) the covariance between the true genomic effects ($a$) and phenotypes ($y$) described as $Cov(a,y)=\tilde{G}Z'=GZ'\sigma_a^2$ and (3) the inverse of the phenotypic covariance matrix described as $[Var(y)]^{-1}=V^{-1}$. Alternatively, estimates of the (fixed and random)[why is "fixed and random" in brackets?] effects in the model can be obtained by solving the mixed model equations which have the following structure:
 
 \begin{equation}
 \left[
@@ -631,41 +632,41 @@ The BLUP equation for the estimate of the genomic effects consists of three part
   X^TR^{-1}y \\
   Z^TR^{-1}y
   \end{array}
-\right]
+\right].
 (\#eq:gblupmme)
 \end{equation}
 
-From \@ref(eq:hatublup) we can see that the GBLUP estimation procedure looks very similar to estimation of genetic predisposition based on pedigree information (PBLUP). In GLUP the covariances between genetic predisposition is based on the genomic relationship matrix $G$ which is computed from genomic markers whereas in PBLUP it is based on the numerator relationship matrix $A$ computed from pedigree information. 
+From \@ref(eq:hatublup) we can see that the GBLUP estimation procedure looks very similar to estimation of genetic predisposition based on pedigree information (PBLUP). In GLUP [should this be GBLUP?] the covariances between genetic predisposition is based on the genomic relationship matrix $G$ which is computed from genomic markers whereas in PBLUP it is based on the numerator relationship matrix $A$ computed from pedigree information. 
 
 
-### Estimation of genetic predisposition for individuals in test population in GBLUP
-The estimates of the genetic predisposition $\hat{a}_1$ for individuals with phenotypes can be used to estimate genetic predisposition $\hat{a}_2$ for individuals with only genomic information. Under the assumption of multivariate normality for the true genetic predisposition ($a \sim MVN(0,G\sigma_a^2)$), the expected value of the estimated genetic predisposition for individuals without phenotypes ($a_2$) conditional on the genetic predisposition for individuals with phenotypes $\hat{a}_1$ can be written as:
+### Estimation of genetic predisposition for individuals in the test population in GBLUP ["in" GBLUP or "with" GBLUP or "using" GBLUP?]
+The estimates of the genetic predisposition $\hat{a}_1$ for individuals with phenotypes [should this be: "for individuals with phenotypic information" - all individuals have phenotypes?] can be used to estimate genetic predisposition $\hat{a}_2$ for individuals with only genomic information [for individuals that only have genomic information available OR "for those individuals where only genomic information is available"]. Under the assumption of multivariate normality for the true genetic predisposition ($a \sim MVN(0,G\sigma_a^2)$), the expected value of the estimated genetic predisposition for individuals without phenotypes ($a_2$) conditional on the genetic predisposition for individuals with phenotypes ($\hat{a}_1$) can be written as:
 
 \begin{equation}
 \hat{a}_{2} = \tilde{G}_{12}\tilde{G}_{11}^{-1}\hat{a}_{1}.
 (\#eq:hatublupvt)
 \end{equation}
 
-The equation given in \@ref(eq:hatublupvt) consists of three parts; The term, $\hat{a}_{1}$, represent the genetic predisposition for individuals with phenotypes in the reference population. The covariance between the true genetic predisposition for invididuals without phenotypes ($a_2$) for individuals in the test population and individuals with phenotypes ($a_1$) in the training population is $Cov(a_1,a_2)=\tilde{G}_{12}=G_{12}\sigma_a^2$. The inverse of the genomic covariance matrix for individuals with phenotypes in the training population is $\tilde{G}_{11}^{-1}=\sigma_a^{-2}G_{11}^{-1}$. 
+The equation given in \@ref(eq:hatublupvt) consists of three parts: [check if you agree - I did the same for the previous "consists of three parts" descriptions] (1) the term $\hat{a}_{1}$ represents the genetic predisposition for individuals with phenotypes in the reference population, (2) the covariance between the true genetic predisposition for invididuals without phenotypes ($a_2$), for individuals in the test population, and individuals with phenotypes ($a_1$) in the training population is given as $Cov(a_1,a_2)=\tilde{G}_{12}=G_{12}\sigma_a^2$ and (3) the inverse of the genomic covariance matrix for individuals with phenotypes in the training population is given as [I added "given as" - but perhaps it could be "described as"?] $\tilde{G}_{11}^{-1}=\sigma_a^{-2}G_{11}^{-1}$. 
 
 
 ### Genomic Relationship Matrix $G$
 
-The additive genomic relationship matrix $G$ is constructed using all genomic markers (or potentially pruned for LD) as follows: 
+The additive genomic relationship matrix, $G$, is constructed using all genomic markers (or potentially pruned for LD) as follows: 
 
 \begin{equation}
 G = \frac{WW^T}{\sum_{i=1}^m 2p_i(1-p_i)},
 (\#eq:genomicrelmat)
 \end{equation}
 
-where $W$ is the centered and scaled genotype matrix, and $m$ is the total number of markers. Each column vector of $W$ was calculated as follows: $w_i=M_i-2p_i-0.5$, where $p_i$ is the minor allele frequency of the i'th genomic marker and $M_i$ is the i'th column vector of the allele count matrix, $M$, which contains the genotypes coded as 0, 1 or 2 counting the number of minor allele. The centering of the allele counts and scaling factor $\sum_{i=1}^m 2p_i(1-p_i)$ ensures that the genomic relationship matrix $G$ has similar properties as the numerator relationship matrix $A$. 
+where $W$ is the centered and scaled genotype matrix, and $m$ is the total number of markers. Each column vector of $W$ was calculated as follows: $w_i=M_i-2p_i-0.5$, where $p_i$ is the minor allele frequency of the i'th genomic marker and $M_i$ is the i'th column vector of the allele count matrix ($M$) [earlier the marker genotype matrix was called $M$ - it should be consistent] which contains the genotypes coded as 0, 1 or 2 counting the number of minor alleles. The centering of the allele counts and the scaling factor, $\sum_{i=1}^m 2p_i(1-p_i)$, ensures that the genomic relationship matrix ($G$) has similar properties as the numerator relationship matrix ($A$). 
 
-The main difference between the two types of genetic relationship matrices ($A$ and $G$) is that $A$ is based on the concept of identity by descent (sharing of the same alleles, transmitted from common ancestors) whereas $G$ is based on the concept of identity by state (sharing of the same alleles, regardless of their origin). 
+The main difference between the two types of genetic relationship matrices $A$ and $G$, is that $A$ is based on the concept of identity by descent (sharing of the same alleles, transmitted from common ancestors), whereas $G$ is based on the concept of identity by state (sharing of the same alleles, regardless of their origin). 
 
 ## Accuracy of genetic predisposition 
-Furthermore, genetic predisposition estimated using genomic information is generally more accurate than genetic predisposition estimated based only on pedigree information. One of the reasons for this is that the genomic relationship matrix more efficient use of phenotypic information for all individuals (based on degree of allele sharing) in the estimation procedure. 
+[Genetic predisposition estimated using genomic information is generally more accurate than genetic predisposition estimated based only on pedigree information. One of the reasons for this is that the genomic relationship matrix more efficient use of phenotypic information for all individuals (based on degree of allele sharing) in the estimation procedure.] Perhaps this could be rewritten as follows: Genetic predisposition that is estimated by using genomic information is generally more accurate than genetic predisposition estimated by using only pedigree information. One of the reasons for this is the genomic relationship matrix's more efficient use of phenotypic information for all individuals (based on degree of allele sharing) in the estimation procedure. 
 
-The accuracy of genetic predisposition estimates is trait specific and depends on the heritability and the number of phenotypic records. The accuracy of genetic predisposition increases when the size of the training population increases, when the reference population represents as much of the relevant genetic variation in the population as possible, when individuals in the test population are closely related to the reference population, when genetic diversity in the population is low (\textit{i.e.}, low effective population size) and with better statistical models. 
+The accuracy of genetic predisposition estimates is trait specific and depends on the heritability and the number of phenotypic records. [The accuracy of genetic predisposition increases when the size of the training population increases, when the reference population represents as much of the relevant genetic variation in the population as possible, when individuals in the test population are closely related to the reference population, when genetic diversity in the population is low (\textit{i.e.}, low effective population size) and with better statistical models.] Perhaps this could be rewritten as follows: The accuracy of genetic predisposition increases when (1) the size of the training population increases, (2) the reference population represents as much of the relevant genetic variation in the population as possible, (3) individuals in the test population are closely related to the reference population, (4) the genetic diversity in the population is low (\textit{i.e.}, low effective population size) and (5) better statistical models are applied.
 
 \begin{comment}
 A common finding is that a straightforward BLUP method for estimating the marker effects gave reliabilities of genomic breeding values almost as high as more complex methods. The BLUP method is attractive because the only prior information required is the additive genetic variance of the trait. 
