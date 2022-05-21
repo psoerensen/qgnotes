@@ -62,9 +62,10 @@ The \indx{approximate distributions} (e.g.\ $\chi^2$) relies on that some distri
 The \indx{empirical distributions} are the brute-force `when-all-else-fails' solutions we attend [turn] to, when the other distributions are too computationally demanding, or the conditions for approximating seem to [too] strongly bent. Usual methods for obtaining these are bootstrapping or permutation routines, but caution should be taken under which conditions the routines are performed.
 
 # Single-step approaches
-In the single-step approaches, the data is fitted to the model with AI-REML to obtain estimates of the variance components ($\hat{\theta}$) and the likelihood, which is used to compare nested models with a likelihood ratio test (LRT). 
+In the single-step approaches, the data is fitted to the model [which model?] with [AI?]-Restricted Maximum Likelihood (AI-REML) [should this abbreviation be written out first?] to obtain estimates of the variance components ($\hat{\theta}$) and the likelihood, which is used to compare nested models with a likelihood ratio test (LRT). [are the variance compoments and likelihood used __to compare__ nested models with a likelihood ratio test? - which are the nested models?]
 
-The LRT, Wald's test, and Rao's Score test, can be referred to as `The Holy Trinity' \citep{Rao2009}, and are all related to the likelihood and the first and second derivation (Figure \ref{fig:gfm:trinity}). The first derivative gives the slope of the function \footnote{The first derivative of the likelihood is also referred to as the 'score', which is the basis of the Score based statistic.}, and the second derivative is related to the uncertainty of the estimated variance component.
+The LRT, Wald's test, and Rao's Score test, can be referred to as `The Holy Trinity' \citep{Rao2009}, and are all related to the likelihood and the first and second derivation (Figure \ref{fig:gfm:trinity}). The first derivative gives the slope of the function\footnote{The first derivative of the likelihood is also referred to as the 'score', which is the basis of the Score based statistic.}, and the second derivative is related to the uncertainty of the estimated variance component.
+[in the figure "Likelihood Ratio Test" - is missing the "t"]
 
 \begin{figure}
   \centering
@@ -77,10 +78,10 @@ The LRT, Wald's test, and Rao's Score test, can be referred to as `The Holy Trin
   \label{fig:gfm:trinity}
 \end{figure}  
 
-The LRT compares the model fit between the full model and the reduced model. In Wald's test, the model parameters are fitted using the full model, and test if the estimated variance component is significantly different from a particular value (usually zero). Rao's Score test uses the reduced model (\textit{i.e.}, null model), and estimates the size of improvement in model fit, if an additional variance component was added to the model. Both the Wald and the Rao's score tests are asymptotically equivalent to the LRT, that is, as the sample size becomes infinitely large, the values of the Wald and Rao's score test statistics will become increasingly close to the test statistic from the LRT. A few additional details on the different approaches are given below.
+The LRT compares the model fit between the full model and the reduced model. In Wald's test the model parameters are fitted using the full model, and [it?] test[s] whether the estimated variance component is significantly different from a particular value (usually zero). Rao's Score test uses the reduced model (\textit{i.e.}, null model), and estimates the size of improvement in model fit if an additional variance component was added to the model. Both the Wald and the Rao's score tests are asymptotically equivalent to the LRT, that is, as the sample size becomes infinitely large, the values of the Wald and Rao's score test statistics will become increasingly close to the test statistic from the LRT [OR: "increasingly close to the LRT (test?) statistic"]. A few additional details on the different approaches are given below.
 
 ## Likelihood Ratio Test
-The likelihood ratio tests (LRT) are used to assess whether a reduced model fits the data better than the full model
+The LRT is used to assess whether a reduced model fits the data better than the full model
 by comparing the likelihoods of the two models. A high LR indicates that the full model is better at explaining the observed genomic variance than the reduced model with one less variance component. The reduced model has to be nested within the full model, and when REML is used, the two models being compared has to have the same fixed effects, otherwise the two likelihoods are not comparable. The LRT statistic can be derived as:
 
 \begin{equation}
@@ -90,34 +91,34 @@ T_\textrm{LRT} = 2 \ln\left[\frac{L(\hat{\theta}|\vect{y})}{L(\hat{\theta}_r|\ve
 where $l(\hat{\theta}|{y})$ is the log-likelihood for the full model, and $l(\hat{\theta}_r|{y})$ is the log-likelihood for the reduced model. When the sample size is sufficiently large, the LRT statistic is $\chi^2$ distributed with $\kappa$ degrees of freedom, where $\kappa$ is the difference in parameters between the two comparable models.
 
 ## Wald's test
-The Wald's test is a parametric test that compares an estimated variance component to some particular value, $\theta_0$, based on some null hypothesis:
+The Wald's test is a parametric test that compares an estimated variance component to some particular value, $\theta_0$, based on a null hypothesis.
 
 \begin{equation}
-  \frac{(\thetahat - \theta_0)^2}{\Var(\thetahat)}
+  \frac{(\thetahat - \theta_0)^2}{\Var(\thetahat)}.
   \label{eq:walds.test.basic}
 \end{equation}
 
 The test statistic is assumed $\chi^2$-distributed with one degree of freedom. If the null hypothesis was that the {i\th} variance component was equal to zero, the above can be expressed as a quadratic form by
 
 \begin{equation}
-  T_\textrm{Wald} = (\thetahat_i - 0)' \left[ \matr{I}_E (\thetahat) ^{-1} \right]^{ii} (\thetahat_i - 0)
+  T_\textrm{Wald} = (\thetahat_i - 0)' \left[ \matr{I}_E (\thetahat) ^{-1} \right]^{ii} (\thetahat_i - 0),
   \label{eq:walds.test}
 \end{equation}
 
-where $\left[ \matr{I}_E (\thetahat) ^{-1} \right]^{ii}$ is the {i\th} diagonal element of the inverse expected information matrix. Wald's test has the advantage, that it only requires fitting and estimating the parameters under the full model. If the test fails to reject the null hypothesis, this suggests that removing the corresponding variance component from the model will not substantially harm the fit of that model. 
+where $\left[ \matr{I}_E (\thetahat) ^{-1} \right]^{ii}$ is the {i\th} diagonal element of the inverse expected information matrix. Wald's test has the advantage that it only requires fitting and estimating the parameters under the full model. If the test fails to reject the null hypothesis, this suggests that removing the corresponding variance component from the model will not substantially harm the fit of that model. 
 
 Wald's test is computed as the parameter estimate divided by its asymptotic standard error. The asymptotic standard errors are computed from the inverse of the second derivative matrix of the likelihood with respect to each of the covariance parameters. The Wald's test is valid for large samples, but it can be unreliable for small data sets. When used on correlated variance components, $I_E$ might not be full rank and therefore not invertible. 
 
 ## Rao's Score test
 Rao's score test requires estimating only a single model that does not include the parameter(s) of interest. Thus, one can test if adding the variance component to the model will result in a significant improvement in model fit, without fitting additional models.  The test statistic is based on the slope (or score) of the likelihood function, using model parameters estimated under the null model. If the null model is true, then the slope of the likelihood function is close to zero. If the null model is not true, fixing a variance component to a value will penalise the likelihood.
 
-Instead of calculating likelihoods for both the null and the full model,  the first and second derivatives is used to get an indication of the produced change. The Rao's Score test statistic can be formulated as:
+Instead of calculating likelihoods for both the null and the full model,  the first and second derivatives are used to get an indication of the produced change. The Rao's Score test statistic can be formulated as:
 
 \begin{equation}
   T_\textrm{Rao} = \left(l'(\theta_i = 0, \thetahat_{-1}) \right)' \left[ \matr{I}_E (\theta_i = 0, \thetahat_{-1}) ^{-1} \right]^{ii} \left(l'(\theta_i = 0, \thetahat_{-1}) \right),
 \end{equation}
 
-where $\left(l'(\theta_i = 0, \thetahat_{-i}) \right)$ is the first derivative of the \emph{full model's} likelihood function, calculated using the parameters estimated with the \emph{null model} and the parameter of interest ($\theta_i$) fixed cf.\ null model. $\left[ \matr{I}_E (\theta_i = 0, \thetahat_{-1}) ^{-1} \right]^{ii}$ is the {i\th} diagonal element of the inverse expected information matrix, under same conditions as the first derivative. It is possible to use the average between the expected and observed information matrix, i.e.\ the average information matrix, as it may be easier to compute \citep{Freedman2007,Johnson1995,Madsen1994,Jensen1997}.
+where $\left(l'(\theta_i = 0, \thetahat_{-i}) \right)$ is the first derivative of the \emph{full model's} likelihood function, calculated using the parameters estimated with the \emph{null model} and the parameter of [interest ($\theta_i$) fixed cf.\ null model ???]. $\left[ \matr{I}_E (\theta_i = 0, \thetahat_{-1}) ^{-1} \right]^{ii}$ is the {i\th} diagonal element of the inverse expected information matrix, under the same conditions as the first derivative. It is possible to use the average between the expected and observed information matrix, i.e.\ the average information matrix, as it may be easier to compute \citep{Freedman2007,Johnson1995,Madsen1994,Jensen1997}.
 
 The Rao's Score test has an asymptotic distribution of $\chi^2$ with number of parameters in $\thetahat_i$ as degrees of freedom when the null hypothesis is true. Some issues related to the test statistic may occur if the information matrix is not positive definite which can happen if the null hypothesis is true \citep{Freedman2007}.
 
@@ -128,7 +129,7 @@ There are several different score-based statistics that also are derived from th
   T_\textrm{Score} = \half (\vect{y} - \matr{X}\bfbeta)' \matr{V}^{-1}\matr{Z}\vect{g}_i\matr{Z'V}^{-1}(\vect{y}-\matr{X}\bfbeta),
 \end{equation}  
 
-which under the null hypothesis $H_0: \sigma^2_i = 0$ should be close to zero. If the parameters are estimated under the null model,the score statistic for a group of markers $i$ is:
+which under the null hypothesis $H_0: \sigma^2_i = 0$ should be close to zero. If the parameters are estimated under the null model, the score statistic for a group of markers $i$ is:
 
 \begin{equation}
   T_\textrm{Score} = \half (\vect{y} - \matr{X}\betahat)' \Vhat^{-1}_0\matr{Z}\vect{g}_i\matr{Z}'\Vhat^{-1}_0(\vect{y}-\matr{X}\betahat).
@@ -141,11 +142,11 @@ Utilizing that $\Phat\vect{y} = \Vhat^{-1}_0 (\vect{y}-\matr{X}\betahat) = \ehat
   \label{eq:Ti}
 \end{equation}
 
-where the latter expansion is done for the subset of markers. This is computational simple, and also easy to derive an empirical distribution of the score statistic under both the competitive and self-contained null hypothesis. 
+where the latter expansion is done for the subset of markers. This is computationally simple, and also easy to derive an empirical distribution of the score statistic under both the competitive and self-contained null hypothesis. 
 
 
 # Two-step approaches
-In the first step, a test statistic for the association (\textit{e.g.}, t-statistics) of individual markers with the trait phenotype is obtained from traditional single-marker regression (can also be from a  mixed model or a Bayesian linear regression). In the second step, for each set of markers being tested, a summary statistic is obtained. For each set an appropriate summary statistic measuring the degree of association between the set of markers and the phenotypes is computed. 
+In the first step, a test statistic for the association (\textit{e.g.}, t-statistic[s]) of individual markers with the trait phenotype is obtained from traditional single-marker regression (it can also be obtained from a  mixed model or a Bayesian linear regression). In the second step, for each set of markers being tested, a summary statistic is obtained. [In the second step, a summary statistic is obtained for each of the markers being tested.] For each set an appropriate summary statistic measuring the degree of association between the set of markers and the phenotypes is computed. [does this mean the same as the first description of a two-step approach? - see section 1.1] 
 
 ## Gene set statistics
 Determination of association of individual markers is based on a single marker test statistic such as the t-statistics and a threshold for this statistic.
