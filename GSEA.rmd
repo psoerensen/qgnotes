@@ -149,23 +149,23 @@ where the latter expansion is done for the subset of markers. This is computatio
 In the first step, a test statistic for the association (\textit{e.g.}, t-statistic[s]) of individual markers with the trait phenotype is obtained from traditional single-marker regression (it can also be obtained from a  mixed model or a Bayesian linear regression). In the second step, for each set of markers being tested, a summary statistic is obtained. [In the second step, a summary statistic is obtained for each of the markers being tested.] For each set an appropriate summary statistic measuring the degree of association between the set of markers and the phenotypes is computed. [does this mean the same as the first description of a two-step approach? - see section 1.1] 
 
 ## Gene set statistics
-Determination of association of individual markers is based on a single marker test statistic such as the t-statistics and a threshold for this statistic.
+Determination of the association of individual markers with the phenotype is based on a single marker test statistic such as the t-statistic and a threshold for this statistic.
 
 Let $m$ denote the total number of markers tested, $m_F$ is the total number of markers belonging to the set of interest, $m_A$ is the number of associated markers, and $m_{AF}$ is the number of associated markers belonging to the feature. Thus $m$, $m_A$, and $m_{AF}$ are fixed. 
 
-We consider two properties of a marker; 1) to be associated to the phenotypic trait, and 2) belong to the genomic feature of interest. Let $H_0$ denote the null hypothesis, that the two properties of a marker are independent, or equivalently that the associated markers are picked at random from the total population of tested markers. \citet{Rivals2007} show that this can be formulated and tested in a number of ways.The different tests can be evaluated using an exact (Hypergeometric), approximate ($\chi^2$), or empirical distribution ($T_{Sum}$) under the null hypothesis.
+We consider two properties of a marker; 1) it is associated with the phenotype, and 2) it belongs to the genomic feature of interest. Let $H_0$ denote the null hypothesis which states that the two properties of a marker are independent, or likewise, that the associated markers are picked at random from the total population of tested markers. \citet{Rivals2007} shows that this can be formulated and tested in a number of ways. The different tests can be evaluated using an exact (hypergeometric), approximate ($\chi^2$), or empirical distribution ($T_{Sum}$) under the null hypothesis.
 
 ### Hypergeometric test
 
-The total number of markers that belong to the genomic feature of interest and that are associated to the trait phenotype can be computed as
+The total number of markers that belong to the genomic feature of interest and that are associated with the phenotype can be computed as:
 
 \begin{equation}
-	T_\textrm{Count} = m_{AF} = \sum_{i=1}^{m_F} \matr{I}(t_i > t_0)
+	T_\textrm{Count} = m_{AF} = \sum_{i=1}^{m_F} \matr{I}(t_i > t_0),
 \end{equation}
 
-where $t_i$ is the {i\th} single marker test statistics, $t_0$ is an arbitrary chosen threshold for the single marker test statistics, and $I$ is an indicator function that takes the value $1$ if the argument $(t_i > t_0)$ is satisfied. 
+where $t_i$ is the {i\th} single marker test statistics [or should it be statistic (singular)], $t_0$ is an arbitrary chosen threshold for the single marker test statistics [s or not], and $I$ is an indicator function that takes the value $1$ if the argument $(t_i > t_0)$ is satisfied. 
 
-The number of associated markers that belong to a genomic feature, $m_{AF}$, can be modelled using a Hypergeometric distribution that has a discrete probability distribution that describes 
+[EXTREMELY LONG SENTENCE - I DON'T KNOW HOW TO FIX IT] The number of associated markers that belong to a genomic feature, $m_{AF}$, can be modelled using a hypergeometric distribution that has a discrete probability distribution that describes 
 the probability of $m_{AF}$ successes in $m_F$ draws without replacement (can only be drawn one time) from a finite population of size $m$ containing exactly $m_A$ successes. Thus if the null hypothesis is true (associated markers are picked at random from the total population of tested markers), then the observed value $m_{AF}$ is a realization of the random variable $M_{AF}$ 
 having a hypergeometric distribution with parameters $m$, $m_A$, and $M_F$, which we denote by $M_{AF} \sim \distr{Hyper}(m, m_A, m_F)$. 
 
