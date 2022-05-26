@@ -195,10 +195,10 @@ The second summary statistic is based on a $\chi^2$ test. Let the observed data 
 \vspace{1em}
 \end{center}
 
-Let again $H_0$ denote the null hypothesis that the property to belong to the genomic feature of interest, and that to be associated, are independent. If the occurrence of these two outcomes are statistically independent, we expect the number in the {ij\th} cell to be $f_{ij} = \frac{m_i m_j}{m^2}$. Based on this expectation we can compute the following summary statistic:
+[SHOULD BE REWRITTEN: Let again $H_0$ denote the null hypothesis that the property to belong to the genomic feature of interest, and that to be associated, are independent.] If the occurrence of these two outcomes are statistically independent, we expect the number in the {ij\th} cell to be $f_{ij} = \frac{m_i m_j}{m^2}$. Based on this expectation we can compute the following summary statistic:
 
 \begin{equation}
-  T_{\chi^2} = \sum_{i=1}^2 \sum_{j=1}^2 \frac{\left(m_{ij} - m \cdot f_{ij} \right)^2}{m \cdot f_{ij}}
+  T_{\chi^2} = \sum_{i=1}^2 \sum_{j=1}^2 \frac{\left(m_{ij} - m \cdot f_{ij} \right)^2}{m \cdot f_{ij}},
 \end{equation}	
 
 where $f_{ij}$ is the observed frequency in the contingency table. This is called the $\chi^2$ test for independence and it has been shown that the $T_{\chi^2}$ variable is asymptotically $\chi^2$ distributed with one degree of freedom \citep{Wackerly1996,Rivals2007}. The alternative hypothesis corresponds to the variables having an association or relationship, where the structure of this relationship is not specified.
