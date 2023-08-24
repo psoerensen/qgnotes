@@ -1,5 +1,6 @@
 This is a set of notes used for the qgg package.  
 
+
 Notes:  
 [Quantitative Genetics Theory](https://psoerensen.github.io/qgnotes/Quantitative-Genetics-Theory.pdf)  
 [Estimation of Genetic Predisposition](https://psoerensen.github.io/qgnotes/Estimation-of-Genetic-Predisposition.pdf)  
