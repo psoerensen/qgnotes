@@ -13,7 +13,7 @@ output:
     includes:
       in_header: mathjax_header.html
   word_document: default
-bibliography: [qg2021.bib, book.bib, packages.bib]
+bibliography: [qg2021.bib, quantmd.bib, book.bib, packages.bib]
 link-citations: yes
 ---
 
@@ -29,7 +29,7 @@ Compared to the idealized cases described in the previous section, a practical b
 
 BLUP approaches are widely used in genetic evaluations, for both traditional predictions of breeding values and also for predicting genomic breeding values. The popularity of BLUP is not only due to the theoretical foundations behind BLUP, but also the efficient algorithms developed by Henderson for computing predicted breeding values, even in very large breeding populations. The theoretical foundations, and the development of efficient algorithms, together with the availability of large computational resources at a very low price, have made BLUP the de-facto standard for breeding value estimation.
 
-This chapter focuses on the usage and application of linear mixed models, as they are applied in these notes. The first section applies standard probability theory and linear algebra to predict genetic values and marker effects, assuming the variances are known. Because the solutions provided in section \ref{sec:predicting.values.and.effects} are not always computational feasible, the Mixed Models Equations have been developed, which are described in section \ref{sec:MME}. These solutions however also require that the variances are known, so estimating these with Maximum Likelihood and Restricted Maximum Likelihood are outlined in Chapter \ref{sec:varcomp}.Finally, we will return to predicting genetic values and estimating a model's predictive ability in section \ref{sec:cross.validation}.
+This chapter focuses on the usage and application of linear mixed models, as they are applied in these notes. The first section applies standard probability theory and linear algebra to predict genetic values and marker effects, assuming the variances are known. Because the solutions provided in section \ref{sec:predicting.values.and.effects} are not always computational feasible, the Mixed Models Equations have been developed, which are described in section \ref{sec:MME}. These solutions however also require that the variances are known, so estimating these with Maximum Likelihood and Restricted Maximum Likelihood methods. Finally, we will return to predicting genetic values and estimating a model's predictive ability in section \ref{sec:cross.validation}.
 
 For the following chapter, we will extend the simple model notation of M-BLUP and G-BLUP to a general form that allows multiple observations per individual, hence the matrix $\matr{Z}$ emerges; an $n \times q$ incidence matrix relating observations to individuals. We also expand the intercept $\mu$ to $\matr{X}\bfbeta$, the $n \times p$ incidence matrix relating observations to the $p$-length vector of fixed effects, $\bfbeta$. Written in their entirety, the models become:
 
@@ -47,7 +47,7 @@ It appears that it has become common practice to 'estimate' fixed effects and 'p
 
 Predicting genetic values has generally been the most important task for animal geneticists as they are used by farmers to select animals for reproduction. Originally, genetic values have been calculated by using the expected relationships among individuals by using the pedigree based relationship matrix $A$. Nowadays, the advent of genome-wide genotyping at cheaper cost is revolutionizing the field by allowing the construction of the relationship matrix taking into account the realized relationships among individuals by using SNP marker data: the genetic relationship matrix $\matr{G}$. 
 
-For this section, we will cover three scenarios, all based on the M-BLUP and G-BLUP models, and the assumptions in chapter \ref{ch:lmm1}. To solve the conditional expectations, we will be relying on standard probability theory and linear algebra. These tools are briefly described in the `Stat boxes'.
+For this section, we will cover three scenarios, all based on the M-BLUP and G-BLUP models. To solve the conditional expectations, we will be relying on standard probability theory and linear algebra. These tools are briefly described in the `Stat boxes'.
 
 The first scenario is predicting genetic values based on the observed values, i.e.\ finding the solution to $\E[\vect{g}|\vect{y}]$. In the second scenario, we will predict the genetic values after predicting the marker effects, i.e.\ $\E[\vect{g}|\vect{b}]$. The third scenario is the reverse of the second, predicting marker effects from predicted genetic values, i.e.\ $\E[\vect{b}|\vect{g}]$.
 
@@ -205,15 +205,13 @@ By applying stat box \ref{stat:2mvn}, the conditional expectation of $\vect{g}$ 
 
 which is the Best Linear Unbiased Predictor of $\vect{g}$. 'Best' because it has the minimum mean squared error among the possible predictors,'Linear' because it is a linear function of the data, 'Unbiased' because the average value of the predictor is equal to the one of the quantity being predicted.  
 
-The construct $\matr{ZGZ'}$ expands the genomic relationship matrix from $q \times q$ to $n \times n$ and, if there are multiple observations per individual, the result is rank deficient (see \eqref{eq:app:zgz}, p. \pageref{eq:app:zgz}). So when the data set to be analysed contains a lot of observations it might not possible to calculate the inverse in \eqref{eq:gblup.blup},
+The construct $\matr{ZGZ'}$ expands the genomic relationship matrix from $q \times q$ to $n \times n$ and, if there are multiple observations per individual, the result is rank deficient. So when the data set to be analysed contains a lot of observations it might not possible to calculate the inverse in \eqref{eq:gblup.blup},
 partly due to the structure, partly due to the sheer size. The Mixed Model Equations (MME), described in section \ref{sec:MME}, can therefore be used as the dimensions of the matrices are in the order of the sum of number of fixed effects and genetic values (or marker effects).
 Furthermore, the matrices needed inverted in MME can be sparse so more effective inversion algorithms can be applied, except in animal breeding where the genomic relationship matrix usually are dense -- but the inverse of these can usually be made while constructing the ordinary matrix.
 
 
 \subsection{Predicting \texorpdfstring{$\vect{g}$}{genetic values} from \texorpdfstring{$\vect{b}$}{marker effects}: \texorpdfstring{$\E[\vect{g} | \vect{b}]$}{E[g|b]}}
 \label{sec:b2g}
-
-<!-- \subsection{Formula for calculating the genomic value for an individual from the SNP effects obtained from the M-BLUP} -->
 
 Having predicted values of marker effects (${\bhat}$), we can predict genetic values based on the linear combination:
 \begin{subequations}
@@ -239,7 +237,7 @@ This is the reverse of the above, but as $W$ is not necessarily a square and inv
 
 which will be derived in the following. We could do as for $\E[\vect{g}|\vect{y}]$, but we will here use another approach that is a more general solution.
 
-To achieve the goal, it is useful to write down the joint distribution of $\vect{b}$, $\vect{g}$ and $\vect{y}$. The starting point to build this joint distribution is to keep in mind the assumptions of M-BLUP and G-BLUP that we have already stated in section \ref{sec:snpblup}. To make things clear they are summarised in table \ref{tab:blup.assumptions} for the general form.
+To achieve the goal, it is useful to write down the joint distribution of $\vect{b}$, $\vect{g}$ and $\vect{y}$. The starting point to build this joint distribution is to keep in mind the assumptions of M-BLUP and G-BLUP as summarised in table \ref{tab:blup.assumptions} for the general form.
 
 \begin{table}[!b]
 	\centering
@@ -248,7 +246,7 @@ To achieve the goal, it is useful to write down the joint distribution of $\vect
 		\label{tab:blup.assumptions}
 		\begin{tabular}{ll}
 		  \toprule
-		  $\vect{y} = \matr{X}\bfbeta + \matr{ZW}\vect{b}+\vect{e}$ \eqref{eq:snpblup} & $\E(\vect{y}) = \matr{X}\bfbeta$ \\
+		  $\vect{y} = \matr{X}\bfbeta + \matr{ZW}\vect{b}+\vect{e}$  & $\E(\vect{y}) = \matr{X}\bfbeta$ \\
 		  $\vect{g} = \matr{W}\vect{b}$ & $\vect{g} \sim N(0, \matr{G} \sigma^2_g)$ \\
 		  & $\vect{b} \sim N(0, \matr{I} \sigma^2_b)$ \\
 		  & $\vect{e} \sim N(0, \matr{D} \sigma^2_e)$ \\
@@ -348,7 +346,7 @@ The joint distribution found in \eqref{eq:gblup.degenerate-first} could also hav
 \label{sec:MME}
 
 The mixed model equations (MME) were first introduced by \citeauthor{Henderson1949} in 1949. This set of equations is used to jointly obtain estimates of fixed and random effects while avoiding the need of $(\matr{G}\sigma^2_g + \matr{D}\sigma^2_e)^{-1}$, which is difficult to compute when the data set is large (computational time is proportional to $n^3$). A fundamental property of the estimates of random and fixed effects obtained is that they are, respectively, the BLUP and the BLUE (i.e.\ same properties as BLUP but for fixed effects; `E' stands for Estimator). 
-The proof of this was published by \citet{Goldberger1962} and  \citet{Henderson1963} (with the help of Searle). This discovery has revolutionized the field of animal breeding since it has allowed to estimate breeding values in relatively short time, providing that variance components are known (if they are not, they can be estimated from the data as explained in section \ref{sec:varcomp}).
+The proof of this was published by \citet{Goldberger1962} and  \citet{Henderson1963} (with the help of Searle). This discovery has revolutionized the field of animal breeding since it has allowed to estimate breeding values in relatively short time, providing that variance components are known (if they are not, they can be estimated from the data).
 
 
 \subsection{MME for G-BLUP}
@@ -474,8 +472,7 @@ For M-BLUP however, the size of the kernel is $O(m^2)$. This implies that if $q 
 
 \subsection{MME for two random marker or genetic factors}
 
-Here, we will briefly display the MME for G-BLUP and M-BLUP with two random factors, as those given in section \ref{sec:model.expansion}, page \pageref{sec:model.expansion}.
-
+Here, we will briefly display the MME for G-BLUP and M-BLUP with two random factors.
 
 The MME for both G-BLUP and M-BLUP are presented in \eqref{eq:gblup2.mme.kernel} and \eqref{eq:snpblup2.mme.kernel}:
 
@@ -625,6 +622,7 @@ and similarly for $\matr{H}_\beta$:
 
 
 \section{Cross validation}
+\label{sec:cross.validation}
 
 So far we have been discussing model fit, predicted marker effects and genetic values, and estimated variance components for evaluating a model.
 But a model may be used for more than trying to understand how the biological machinery produces the observed phenotypes. In animal breeding and personalised medicine, predicting future outcomes is highly valuable, and thus evaluating a models predictive ability has its merit. The predictive ability stems from the models' ability to generalise to another dataset, a feature that is penalized if the model has been overfitted. 
@@ -677,7 +675,8 @@ We will now cover the cross-validation for G-BLUP. We will denote the observatio
   +
   \binom{\vect{e}_2}{\vect{e}_1}
 \end{equation}
-in the same manner as we did in section \ref{sec:g2b}. Assumptions are as noted in section \ref{sec:gblup.assumptions}, but we annotate $\matr{G}$ as:
+in the same manner as we did in section \ref{sec:g2b}. The genomic values for individuals in the valdiation set $\vect{a}_2$ and those in the training set as $\vect{a}_1$ are assumed to follow a multivariate normal distribution:
+
 \begin{equation}
   \binom{\vect{g}_2}{\vect{g}_1}
   \sim
@@ -752,10 +751,9 @@ This emphasises the importance of the relationship between the two groups and th
     {y}^\ast \sim N[{Am + c}, {AVA}'].
   \end{equation*}
   
-  {\bfseries Example:} Using M-BLUP in \eqref{eq:snpblup}, $y^\ast = y$,
+  {\bfseries Example:} Using the M-BLUP model, $y^\ast = y$,
   and we can set ${A} = (W ~ I_n)$, ${x} = {\binom{b}{e}}$, ${c} = {1}_n\mu$, and ${m} = {0}$.
-  The variance-covariance matrix for $b$ and $e$ is found by equations \eqref{eq:snpblup.cov}, 
-  giving ${V} = \bigl(\begin{smallmatrix} {I}_m \sigma^2_b & {0} \\ {0} & {D}_n \sigma^2_e   \end{smallmatrix} \bigr)$.
+  The variance-covariance matrix for $b$ and $e$ is ${V} = \bigl(\begin{smallmatrix} {I}_m \sigma^2_b & {0} \\ {0} & {D}_n \sigma^2_e   \end{smallmatrix} \bigr)$.
   Thus, the joint distribution from above becomes:
   \begin{align*}
     {y} &\sim N\left[ 
@@ -772,7 +770,6 @@ This emphasises the importance of the relationship between the two groups and th
     	  \right]
   \end{align*}
   
-which is identical to what we found in \eqref{eq:snpblup.var.4}, section  \ref{sec:snpblup.assumptions}.
 \end{statbox}
     	
 \begin{statbox}[floatplacement=hb,label={stat:joint}]{A joint distribution}

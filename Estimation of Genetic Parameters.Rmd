@@ -26,9 +26,6 @@ set.seed(19)
 # Introduction to genetic parameters
 Estimation of genetic parameters is an important discipline in studying the genetics of complex traits and multifactorial diseases. First of all, estimating additive genetic variance, and possible non-additive genetic variances, contributes to a better understanding of the underlying genetic mechanisms of complex phenotypes.  Secondly, estimates of phenotypic and genetic variances, and their covariances, are essential for prediction of genetic predisposition, e.g., animal breeding values or an individuals genetic liability towards a common complex disease. Parameters that are of great interest are heritability, genetic and phenotypic correlation and repeatability, which all can be computed from the estimated variance components. Genetic parameters are estimated using information on phenotypes and genetic relationships among individuals in the study population. In this section, we will illustrate how different phenotypic sources and genetic relationships are used for estimating genetic parameters.
 
-\begin{comment}
-In modern genetic studies of complex phenotypes, genome-wide association studies (GWAS) are commonly conducted to investigate the underlying genetic basis of the trait in question. From such studies, the SNP-heritability ($h_{SNP}^2$) can be estimated (\textcolor{red}{see section on 'Summary statistics'}), which is the proportion of the total phenotypic variation that can be explain by \textit{common} genetic variants (i.e., typically single nucleotide polymorphisms (SNPs) with a minor allele frequency $>0.01$). 
-\end{comment}
 
 ## The genetic model
 The phenotype for a quantitative trait is the sum of both genetic ($g$) and environmental factors ($e$). In general, the total genetic effect ($g$) for an individual is the sum of both additive and non-additive effects: 
@@ -37,7 +34,7 @@ The phenotype for a quantitative trait is the sum of both genetic ($g$) and envi
 	y &=\mu+a+d+i+e,
 \end{align}
 
-where $\mu$ is the population mean, $a$ is the additive genetic effect, $d$ is the dominance effect, $i$ is the interaction effect ($i.e.$, epistasis), and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. Only the additive genetic effects are passed on to the offspring. In contrast, the non-additive genetic effects (i.e., dominance and epistasis) are degraded by recombination and are not transmitted from generation to generation, even though they may be important for an individual's phenotype. Here, we only consider the additive and dominance effects. We assume that the genetic effects ($i.e$., $a$ and $d$), and the residual term, $e$, are independent, and normally distributed:
+where $\mu$ is the population mean, $a$ is the additive genetic effect, $d$ is the dominance effect, $i$ is the interaction effect ($i.e.$, epistasis), and $e$ is the environmental deviation (or residual) not explained by the genetic effects in the model. Only the additive genetic effects are passed on to the offspring. In contrast, the non-additive genetic effects (i.e., dominance and epistasis) are degraded by recombination and are not transmitted from generation to generation, even though they may be important for an individual's phenotype. Here, we only consider the additive and dominance effects. We assume that the genetic effects ($i.e.$, $a$ and $d$), and the residual term, $e$, are independent, and normally distributed:
 
 \begin{align}
 a \sim N(0,\sigma^2_{a}), \notag \\
@@ -51,7 +48,7 @@ where $\sigma^2_{a}$ is the additive genetic variance, $\sigma^2_{d}$ is the dom
 ## Genetic parameters {#section:param}
 Heritability and genetic correlations are the key genetic parameters used in estimating an individuals' genetic predisposition to a complex trait. They are defined in terms of the variance components ($\sigma^2_{a}$, $\sigma^2_{d}$ and $\sigma^2_{e}$) as presented in the section above.    
     
-__Heritability__ estimates the degree of variation in a phenotypic trait in a population that is due to genetic variation among individuals in that specific population. It quantifies how much of the phenotypic variation can be attributed to variation in genetic factors, and how much is attributed to variation in environmental factors. [OR: It quantifies how much of the phenotypic variation can be attributed to either variation in genetic factors or variation in environmental factors.]
+__Heritability__ estimates the degree of variation in a phenotypic trait in a population that is due to genetic variation among individuals in that specific population. It quantifies how much of the phenotypic variation can be attributed to either variation in genetic factors or variation in environmental factors.
 
 The broad sense heritability ($H^2$) quantifies how much of the total phenotypic variation can be explained by the overall genetic variance ($\sigma^2_{g}=\sigma^2_{a}+\sigma^2_{d}$):
 \begin{align}
@@ -62,13 +59,13 @@ whereas the narrow sense heritability ($h^2$) measures the degree of phenotypic 
 h^2 &= \sigma^2_{a}/(\sigma^2_a+\sigma^2_d+\sigma^2_e).
 \end{align}
 
-[CONFUSING THAT GENETIC FACTORS ARE STILL HAVE AN INFLUENCE ON PHENOTYPE EVEN THOUGH HERITABILITY = 0] A heritability of 0 implies that no genetic effects contributes to the observed variation in the trait, while a heritability of 1 implies that all of the variation in the trait is explained by the genetic effects. Importantly, the heritability is population-specific and a heritability of 0 does not necessarily imply that there is no genetic determinism for the trait. The trait might be highly influenced by genetic factors. Yet, the observed variation for the trait might not be due to genetic factors, because all alleles contributing to the trait are fixed, and there are no segregating causal alleles for the trait, in the population. Therefore, observed variation may only be due to environmental factors, and the heritability in that population might be 0. The proportion of phenotypic variance explained by additive genetic variance also sets the limit for the accuracy of genetic predisposition.
+A heritability of 0 implies that no genetic effects contributes to the observed variation in the trait, while a heritability of 1 implies that all of the variation in the trait is explained by the genetic effects. Importantly, the heritability is population-specific and a heritability of 0 does not necessarily imply that there is no genetic determinism for the trait. The trait might be highly influenced by genetic factors. Yet, the observed variation for the trait might not be due to genetic factors, because all alleles contributing to the trait are fixed, and there are no segregating causal alleles for the trait, in the population. Therefore, observed variation may only be due to environmental factors, and the heritability in that population might be 0. The proportion of phenotypic variance explained by additive genetic variance also sets the limit for the accuracy of genetic predisposition.
 
-If the phenotype is binary then heritability estimates might be biased. This is because the scale at which the phenotype is measured is different from the scale at which the heritability is expressed. Also, often the proportion of cases [PROPORTION OF CASES = DISEASE PREVALENCE: "Prevalence refers to proportion of persons who have a condition at or during a particular time period" - how can the proportion of cases then be different from the prevalence?] is larger than the disease prevalence in the population leading to ascertainment bias. Therefore, the observed genomic heritability ($h_o^2$) can be transformed to the liability scale ($h_l^2$) \citep{Lee2011}:
+If the phenotype is binary then heritability estimates might be biased. This is because the scale at which the phenotype is measured is different from the scale at which the heritability is expressed. Also, often the proportion of cases in the study population is larger than the disease prevalence in the general population leading to ascertainment bias. Therefore, the observed genomic heritability ($h_o^2$) can be transformed to the liability scale ($h_l^2$) \citep{Lee2011}:
 \begin{equation}
 h_l^2 = h_o^2\frac{K(1-K)}{z^2}\frac{K(1-K)}{P(1-P)},
 \end{equation}
-where $K$ is the prevalence of the disease in the population, $P$ is the proportion of cases in the sample, and $z$ is the height of the standard normal curve at the truncation point, thus, $z=\phi(x)=e^{-0.5x^2}/\sqrt(2\pi)$.
+where $K$ is the prevalence of the disease in the population, $P$ is the proportion of cases in the sample, and $z$ is the height of the standard normal curve at the truncation point, thus, $z=\phi(x)=e^{-0.5x^2}/\sqrt{(2\pi)}$.
 
 __Genetic correlation__ is the proportion of variance that two traits share due to genetic causes. Genetic correlations are not the same as heritability, as it is about the overlap between the two sets of influences and not the absolute magnitude of their respective genetic effects; two traits could be both highly heritable but not be genetically correlated, or they could have small heritabilities and be completely correlated (as long as the heritabilities are non-zero).
 Genetic correlation ($\rho_a$) is the genetic covariance between two traits divided by the product of the genetic standard deviation for each of the traits:
@@ -96,16 +93,15 @@ For estimating genetic parameters we need to specify a statistical model that de
 \begin{align}
 			\text{phenotype}=\text{mean} + \text{systematic effect} + \text{genetic effect}  + \text{residual}	 \notag
 \end{align}
-Here, we make a distinction between fixed effects that determine the level (expected mean) of observations, and random effects that determine the variance. A model consists of at least one fixed effect (i.e, the mean) and one random effect (the residual error variance). If observations are also influenced by a genetic effect, then a genetic variance component exists as well. In that situation, we have two components contributing to the total variance of the observations: a genetic and a residual variance component.[In such a situation, we have two components contributing to the total variance of the observations: a genetic and a residual variance component.] [I HAVE TO THINK ABOUT THIS A BIT MORE In cases where observations are also influenced by a genetic effect, a genetic variance component exists as well. In such cases, two components contribute to the total variance of the observations: a genetic and a residual variance component.]
-
+Here, we make a distinction between fixed effects that determine the level (expected mean) of observations, and random effects that determine the variance. A model consists of at least one fixed effect (i.e, the mean) and one random effect (the residual error variance). If observations are also influenced by a genetic effect, then a genetic variance component exists as well. In that situation, we have two components contributing to the total variance of the observations: a genetic and a residual variance component.
 
 The statistical model is a formal representation of our quantitative genetic theory, but it is important to realize that all models are simple approximations of how genetic and non-genetic factors influence a trait. The goal of the statistical analysis is to find the best practical model that explains most of the variation in the data. The methods used for estimating genetic parameters is based on statistical concepts such as random variables, matrix algebra, multivariate normal theory, and linear (mixed) models. These concepts and their use will be explained in the following sections. 
 
 ## Considering variance components
-An accurate estimation of variance components has to be based on a sufficient amount of data. Depending on the data structure and measurements, estimations can be based on hundreds to >10,000 observations. Importantly, in cases where the data set is small, information from the literature may feature more accurate estimates of variance components. [NOT SURE THIS MAKES SENSE:] When studying new traits, we have 
+An accurate estimation of variance components has to be based on a sufficient amount of data. Depending on the data structure and measurements, estimations can be based on hundreds to >10,000 observations. Importantly, in cases where the data set is small, information from the literature may feature more accurate estimates of variance components. When studying new traits, we have 
 to estimate variance components without external information, or if the study cohort is very different from what is known from the literature as variances and covariances can change over time, e.g., due to various evolutionary forces, such as genetic drift, selection, migration, or mutation. 
 
-It is well known that genetic variance changes as a consequence of selection or genetic drift. Changes are expected, especially when generation intervals are short, selection intensity is high, or the trait under selection is determined by few causal genes with large effects. Moreover, the circumstances under which measurements are taken can change. For example, if the conditions under which the measurements are taken are better controlled, and getting more uniform over time, the environmental variance decreases, and consequently the heritability increases. On a similar note, the genetic predisposition to a multifactorial disease is stable across [through?] life, however, the environmental exposure varies and may accumulate risk effects as we age, consequently meaning that the heritability for a trait may decrease with age. Finally, the biological basis of a trait may change from one environment to another. In conclusion, there are sufficient reasons for regular estimation of (co-)variance components. 
+It is well known that genetic variance changes as a consequence of selection or genetic drift. Changes are expected, especially when generation intervals are short, selection intensity is high, or the trait under selection is determined by few causal genes with large effects. Moreover, the circumstances under which measurements are taken can change. For example, if the conditions under which the measurements are taken are better controlled, and getting more uniform over time, the environmental variance decreases, and consequently the heritability increases. On a similar note, the genetic predisposition to a multifactorial disease is stable through life, however, the environmental exposure varies and may accumulate risk effects as we age, consequently meaning that the heritability for a trait may decrease with age. Finally, the biological basis of a trait may change from one environment to another. In conclusion, there are sufficient reasons for regular estimation of (co-)variance components. 
 
 ## Methods for estimation of genetic parameters
 Estimating heritability and genetic correlations are based on methods that determine resemblance between genetically related individuals. Close (compared to distant) relatives share more alleles and, if the trait is under genetic influence, they will therefore share phenotypic similarities. Methods for estimating heritability include parent-offspring regression, analysis of variance (ANOVA) for family data (e.g., half-sib/full-sib families) and restricted maximum likelihood (REML) analysis for a general pedigree. These methods are increasingly more complex, but they are also increasingly more flexible. While REML can analyze any type of relationship and structure, ANOVA can only analyze groups of individuals with similar relationships (e.g., half-sib, or full-sib families), and regression analysis can only analyze pairs of individuals with similar relationships (e.g., pairs of parent and respective offspring, or pairs of mono- and dizygotic twins). 
@@ -132,55 +128,53 @@ X &: \text{is a known design matrix that relates the elements of $b$ to their co
 Z &: \text{is a known design matrix that relates the elements of $a$ to their corresponding element in $y$.} \notag 
 \end{align}
 
-
-[in this section factors and variables ar used interchangebly - a bit confusing for me] The factors (or 'variables') which describe fixed and random effects, may be either continuous or categorical. 
+The factors (or 'variables') which describe fixed and random effects, may be either continuous or categorical. 
 
 __Continuous variables__ have (theoretically) an infinite range of
 possible values (e.g., body weight or height in humans).
 
 __Categorical variables__ fall in distinct categories (e.g., different years). These variables do not describe a gradient of values along a single axis, like height of individuals (values between 0 and "infinity"). Instead, they have distinct classes (or 'levels'), each of which has its own estimated effect.
 
-In addition to continuous or categorical (factor) [variables], it is necessary to distinguish between __fixed__ and __random__ effects in the linear mixed model. 
+In addition to continuous or categorical variables, it is necessary to distinguish between __fixed__ and __random__ effects in the linear mixed model. 
 
-__Fixed effect:__ If the number of levels of a categorical variable is small or limited to a fixed number, and inferences about that factor [e.g., her "factor" is used - is that = variable?] are going to be limited to that set of levels, and to no others, then its effects are usually fixed. In other words, if a new sample of observations is made (from a new experiment), and the same levels of that factor are in both samples, then the factor is usually fixed. Continuous variables are usually fixed too (but not always). [perhaps this could be written differently?]
+__Fixed effect:__ If the number of levels of a categorical variable is small or limited to a fixed number, and inferences about that factor are going to be limited to that set of levels, and to no others, then its effects are usually fixed. In other words, if a new sample of observations is made (from a new experiment), and the same levels of that factor are in both samples, then the factor is usually fixed. Continuous variables are usually fixed too (but not always).
 
-__Random effect:__ If the number of levels of a categorical [variable] is large, then [that factor] may be random. If the inferences about that factor are going to be made for an entire population of levels, and if the levels of the factor are a sample from an infinitely large population, then that factor is usually random. In other words, if a new sample of observations are made (from a new experiment), and the levels are completely different between the two samples, then the factor is usually random.
+__Random effect:__ If the number of levels of a categorical variable is large, then that factor may be random. If the inferences about that factor are going to be made for an entire population of levels, and if the levels of the factor are a sample from an infinitely large population, then that factor is usually random. In other words, if a new sample of observations are made (from a new experiment), and the levels are completely different between the two samples, then the factor is usually random.
 
 ### Model parameters and assumptions
 In the statistical model (specified above) the random effects ($a$ and $e$) and the phenotypes ($y$) are considered to be random variables which follow a multivariate normal distribution. In general terms, the expectations of these random variables are:  
 \begin{align}
 E(y) &= E(Xb) + E(Za) + E(e) \notag \\
      &= Xb + 0 + 0 \notag \\
-     &= Xb [should this equation have a number?] \notag
+     &= Xb \notag
 \end{align}
 and the variance-covariance matrices are defined as:
 \begin{align}
  Var(y) &= Var(a) + Var(e) \notag \\
  Var(a) &= A\sigma_a^2 \notag \\
- Var(e) &= I\sigma_e^2 [equation number?] \notag
+ Var(e) &= I\sigma_e^2 \notag
 \end{align}
-where $A$ is the additive genetic relationship matrix, and $I$ is an identity matrix. The matrices $Var(y)$, $Var(a)$ and $Var(e)$ are square matrices of the phenotypic, genetic, residual (co)variances among the individuals, respectively. [what about explaining E?]
+where $A$ is the additive genetic relationship matrix, and $I$ is an identity matrix. The matrices $Var(y)$, $Var(a)$ and $Var(e)$ are square matrices of the phenotypic, genetic, residual (co)variances among the individuals, respectively. 
 
 ### Genetic relationship matrices
-The genetic relationship can be inferred from general pedigrees (e.g., $A$ numerator relationship matrix) or estimated from genetic markers (e.g., $G$ genomic relationship matrix). The main difference between the two types of genetic relationship matrices ($A$ and $G$) is that $A$ is based on the concept of identity by descent (sharing of the same alleles, transmitted from common ancestors) whereas $G$ is based on the concept of identity by state (sharing of the same alleles, regardless of their origin). 
-[The genetic relationship can be (1) inferred from general pedigrees, e.g., a numerator relationship matrix, $A$, or (2) estimated from genetic markers e.g., a genomic relationship matrix, $G$. The main difference between the two types of genetic relationship matrices, $A$ and $G$, is that $A$ is based on the concept of identity by descent (sharing of the same alleles, transmitted from common ancestors) whereas $G$ is based on the concept of identity by state (sharing of the same alleles, regardless of their origin).]
+The genetic relationship can be (1) inferred from general pedigrees, e.g., a numerator relationship matrix, $A$, or (2) estimated from genetic markers e.g., a genomic relationship matrix, $G$. The main difference between the two types of genetic relationship matrices, $A$ and $G$, is that $A$ is based on the concept of identity by descent (sharing of the same alleles, transmitted from common ancestors) whereas $G$ is based on the concept of identity by state (sharing of the same alleles, regardless of their origin).
 
 ### Advanced linear mixed models
-The linear mixed model framework is very flexible and can be expanded in a number of ways. First, additional effects can be included to describe the data more accurately: maternal, permanent environmental, or QTL effects. These effects may be fitted as additional random effects. Second, non-additive genetic effects can be included in the model such as dominance (i.e., [modeled by a dominance relationship matrix], $D$) or additive by additive interaction effects (i.e., modeled by an [epistatic relationship matrix], $A \circ A$ ).
-Third, the multiple genetic variance components may be defined by partitioning the total genetic variance  using genomic relationship matrices computed from different marker sets defined by different functional marker categories. Fourth [or finally?], multiple trait models can be fitted:
+The linear mixed model framework is very flexible and can be expanded in a number of ways. First, additional effects can be included to describe the data more accurately: maternal, permanent environmental, or QTL effects. These effects may be fitted as additional random effects. Second, non-additive genetic effects can be included in the model such as dominance (i.e., modeled by a dominance relationship matrix, $D$) or additive by additive interaction effects (i.e., modeled by an epistatic relationship matrix, $A \circ A$ ).
+Third, the multiple genetic variance components may be defined by partitioning the total genetic variance  using genomic relationship matrices computed from different marker sets defined by different functional marker categories. Finally, multiple trait models can be fitted:
 \begin{align}
  Var(a) &= A\otimes V_a \notag \\
- Var(e) &= I\otimes V_e [equation number?] \notag
+ Var(e) &= I\otimes V_e \notag
 \end{align}
 where $V_a$ and $V_e$ are square matrices of genetic and residual (co)variances among traits, respectively. To simplify, we assumed one observation per individual per trait and therefore the $Z$-matrix reduces to an identity matrix which can be left out of the equation system.
 
 
 ## Estimating variance components using REML
-Restricted Maximum Likelihood, or REML, is a method that is used to estimate [The REML method is used to estimate] the  variance components ($\sigma_{a}^2$ and $\sigma_{e}^2$) in the linear mixed model specified in Section \@ref(section:lmm). The general principle used in maximum likelihood methods is to find the set of parameters ($\hat{\theta}$) which maximizes the likelihood of the data, i.e., the probability of observations given the model and its parameter estimates $p(y|\hat{\theta})$. For a single trait model including additive genetic effects, the vector of parameters can be specified as $\hat{\theta}=\hat{b}, \hat{\sigma}^2_{a}, \hat{\sigma}^2_{e}$ [SHOULD THIS EQUATION BE IN A SEPERATE LINE AND NUMBERED? - SHOULD THE MEANING OF HAT ALSO BE EXPLAINED HERE? SEE: "Estimates of genetic parameters"]. 
+Restricted Maximum Likelihood, or REML, is a method that is used to estimate the variance components ($\sigma_{a}^2$ and $\sigma_{e}^2$) in the linear mixed model specified in Section \@ref(section:lmm). The general principle used in maximum likelihood methods is to find the set of parameters ($\hat{\theta}$) which maximizes the likelihood of the data, i.e., the probability of observations given the model and its parameter estimates $p(y|\hat{\theta})$. For a single trait model including additive genetic effects, the vector of parameter estimates can be specified as $\hat{\theta}=\hat{b}$, $\hat{\sigma}^2_{a}$, $\hat{\sigma}^2_{e}$ (where the $hat{~}$ refers to that these are estimates of parameters). 
 
 It is useful to recall that the likelihood $L(\theta|{y})$ may be any function of the parameters ($\theta$) that is proportional to $p({y}|\theta)$. Maximizing $L(\theta|{y})$ leads to obtaining the most likely value of $\theta$ ($\hat{\theta}$) given the data ${y}$. The REML method was developed by \citet{Patterson1971} as an improvement of the standard Maximum Likelihood (ML). ML assumes that fixed effects are known without error which is false in most cases, and as a consequence, it produces biased estimates of variance components (usually the residual variance is biased downward). As a solution to this problem, REML estimators maximize only the part of the likelihood which does not depend on the fixed effects, and REML by itself, does not estimate the fixed effects. 
 
-There are no simple one-step solutions for estimating the variance components based on REML \citep{LynchWalsh1998}. [COULD THIS BE WRITTEN MORE CLEARLY?] Instead, the partial derivatives of the likelihoods are inferred with respect to the variance components. The solutions to these involve the inverse of the variance-covariance matrix, which themselves includes the variance components, so the variance component's estimates are non-linear functions of the variance components.] It is therefore necessary to apply an iterative method to obtain the estimates, $\hat{\theta}$.
+There are no simple one-step solutions for estimating the variance components based on REML \citep{LynchWalsh1998}. Instead, the partial derivatives of the likelihoods are inferred with respect to the variance components. The solutions to these involve the inverse of the variance-covariance matrix, which themselves includes the variance components, so the variance component's estimates are non-linear functions of the variance components.] It is therefore necessary to apply an iterative method to obtain the estimates, $\hat{\theta}$.
 
 ### Estimates of genetic parameters
 From the REML estimate of the variance components the narrow sense heritability can easily be estimated: 
@@ -194,7 +188,6 @@ where the hat ($\hat{~}$) indicates that the value is an estimate, and therefore
 
 ### Statistical test of variance components
 The concept of likelihood also provides a framework for testing hypotheses regarding the variance components in the models. In particular, the so-called likelihood ratio (LR) test is used to assess whether a reduced model fits the data better than a full model by comparing the likelihoods of the two models. 
-
 The LR test statistic ($T_\textrm{LRT}$) can be derived by using the following formula:
 
 \begin{equation}
@@ -202,10 +195,9 @@ T_\textrm{LRT} = 2 \ln\left[\frac{L(\hat{\theta}|\vect{y})}{L(\hat{\theta}_r|\ve
 		= -2\left[l(\hat{\theta}_r|\vect{y})-l(\hat{\theta}|\vect{y})\right],
 \end{equation}
 
-where $l(\hat{\theta}|{y})$ is the log-likelihood of the full model, and $l(\hat{\theta}_r|{y})$ is the log-likelihood of the reduced model. When the sample size is sufficiently large, the LR statistic is $\chi^2$ distributed with $\kappa$ degrees of freedom, [EXTREMELY COMPLICATED FOR ME:] where $\kappa$ parameters that were free in the full model, have been assigned fixed values in the reduced.
+where $l(\hat{\theta}|{y})$ is the log-likelihood of the full model, and $l(\hat{\theta}_r|{y})$ is the log-likelihood of the reduced model. When the sample size is sufficiently large, the LR statistic is $\chi^2$ distributed with $\kappa$ degrees of freedom, where $\kappa$ parameters that were free in the full model, have been assigned fixed values in the reduced.
 
-For example, a high likelihood ratio [LR? - the LR abbreviation should be used consistently - or left out] shows that the full model with two (different) variance components is better at explaining the observed phenotypic variance than the reduced model with only one variance component. It is fundamental for the reduced model to be nested within the full model, otherwise this approach does not make any sense. When the REML procedure is used, it is also important for the two models being compared to have the same fixed effects, otherwise the two likelihoods are not comparable as can be easily understood by looking at the concept of restricted likelihood. [not sure about the last sentence "can be easily understood by looking at the concept of restricted likelihood" - perhaps this whole paragraph should be looked at]  
-
+For example, a high likelihood ratio shows that the full model with two (different) variance components is better at explaining the observed phenotypic variance than the reduced model with only one variance component. It is fundamental for the reduced model to be nested within the full model, otherwise this approach does not make any sense. When the REML procedure is used, it is also important for the two models being compared to have the same fixed effects, otherwise the two likelihoods are not comparable as can be easily understood by looking at the concept of restricted likelihood. 
 
 ### Advantages of using REML for estimating genetic parameters
 Although REML does not produce unbiased estimates, it is still the method of choice due to the fact that this source of bias is also present, but higher in ML estimates \citep{LynchWalsh1998}.
@@ -218,224 +210,7 @@ REML can account for selection when the complete mixed model is used with
 all genetic relationships and all data used for selection is included (Sorensen and Kennedy, 1984; Van der Werf and De Boer, 1990). 
 
 There is obviously an advantage in using (RE)ML methods that are more flexible in 
-handling several (overlapping) generations (and possibly several random effects). However, the use of such methods could be "dangerous" in the sense that we no longer need to think explicitly about the data structure. For example, to estimate additive genetic variance, we need to have a data set that contains a certain family structure, which allows us to separate differences between families from differences within families. Or in other words, we need to differentiate genetic and residual effects, and therefore the structure due to genetic relationships must be different from the structure due to residual effects (i.e., the G and R matrices must be different enough [different enough?]). 
+handling several (overlapping) generations (and possibly several random effects). However, the use of such methods could be "dangerous" in the sense that we no longer need to think explicitly about the data structure. For example, to estimate additive genetic variance, we need to have a data set that contains a certain family structure, which allows us to separate differences between families from differences within families. Or in other words, we need to differentiate genetic and residual effects, and therefore the structure due to genetic relationships must be different from the structure due to residual effects (i.e., the G and R matrices must be different enough). 
 
 
 
-
-
-\begin{comment}
-
-# Variance Components {#variance-components}
-The prediction of breeding values using a BLUP animal model required the __variance components__ $\sigma_e^2$ for the residual variance and $\sigma_u^2$ for the genetic additive variance to be known. For the sire model, $\sigma_u^2$ is replaced by the sire variance component $\sigma_s^2$. In real world livestock breeding evaluations, these variance components are not known and hence must be estimated from the data. The data analysis procedure that estimates the variance components from data is called __variance components estimation__. 
-
-
-## Sire Model
-The sire model is used to motivate the introduction of the topic of variance components estimation. The sire model is given by
-
-\begin{equation}
-y = X\beta + Z_ss + e
-(\#eq:varcompsiremodel)
-\end{equation}
-
-with $var(e) = R$, $var(s) = A_s \sigma_s^2$ and $var(y) = Z_sA_sZ_s^T \sigma_s^2 + R$. The matrix $A_s$ is the numerator relationship for sires, the sire variance component $\sigma_s^2$ corresponds to $0.25 * \sigma_u^2$ and $R$ can often be simplified to $R = I * \sigma_e^2$. The interest in this chapter is how to estimate $\sigma_s^2$ and $\sigma_e^2$. 
-
-In the simple case the vector $\beta$ is reduced to just one scalar fixed effects parameter. This reduced $X$ to a matrix with one column with all elements equal to $1$. Assuming that we have $q$ unrelated sires the relationship matrix $A_s$ for the sires corresponds to the identity matrix $I$. 
-
-
-## Analysis Of Variance (Anova)
-As a first approach we can use an analysis of variance by fitting 
-
-1. a model with an overall effect $\beta = \mu$ and 
-2. a model with sire effects. 
-
-These two models give an analysis of variance of the following structure
-
-\begin{tabular}{lll}
-\hline \\
-Source           &  Degrees of Freedom ($df$)          &  Sums of Squares ($SSQ$) \\
-\hline \\
-Overall ($\mu$)  &  $Rank(X)=1$                        &  $y^TX(X^TX)^{-1}X^Ty = F$  \\
-Sires ($s$)      &  $Rank(Z_s) - Rank(X) = q - 1$      &  $y^TZ_s(Z_s^TZ_s)^{-1}Z_s^Ty - y^TX(X^TX)^{-1}X^Ty = S$  \\
-Residual ($e$)   &  $n - Rank(Z_s) = n - q$            &  $y^Ty - y^TZ_s(Z_s^TZ_s)^{-1}Z_s^Ty = T$ \\
-\hline \\
-Total            &  $n$                                &  $y^Ty$ \\
-\hline
-\end{tabular}
-
-The sums of squares ($SSQ$) can also be expanded into sums of scalar quantities which might be easier to understand. For our sire model we get
-
-$$F = y^TX(X^TX)^{-1}X^Ty = \frac{1}{n} \left[\sum_{i=1}^n y_i \right]^2$$
-where $n$ corresponds to the number of observations in the dataset.
-
-$$S= y^TZ_s(Z_s^TZ_s)^{-1}Z_s^Ty - y^TX(X^TX)^{-1}X^Ty = \sum_{i=1}^{q} \frac{1}{n_i} \left[\sum_{j=1}^{n_i} y_{ij}\right]^2 - F $$
-where $n_i$ corresponds to the number of observations for sire $i$. 
-
-$$T = y^Ty - y^TZ_s(Z_s^TZ_s)^{-1}Z_s^Ty = \sum_{i=1}^n y_i^2 - S - F$$
-
-In principle effects $\beta$ and $s$ are treated as fixed effects in the above anova. If estimates of $\sigma_e^2$ and $\sigma_s^2$ are required the observed sums of squares $S$ and $T$ can be equated to their expected values $E(T) = (n-q) \sigma_e^2$ and $E(S) = (q-1) \sigma_e^2 + tr(Z_sMZ_s)\sigma_s^2$ where $M = I - X(X^TX)^{-1}X^T$ and $tr(M)$ stands for the trace of matrix M which corresponds to the sum of the diagonal elements of matrix $M$.
-
-
-
-## Numerical Example
-We want to show the estimation of variance components with a very small data set. The data that will be used is shown in the table below. The observations consist of pre-weaning weight gains of beef cattle. 
-
-
-```{r datavcesm, echo=FALSE, results='asis'}
-tbl_num_ex_chp12 <- tibble::tibble( Animal = c(4, 5, 6, 7),
-                                        Sire   = c(2, 1, 3, 2),
-                                        WWG    =  c(2.9, 4.0, 3.5, 3.5) )
-
-knitr::kable(tbl_num_ex_chp12,
-             booktabs  = TRUE,
-             longtable = TRUE,
-             caption   = "Small Example Dataset for Variance Components Estimation Using a Sire Model")
-```
-
-
-The model used is a simplified sire model where all the fixed effect are captured by a common mean $\mu$. Then there is the sire effect $s$ as a random effect and the random residual effect. Hence for any given observation $y_{ij}$ for animal $i$ of sire $j$, we can write
-
-$$y_{ij} = \mu + s_j + e_i$$
-
-with $\mu$ the common mean, $s_j$ the random effect of sire $j$ ($j = 1, 2, 3$) and $e_i$ corresponds to the random residual of observation $i$ ($i = 1, \ldots, 4$). In matrix notation thi s model was already given in \@ref(eq:varcompsiremodel). The design matrix $X$ is a matrix with one column and with elements all equal to $1$. The design matrix $Z_s$ links observations to sire effects. 
-
-
-```{r,echo=FALSE, results='asis'}
-n_nr_obs_p02 <- nrow(tbl_num_ex_chp12)
-### # design matrix X
-mat_x_p02 <- matrix(1, nrow = n_nr_obs_p02, ncol = 1)
-### # design matrix Z
-mat_z_p02 <- matrix(c(0, 1, 0,
-                      1, 0, 0,
-                      0, 0, 1,
-                      0, 1, 0), nrow = n_nr_obs_p02, byrow = TRUE)
-n_nr_sire <- ncol(mat_z_p02)
-### # Observations
-mat_obs <- matrix(tbl_num_ex_chp12$WWG, ncol = 1)
-
-cat("$$\n")
-cat("X = \\left[\n")
-cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_x_p02, pnDigits = 0), collapse = "\n"), "\n")
-cat("\\right] \\text{, }")
-cat("Z_s = \\left[\n")
-cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_z_p02, pnDigits = 0), collapse = "\n"), "\n")
-cat("\\right]")
-cat("$$\n")
-```
-
-```{r anovacomp, echo=FALSE, results='hide'}
-### # compute F
-ytx <- crossprod(mat_obs,mat_x_p02)
-xtx <- crossprod(mat_x_p02)
-ssqf <- ytx %*% solve(xtx) %*% t(ytx)
-### # compute S
-ytz <- crossprod(mat_obs, mat_z_p02)
-ztz <- crossprod(mat_z_p02)
-ssqs <- ytz %*% solve(ztz) %*% t(ytz) - ssqf
-### # compute R
-yty <- crossprod(mat_obs)
-ssqr <- yty - ssqs - ssqf
-
-```
-
-An analysis of variance can be constructed as
-
-\begin{center}
-\begin{tabular}{lll}
-\hline \\
-Source           &  Degrees of Freedom ($df$)          &  Sums of Squares ($SSQ$) \\
-\hline \\
-Overall ($\mu$)  &  $Rank(X)=1$                  &  $F = `r ssqf`$  \\
-Sires ($s$)      &  $Rank(Z_s) - Rank(X) = q - 1$  &  $S = `r ssqs`$  \\
-Residual ($e$)   &  $n - Rank(Z_s) = n - q$        &  $T = `r ssqr`$ \\
-\hline \\
-\end{tabular}
-\end{center}
-
-
-With 
-
-```{r varcompest, echo=FALSE, results='asis'}
-mat_m <- diag(n_nr_obs_p02) - mat_x_p02 %*% solve(xtx) %*% t(mat_x_p02)
-ztmz <- t(mat_z_p02) %*% mat_m %*% mat_z_p02
-tr_ztmz <- sum(diag(ztmz))
-cat("$$\n")
-cat("M = \\left[")
-cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_m)))
-cat("\\right] \\text{ and } ")
-cat("Z_s^TMZ = \\left[")
-cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = ztmz)))
-cat("\\right] \n")
-cat("$$\n")
-```
-
-we get the following estimates
-
-```{r, echo=FALSE}
-hat_sigmae2 <- ssqr
-hat_sigmas2 <- (ssqs - (n_nr_sire-1) * hat_sigmae2) / tr_ztmz
-```
-
-$$\hat{\sigma_e^2} = T = `r hat_sigmae2`$$
-$$\hat{\sigma_s^2} = \frac{S - (q-1)\hat{\sigma_e^2}}{tr(Z_s^TMZ_s)} = \frac{`r ssqs` - `r n_nr_sire-1` * `r hat_sigmae2`}{`r tr_ztmz`} = `r hat_sigmas2`$$
-
-The same computations based on an anova can be done in `R` very easily. Assume that our dataset is in a dataframe which is called `tbl_num_ex_chp12_aov`. We are doing the anova using the function `aov()` to get the sums of squares.
-
-```{r, echo=FALSE, results='hide'}
-tbl_num_ex_chp12_aov <- tbl_num_ex_chp12
-tbl_num_ex_chp12_aov$Sire <- as.factor(tbl_num_ex_chp12_aov$Sire)
-```
-
-```{r, echo=TRUE, results='markup'}
-aov_num_ex_chp12 <- aov(formula = WWG ~ Sire, data = tbl_num_ex_chp12_aov)
-summary(aov_num_ex_chp12)
-```
-
-
-The results from above are obtained for $\hat{\sigma_e^2} = 0.18$ as the value under the column `Mean Sq` in the row `Residuals`. Because in our computations above, we have considered the estimation of the overall effect which is not done in the function `aov()` in R.
-
-
-## Negative Estimates with Anova
-One of the problems that frequently occurs when using anova to estimate variance components is that some estimates might be negative. Negative estimates are outside of the permissible range for the parameter and hence are not valid estimates. As a consequence of that alternative methods have been proposed to estimate variance components. 
-
-
-## Likelihood-Based Approaches
-The maximum likelihood (ML) approach was developed and popularized by R. A. Fisher. ML is a general approach for parameter estimation and is not only used for estimating variance components. Let us assume that our observed traits are continuous and real-valued quantities. In ML we assume that these quantities follow a certain density. This density is a function of the observed values and of unknown parameters that we want to estimate. 
-
-
-### Density of Observations
-Given a vector $y$ of observations. As already mentioned, the vector $y$ follows a certain density. As an example such a density might be a multivariate normal distribution. For a given vector $y$ of length $n$, the underlying $n$-dimensional multivariate normal distribution has the following form
-
-$$
-f_Y(y) = \frac{1}{\sqrt{(2\pi)^n det(\Sigma)}} exp \left\{-\frac{1}{2}(y - \mu)^T \Sigma^{-1}(y - \mu) \right\}
-$$
-
-\begin{tabular}{lll}
-with  &  $\mu$  &  expected value of $y$ \\
-      &  $\Sigma$  &  variance-covariance matrix of $y$ \\
-      &  $det()$   &  determinant
-\end{tabular}
-
-
-### Likelihood Function
-As already mentioned the density is a function of the observed data $y$ and of some unknown parameters. For the multivariate normal distribution these parameters are $\mu$ and $\Sigma$. Before observing any data, we can interpret the density $f(y | \mu, \Sigma)$ as a function of $y$ for some fixed values of $\mu$ and $\Sigma$. But once the data has been observed, $y$ is fixed and the parameters $\mu$ and $\Sigma$ are unknown and must be estimated from the data. For the task of parameter estimation, it makes more sense to view $f(y | \mu, \Sigma)$ as a function of $\mu$ and $\Sigma$. We can write this function a little different
-
-$$L(\mu, \Sigma) = f(y | \mu, \Sigma)$$
-
-The function $L(\mu, \Sigma)$ is called the __Likelihood__ function. 
-
-
-### Maximum Likelihood
-For a given dataset we choose an appropriate density which is suitable for our observations. As already mentioned, due to the Central Limit Theorem, the normal distribution is often used as a density for observations. Once, we have chosen the density, it contains unknown parameters which we have to estimate from the data. Loosely speaking, our goal is to determine the parameters such that the observed data is modeled as good as possible. This requirement is translated into a mathematical framework by the maximization of the likelihood. Hence for a given dataset our parameter estimates are determined such that the likelihood is maximized. For our multi-variate normal distribution, this can be transformed into the following equations
-
-$$\hat{\mu} = argmax_{\mu} L(\mu, \Sigma)$$
-
-and
-
-$$\hat{\Sigma} = argmax_{\Sigma} L(\mu, \Sigma)$$
-
-
-## Summary
-The topic of variance component estimation is a huge area. We have just covered two possible approaches to get estimates of variance components. There are many more of them. The coverage of these methods is outside of the scope of this course.
-
-\end{comment}

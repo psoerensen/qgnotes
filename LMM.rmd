@@ -13,20 +13,19 @@ output:
     includes:
       in_header: mathjax_header.html
   word_document: default
-bibliography: [qg2021.bib, book.bib, packages.bib]
+bibliography: [qg2021.bib, quantmd.bib, book.bib, packages.bib]
 link-citations: yes
 ---
 
 # Linear mixed models
 
-Linear mixed effect models (LMMs) are widely used in genetics and application includes single marker association analysis, estimation of genetic variance and heritability, and prediction of genetic predisposition or disease risk. In this chapter we will start with a general introduction to the linear mixed models to establish the notation and assumptions used throughout the notes. Two models that are used to model the relationship between genotype and phenotype are introduced, but the application and usage is reserved for chapter \ref{ch:lmm2}. We will show that the two models are equivalent and then expand the models to contain two (or more) random effects (section \ref{sec:model.expansion}), followed by a comparison of the models used in these notes (section \ref{sec:model.comparison}).
+Linear mixed effect models (LMMs) are widely used in genetics and application includes single marker association analysis, estimation of genetic parameters (e.g. heritability and genetic correlation), and prediction of genetic predisposition or disease risk. In this chapter we will start with a general introduction to the linear mixed models to establish the notation and assumptions used throughout the notes. Two models that are used to model the relationship between genotype and phenotype are introduced, but the application and usage is reserved for other chapters. We will show that the two models are equivalent (but can differ in their computaional complexity) and then expand the models to contain two (or more) random effects, followed by a comparison of the models used in these notes.
 
-The two models are M-BLUP, which models the \emph{marker effects} of each observed genetic marker, and G-BLUP, which models the \emph{genetic values} of an individual. `BLUP' in this context is an abbreviation for Best Linear Unbiased Predictor, and the solutions to these two BLUP models are shown in the 'BLUP' chapter of these notes.
+The two models are M-BLUP, which models the \emph{marker effects} of each observed genetic marker, and G-BLUP, which models the \emph{genetic values} of an individual. BLUP in this context is an abbreviation for Best Linear Unbiased Predictor, and the solutions to these two BLUP models are shown in the 'BLUP' chapter of these notes.
 
-It is important here to understand the distinction between what is known as the 'true model' and an 'instrumental model'. The true model is what generated the data; in the context of these notes, this would be the biological machinery of genes being expressed and that ultimately produce the observed phenotypes. As we are still trying to infer the workings of this complex biological machinery,
-we instead refer to an instrumental model that reflects our understanding and what we are trying to compute.
+It is important here to understand the distinction between what is known as the 'true model' and an 'instrumental model'. The true model is what generated the data and in the context of these notes, this would be the biological machinery of genes being expressed and that ultimately produce the observed phenotypes. As we are still trying to infer the workings of this complex biological machinery, we instead refer to an instrumental model that reflects our current understanding and what we are trying to compute.
 
-For the following, we refer to the number of genotyped individuals as $q$, number of observations as $n$, and number of markers as $m$. To introduce the two models, we are starting with simplified versions of the models, assuming one observation per individual. This removes the necessity for the ${Z}$ matrix, which will be introduced in chapter \ref{ch:lmm2}. We also assume that fixed effects have been reduced to a single intercept, i.e.\ $X\beta = \mu$.
+For the following, we refer to the number of genotyped individuals as as $n$, and number of markers as $m$. To introduce the two models, we are starting with simplified versions of the models, assuming one observation per individual. We also assume that fixed effects have been reduced to a single intercept, i.e.\ $X\beta = \mu$.
 
 \section{Linear mixed model for marker effects (M-BLUP)}
 \label{sec:mblup}
@@ -44,13 +43,13 @@ where
 \begin{compactdesc}
   \item[$\vect{y}$] is the $n$-length vector of observations and is the \emph{linear combination} of the \emph{random variables} $\vect{b}$ and $\vect{e}$ plus 
 	\item[$\mu$] the intercept.
-	\item[$\matr{W}$] is the $n \times m$ genotype matrix\footnote{Generally, $\matr{W}$ has $q$ rows, one row for each individual.},
+	\item[$\matr{W}$] is the $n \times m$ genotype matrix,
 	\item[$\vect{b}$] is the $m$-length vector of marker effects, and
 	\item[$\vect{e}$] is the $n$-length residual vector.
 \end{compactdesc}
 
-The genotype matrix $\matr{W}$ is the (scaled and centred) marker matrix, linking each of the $q$ individuals to the genotype at each of the $m$ loci.
-See section \ref{sec:genotype.matrix} for a discussion of this matrix.
+The genotype matrix $\matr{W}$ is the (scaled and centred) marker matrix, linking each of the $n$ individuals to the genotype at each of the $m$ loci.
+See section \ref{sec:genotype.matrix} in this chapter for a discussion of this matrix.
 
 
 \subsection{Assumptions}
@@ -58,14 +57,14 @@ See section \ref{sec:genotype.matrix} for a discussion of this matrix.
 \index{M-BLUP!Assumptions}
 
 The M-BLUP assumes a priori that the \emph{marker effects} $\vect{b}$ are uncorrelated, 
-i.e.\ $\vect{b} \sim N\left(\vect{0}, \matr{I} \sigma^2_b \right)$, where $\sigma^2_b$ is the variance component and $\matr{I}$ is a $m \times m$ identity matrix. That is, the marker effects are assumed to be independently sampled from a normal distribution with mean $0$ and variance $\sigma^2_b$. Do not confuse this assumption with that the markers themselves might or might not be correlated!
+i.e.\ $\vect{b} \sim N\left(\vect{0}, \matr{I} \sigma^2_b \right)$, where $\sigma^2_b$ is the variance component for the marker effects and $\matr{I}$ is a $m \times m$ identity matrix. That is, the marker effects are assumed to be independently sampled from a normal distribution with mean $0$ and variance $\sigma^2_b$. Do not confuse this assumption with that the markers themselves might or might not be correlated (i.e. due to linkage disequilibrium).
 
-Residuals are assumed uncorrelated, but might be weighted, i.e.\ $\vect{e} \sim N\left(\vect{0}, \matr{D} \sigma^2_e \right)$ where $\matr{D}$ is a $n \times n$ diagonal matrix and each diagonal element may take a value corresponding to the uncertainty of the observation. The residuals and marker effects are uncorrelated, as displayed in \eqref{eq:mblup.cov.3}.
+Residuals are assumed uncorrelated, but might be weighted, i.e.\ $\vect{e} \sim N\left(\vect{0}, \matr{D} \sigma^2_e \right)$ where $\matr{D}$ is a $n \times n$ diagonal matrix and each diagonal element may take a value corresponding to the uncertainty of the observation. The residuals and marker effects are also assumed to be uncorrelated.
 
 Expectations of $\vect{y}$ are $\E(\vect{y} | \mu) = \mu$, as the expectation of the random variables are $0$. 
 
 \begin{subequations}
-Variance is given as
+Variance of $y$ is given as
 \begin{align}
   \Var(\vect{y} | \mu) &= \Var(\matr{W}\vect{b} + {e} | \mu) \label{eq:mblup.var.1} \\
   &= \Var(\matr{W}\vect{b}) + \Var(\vect{e}) + \Cov(\matr{W}\vect{b},\vect{e}) + \Cov(\vect{e},\matr{W}\vect{b})  \label{eq:mblup.var.2} \\
@@ -74,14 +73,14 @@ Variance is given as
 \end{align}
 \end{subequations}
 
-Step \ref{eq:mblup.var.3} is possible because the two random variables are uncorrelated.
+Step \ref{eq:mblup.var.3} is possible because the two random variables are assumed to be uncorrelated.
 
 \subsection{Covariances}
 \index{M-BLUP!Covariances}
 
 \begin{subequations}
 \label{eq:mblup.cov}
-Covariances can be expressed as
+Covariances between the random variables in the M-BLUP model can be expressed as
 \begin{align}
   \Cov(\vect{y}, \vect{b}) &= \matr{W} \sigma^2_b \\
   \Cov(\vect{y}, \vect{e}) &= \matr{D} \sigma^2_e
@@ -112,13 +111,13 @@ The G-BLUP model can be written as
   \label{eq:gblup}
 \end{equation}
 where 
-$\vect{y}$, $\mu$ and $\vect{e}$ are as for \eqref{eq:mblup}, and $\vect{g}$ is the $q$-length vector of genetic values.
+$\vect{y}$, $\mu$ and $\vect{e}$ are as for \eqref{eq:mblup}, and $\vect{g}$ is the $n$-length vector of genetic values.
 
 \subsection{Assumptions}
 \label{sec:gblup.assumptions}
 \index{G-BLUP!Assumptions}
 
-In G-BLUP we make no (explicit) assumptions on the marker effects, instead we assume that the genetic values are correlated by the relationship between the individuals, i.e.\ by pedigree or genetic similarity, such that $\vect{g} \sim N(\vect{0}, \matr{G}\sigma^2_g)$, where $\matr{G}$ is the $q \times q$ genomic relationship matrix; see remarks in section~\ref{sec:genotype.matrix}.
+In G-BLUP we make no (explicit) assumptions on the marker effects, instead we assume that the genetic values are correlated by the relationship between the individuals, i.e.\ by pedigree or genetic similarity, such that $\vect{g} \sim N(\vect{0}, \matr{G}\sigma^2_g)$, where $\matr{G}$ is the $n \times n$ genomic relationship matrix; see remarks in section~\ref{sec:genotype.matrix}.
 
 For the observations ($\vect{y}$) and residuals ($\vect{e}$), the assumptions are as in section~\ref{sec:mblup.assumptions}.
 Variance is given as
@@ -139,7 +138,7 @@ As in M-BLUP, step \ref{eq:gblup.var.3} is possible due to the two random variab
 
 \begin{subequations}
 \label{eq:gblup.cov}
-Covariances for G-BLUP can be expressed as
+Covariances between the random variables in the G-BLUP model can be expressed as
 \begin{align}
   \Cov(\vect{y}, \vect{g}) &= \matr{G} \sigma^2_g \\
   \Cov(\vect{y}, \vect{e}) &= \matr{D} \sigma^2_e
@@ -227,7 +226,7 @@ Expanding the expectation of a squared variable in step \eqref{eq:marginal.gi.4}
 \section{Some notes on calculation of \texorpdfstring{$\matr{W}$}{W}}
 \label{sec:genotype.matrix}
 
-The genotype matrix $\matr{W}$ can be designed in several ways. The overall assumption is that it links the $q$ genotyped individuals to the $m$ markers (after quality control, etc.). It is therefore an $q \times m$ matrix, where each row corresponds to an individual and each column to a marker.
+The genotype matrix $\matr{W}$ can be designed in several ways. The overall assumption is that it links the $n$ genotyped individuals to the $m$ markers (after quality control, etc.). It is therefore an $q \times m$ matrix, where each row corresponds to an individual and each column to a marker.
 
 The most basic matrix is the \indx{marker count matrix} $\matr{M}$ or \indx{minimal allele count matrix}, where each element in $\matr{M}$ takes the value 0, 1 or 2 (in diploid species).
 \citet{LegarraMisztal2008} use an allele coding of -1, 0 and 1, and in this case, diagonals of $\matr{MM^\prime}$ count the number of homozygous loci per individual, and diagonals of $\matr{M^\prime M}$ count the homozygous individuals per locus \citep{VanRaden2008}.
@@ -273,7 +272,7 @@ The resulting $\matr{G}^\ast$ matrix has been scaled by the total variance at al
  
 The last method produces a genomic relationship matrix having the same scale as the Numerator Relationship Matrix, $\matr{A}$, calculated using the pedigree. This means that the genomic inbreeding coefficient for an individual $i$ can be calculated as $\matr{G}^\ast_{ii}-1$, 
 and the genomic relationship among two individuals $j$ and $k$ as $\matr{G}^\ast_{jk} / (\sqrt{\matr{G}^\ast_{jj}} + \sqrt{\matr{G}^\ast_{kk}})$ \citep{VanRaden2008}.
-Further, \citet{Ober2012} showed that $\E(\matr{G}^\ast) = \matr{A}$.%, confirming all the properties listed above.  
+Further, \citet{Ober2012} showed that $\E(\matr{G}^\ast) = \matr{A}$, confirming all the properties listed above.  
 
 
 \begin{table}[!ht]%
@@ -303,7 +302,7 @@ Further, \citet{Ober2012} showed that $\E(\matr{G}^\ast) = \matr{A}$.%, confirmi
 \end{table}
 
 
-We note here that when utilising $\matr{W}$ to construct the genomic relationship matrix, the markers with high heterozygosity are weighted more than rare alleles due to the scaling by $\sqrt{2p_i (1-p_i)}$. %With the alternative genotype matrix, $W^\ast$, all markers are weighted equally.
+We note here that when utilising $\matr{W}$ to construct the genomic relationship matrix, the markers with high heterozygosity are weighted more than rare alleles due to the scaling by $\sqrt{2p_i (1-p_i)}$. With the alternative genotype matrix, $W^\ast$, all markers are weighted equally.
 
 As noted in the beginning of this section, the allele coding should not affect the estimated variance  \citep{StrandenChristensen2011}. The scaling, however, will. Furthermore, the M-BLUP model assumes a priori that the estimated marker effects are sampled from the same distribution.
 If we had any notion that some of the markers might be more informative towards a complex trait,

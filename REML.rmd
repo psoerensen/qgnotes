@@ -12,7 +12,7 @@ output:
     includes:
       in_header: mathjax_header.html
   word_document: default
-bibliography: [qg2021.bib, book.bib, packages.bib]
+bibliography: [qg2021.bib, quantmd.bib, book.bib, packages.bib]
 link-citations: yes
 ---
 
@@ -38,7 +38,7 @@ We will start by first getting the ML estimators and, then, will move on to REML
 
 
 \subsection{Maximum Likelihood}
-The likelihood for the general G-BLUP model, $\vect{y}=\matr{X}\bfbeta+\matr{Z}\vect{g}+\vect{e}$ \eqref{eq:gblup.full} is simply the probability density function of a multivariate normal distribution,
+The likelihood for the general G-BLUP model, $\vect{y}=\matr{X}\bfbeta+\matr{Z}\vect{g}+\vect{e}$ is simply the probability density function of a multivariate normal distribution,
 conditional on the known elements. 
 The log-transformed likelihood can therefore be written as:
 \begin{equation}
@@ -48,7 +48,7 @@ The log-transformed likelihood can therefore be written as:
 	-\frac{1}{2}(\vect{y}-\matr{X}\bfbeta)'\matr{V}^{-1}(\vect{y}-\matr{X}\bfbeta)
 	\label{eq:maximum.likelihood}
 \end{equation}
-where $\matr{V}$ is the variance-covariance matrix, $\matr{G}\sigma^2_g + \matr{D}\sigma^2_e$ \eqref{eq:gblup.var.3}.
+where $\matr{V}$ is the variance-covariance matrix, $\matr{G}\sigma^2_g + \matr{D}\sigma^2_e$.
 The first term is just a constant that does not involve any parameter estimation and therefore it is usually omitted from computation. 
 
 We then derive the first derivatives with respect to the parameters $\bfbeta$, $\sigma^2_g$ and $\sigma^2_e$. For the variance components, however, we will make use of a general expression using $\sigma^2_i$ and the derivatives can later be adjusted to fit the specific variance components. To help with the derivation, appendix \ref{app:matrix} contains some useful properties for derivatives of matrices.
@@ -185,9 +185,9 @@ because they are assumed known (without error) in ML.
 
 Again, an iterative approach is needed to get the estimates of the variance components, and further derivation of the variance component estimators depends on the iterative approach. The approaches used here are based on finding the set of parameters that maximises the likelihood. The problem can now be treated as a general problem in the sense that we have to search the parameter space for the combination of parameters that result in the largest likelihood and/or improve the likelihood from a given set of parameters.
 
-We mention briefly the derivative free methods, as they circumvented inverting the coefficient matrix, which is required in the derivative-based algorithms \citep{Hofer1998}. The Simplex method only uses the REML likelihood, and relies on other means for guessing the updated variance components \citep{Nelder1965}. Another approach by \citet{Smith1986} and \citet{Graser1987} rewrites the restricted likelihood, so a computational demanding operation can be solved by Gaussian elimination. These are simple, but may be plagued by numerical problems, especially if (...) many parameters (are) to be estimated \citep{Jensen1997} and can be less efficient when used with increasing number of traits \citep{Misztal1994,Jensen1997}.
+We mention briefly the derivative free methods, as they circumvented inverting the coefficient matrix, which is required in the derivative-based algorithms \citep{Hofer1998}. The Simplex method only uses the REML likelihood, and relies on other means for guessing the updated variance components \citep{Nelder1965}. Another approach by \citet{Smith1986} and \citet{Graser1987} rewrites the restricted likelihood, so a computational demanding operation can be solved by Gaussian elimination. These are simple, but may be plagued by numerical problems, especially if many parameters (are) to be estimated \citep{Jensen1997} and can be less efficient when used with increasing number of traits \citep{Misztal1994,Jensen1997}.
 
-An alternate heuristic is the Expectation-Maximization (EM) algorithm \citep{Dempster1977}, which is based on the first derivatives. The idea here is that the model comprises observed data, unobserved, latent variables, and parameters. If any two of the three are known, the third is quite tractable. In terms of G-BLUP, the genetic values $g$ are the unobserved, latent variables, and the parameters are the variance components. If the variance components and observations (and covariance matrices) are known, genetic values can be calculated from \eqref{eq:gblup.blup}.
+An alternate heuristic is the Expectation-Maximization (EM) algorithm \citep{Dempster1977}, which is based on the first derivatives. The idea here is that the model comprises observed data, unobserved, latent variables, and parameters. If any two of the three are known, the third is quite tractable. In terms of G-BLUP, the genetic values $g$ are the unobserved, latent variables, and the parameters are the variance components. If the variance components and observations (and covariance matrices) are known, genetic values can be calculated from BLUP methods.
 If it was the genetic values, instead of variance components, that was known, the latter can be deduced by reflecting on the assumptions placed on the random variables. However, we rarely know both the genetic values \emph{and} the variance components.
 
 The EM algorithm consists of two steps, the E step which expresses the expectation of the unobserved variables conditional on the observed data and estimates of the parameters; and the M step which maximises the parameters, based on the observed data and expectation of the unobserved variables. This is still an iterative approach, and it is started with some initial guesses for the parameters, but by alternating between the E- and M-step, the algorithm approximates the (restricted) maximum likelihood \citep{Knight2008}. There are however computational issues with the EM algorithm, as it a) requires inverting the coefficient matrix (although workarounds exists), and b) may require an extensive number of iterations to converge \citep{Hofer1998}.
@@ -246,7 +246,7 @@ $\matr{W}$ is the total design matrix, i.e.\ $\matr{W} = (\matr{X~Z})$,
 and $\matr{T}$ is a $n \times r$ matrix whose columns are the solutions to the MME using $\vect{f}_j$ instead of $\vect{y}$.
 \citet{Jensen1997} note that once $\matr{F}$ is known the average information can be computed easily by solving the MME once for each parameter in $\theta$ using efficient techniques for solving large and sparse linear systems, such that the solutions can be found without computing the full inverse of the MME coefficient matrix.
 
-For G-BLUP, as displayed in \eqref{eq:gblup.full}, the two columns of $\matr{F}$ can be calculated as:
+For G-BLUP the two columns of $\matr{F}$ can be calculated as:
 \begin{align}
   \vect{f}_g &= \frac{\matr{Z} \hat{\vect{g}} }{\sigma^2_g} \\
 	\vect{f}_e &= \frac{\partial \matr{V}}{\partial \sigma^2_e} (\matr{D} \sigma^2_e)^{-1} (\vect{y} - \matr{X}\betahat - \matr{Z}\hat{\vect{g}}) = \frac{\ehat}{\sigma^2_e}
