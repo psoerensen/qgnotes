@@ -1,0 +1,910 @@
+---
+title: "Introduction to Quantitative Genetics"
+author: "Palle Duun Rohde, Izel Fourie Sørensen & Peter Sørensen"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    citation_package: natbib
+    number_sections: yes
+    includes:
+      in_header: preamble.tex
+  html_document:
+    number_sections: yes
+    includes:
+      in_header: mathjax_header.html
+  word_document: default
+bibliography: [qg2021.bib]
+link-citations: yes
+---
+
+
+# Introduction
+Quantitative genetics, also referred to as the genetics of complex traits, is the study of quantitative traits. Quantitative genetics is based on models in which many genes influence the trait, and in which non-genetic factors may also be important. Quantitative traits such as height, obesity or longevity vary greatly among individuals. Quantitative trait phenotypes are continuously distributed and do not show simple Mendelian inheritance (i.e., phenotypes that are distributed in discrete categories determined by one or a few genes). The quantitative genetics framework can also be used to analyze categorical traits like number of children given birth to (which consist of discrete counts like 0, 1, 2, 3, …) or binary traits like survival to adulthood (which consist of 0 or 1, ‘dead’ or ‘alive’, etc.) or multifactorial diseases as diabetes, provided they have a polygenic basis (i.e., they are determined by many genes). The quantitative genetics approach has diverse applications: it is fundamental to an understanding of variation and covariation among relatives in natural and managed populations; it is also used as basis for predicting genetic predisposition in humans as well as selective breeding methods in animal and plant populations.
+
+This section introduces basic concepts used in Quantitative Genetics such as:
+
+*	Genetic value and variance for a quantitative trait
+*	Genetic parameters (genetic variance, heritability, and correlation)
+*	Single locus model, multiple locus model and infinitesimal model
+*	Linkage disequilibrium (correlation among markers and QTLs)
+*	Genetic relationship inferred from pedigree or genetic marker data (correlation among individuals)
+
+These concepts are relevant for a range of genetic and statistical analyses of human complex traits and diseases including:
+
+*	Estimating the effect of single locus (or marker) for gene discovery
+*	Estimating the effect of multiple loci (or markers) for genomic prediction
+*	Estimating the heritability of a trait (the part of its variability due to genetics)
+*	Estimating genetic predisposition by pedigree or genomic information
+
+
+
+# Genetic Models
+In this section we will be introducing the _single-locus model_ and _two-locus model_ for a quantitative trait. Although quantitative traits are most likely influenced by many loci, it helps to first consider these simple cases of only one or two causal loci affecting the trait. These simple models provides the theoretical basis for more complex models including the infinitesimal model.These simple examples show how the combination of gene action and allele frequencies at causal loci translate to genetic variance and genetic variance components for a complex trait. This theory is highly relevant for understanding the statistical models used for genome-wide associations and prediction studies of complex traits. It illustrate the relationship between a marker effect size estimated from genome-wide associations studies and the variation the markers generates in the population, i.e., how locus-specific effects lead to individual differences. 
+
+
+
+## Single-locus model with additive and dominance effect
+In the single-locus model, we consider a biallelic locus with allele A1 and A2, each with frequency $p$ and $q=1-p$. Under random mating and Hardy-Weinberg equilibrium, the expected genotype frequencies are $p^2$, $2pq$ and $q^2$, for $A1A1$, $A1A2$ and $A2A2$ respectively. We arbitrarily assign genotypic values (i.e., trait means per genotype class) $a$, $d$ and $-a$ to the three genotypes, $d$ representing the dominance effect (within locus interaction, no interaction when $d$ = 0) and $2a$ the difference between the two homozygotes. 
+
+### Population mean
+The population mean under the single-locus model depends on the values of $a$ and $d$ and on the allele frequencies $p$ and $q$:
+\begin{align}
+\mu &= p^2a + 2pqd - q^2a \\ \notag
+\mu &= (2p-1)a + 2pqd \\ \notag
+\mu &= (p-q)a + 2pqd
+\end{align}
+The larger the difference between $p$ and $q$ the more influence the value $a$ has on $\mu$ relatively to $d$. On the other hand, if $p=q=0.5$, then $\mu = 0.5d$. For loci with $d=0$, the population mean $\mu = (p-q)a$ and hence, if in addition we have $p=q$, then $\mu=0$. 
+
+### Average effect of gene (allele) substitution 
+The transmission of value from parents to offspring occurs through their alleles and not their genotypes. The average effect of gene substitution ($\alpha$) is defined as the average effect on the trait when substituting alleles at this locus in the population. (The average effect is also called additive genetic effect in the literature). It can also be defined as the mean value of genotypes produced by different gametes:
+\begin{align}
+\alpha &= a + (1-2p)d \\
+\alpha &= a + (q-p)d
+\end{align}
+
+### Additive genetic values and dominance deviations
+The additive genetic values are the expected genotypic values under additivity. The additive genetic values for the three genotypes A1A1, A1A2 and A2A2 (expressed as deviations from the population mean $\mu$) are $(2-2p)\alpha=2(1-p)\alpha=2q\alpha$, $(1-2p)\alpha=(p+q-2p)\alpha=(q-p)\alpha$, and $(0-2p)\alpha=-2p\alpha$. The additive genetic value (i.e. breeding value), is also defined as the expected genotypic value of the progeny an individual produces, is the sum of average allelic effects each diploid individual carries. The dominance deviations for the three genotypes A1A1, A1A2 and A2A2 are $-2q^2d$, $2pqd$, and $-2p^2d$. 
+
+The following table summarizes all genotypic values, all additive genetic values and the dominance deviations. 
+
+\begin{center} 
+\begin{tabular}{|c|c|c|c|c|}
+   \hline
+   Genotype  & Frequency & Genotypic value  & Additive Genetic Value  &  Dominance Deviation \\
+   \hline
+   $A_1A_1$ & $p^2$ & $a$                 &  $2q\alpha$        &  $-2q^2d$          \\
+   \hline
+   $A_1A_2$ & $2pq$ & $d$                 &  $(q-p)\alpha$     & $2pqd$             \\
+   \hline
+   $A_2A_2$ & $q^2$ & $-a$                &  $-2p\alpha$       & $-2p^2d$           \\
+   \hline
+\end{tabular}
+\end{center}    
+
+The formulas in the above shown table assume that $A_1$ is the favorable allele with frequency $p$. The allele frequency of $A_2$ is $q$, and since we have a bi-allelic locus, $p+q=1$.
+
+
+### Genetic variance
+For the single-locus model the total genotypic variance ($\sigma_g^2$) is partitioned into additive ($\sigma_a^2$) and dominance ($\sigma_d^2$) variance:
+\begin{align}
+\sigma_g^2 = \sigma_a^2 + \sigma_d^2
+\end{align}
+
+#### Additive variance
+The additive variance ($\sigma_a^2$) is the variance of additive genetic values. When values are expressed in terms of deviation from the population mean, the variance simply becomes the mean of the squared values. Hence, $\sigma_a^2$ is obtained by squaring the additive genetic values described above, multiplying by the corresponding frequencies and summing over the 3 genotypes, leading to:
+\begin{align}
+\sigma_a^2 &= 2p(1-p)[a+d(1-2p)]^2 = 2p(1-p)\alpha^2 = H\alpha^2 \\
+\sigma_a^2 &= 2pq[a+d(q-p)]^2 = 2pq\alpha^2 = H\alpha^2
+\end{align}
+with $H$ the heterozygosity at the locus. Note that $\sigma_a^2$ contain both a term due to additivity ($a$) and dominance ($d$) through the average effect $\alpha$.
+
+#### Dominance variance
+Similarly, the dominance variance ($\sigma_d^2$) is the variance of dominance deviations:
+\begin{align}
+\sigma_d^2 &= (2p(1-p)d)^2 = H^2d^2 \\
+\sigma_d^2 &= (2pqd)^2 = H^2d^2
+\end{align}
+Therefore, the dominance variance disproportionally depends on the locus heterozygosity compared to the additive variance ($H^2$ versus $H$).
+
+## Two-locus model with additive and additive-by-additive effect
+
+We extend the one-locus to a two-locus model with additive and additive-by-additive epistatic interaction only, assuming no within loci dominance effects ($d$ = 0 at both loci). We introduce a second (unlinked) locus with alleles B1 and B2 in frequencies $q$ and $1-q$ respectively. The genotypic values and allele frequencies of the 9 genotypes are:
+
+\begin{center} 
+\begin{tabular}{|c|c|c|}
+   \hline
+   Genotype  &  Frequency  &  Genotypic value \\
+   \hline
+   $A_1A_1 B_1B_1$ &  $p_A^2p_B^2$  &  $a_A+a_B+a_{AB}$  \\
+   \hline
+   $A_1A_1 B_1B_2$ &  $p_A^22p_Bq_B$  &  $a_A$     \\
+   \hline
+   $A_1A_1 B_2B_2$ &  $p_A^2q_B^2$  &  $a_A-a_B-a_{AB}$     \\
+   \hline
+   $A_1A_2 B_1B_1$ &  $2p_Aq_Ap_B^2$  &  $a_B$  \\
+   \hline
+   $A_1A_2 B_1B_2$ &  $2p_Aq_A2p_Bq_B$  &  $0$     \\
+   \hline
+   $A_1A_2 B_2B_2$ &  $2p_Aq_Aq_B^2$  &  $-a_B$     \\
+   \hline
+   $A_2A_2 B_1B_1$ &  $q_A^2p_B^2$  &  $-a_A+a_B-a_{AB}$  \\
+   \hline
+   $A_2A_2 B_1B_2$ &  $q_A^22p_Bq_B$  &  $-a_A$     \\
+   \hline
+   $A_2A_2 B_2B_2$ &  $q_A^2q_B^2$  &  $-a_A-a_B+a_{AB}$     \\
+   \hline
+\end{tabular}
+\end{center}    
+
+
+where $a_A$ ($a_B$) is the genotypic value for the upper homozygote A1A1 (B1B1) and $a_{AB}$ is the additive-by-additive interaction effect. This is a re-parametrization of the model described by Mäki-Tanila and Hill (2014).
+
+### Population mean
+In our model, the mean of the genotypic values is:
+\begin{align}
+\mu = a_A(2p-1) + a_B(2q-1) + a_{AB}(1-2(p+q)+4pq)
+\end{align}
+
+Note that the expression of $\mu$ depends on the arbitrarily assigned genotypic values.
+
+Average effect of gene (allele) substitution
+In this model, the locus specific average effects are:
+\begin{align}
+\alpha_A &= a_A + 2qa_{AB} \\
+\alpha_B &= a_B + 2pa_{AB}
+\end{align}
+
+### Genetic variance
+The total genotypic variance ($\sigma_{g}^2$) of the model is partitioned into additive ($\sigma_{a}^2$) and additive-by-additive ($\sigma_{aa}^2$) variance.
+\begin{align}
+\sigma_g^2 = \sigma_a^2 + \sigma_{aa}^2
+\end{align}
+
+#### Additive variance
+
+The additive variance of the model is $\sigma_a^2 = \sum_iH_i\alpha_i^2$, with $H_i$ the heterozygosity at locus $i$ (i = A, B) and $\alpha_i$ the average effect of locus $i$. Hence:
+
+\begin{align}
+\sigma_a^2 = 2p(1-p)[a_A+2qa_{AB}] + 2q(1-q)[a_B+2pa_{AB}]
+\end{align}
+
+Note that $\sigma_a^2$ contains a term due pairwise additive-by-additive interaction between locus A and B ($a_{AB}$).
+
+#### Additive-by-Additive variance
+The additive-by-additive variance of the model is:
+
+$\sigma_{aa}^2 = \sum_i\sum_{j>i}H_iH_ja_{ij}^2$, with $H_i$ the heterozygosity at locus $i$ ($i$ = A, B) and $a_{ij}$ the additive-by-additive interaction effect between locus $i$ and $j$. Hence:
+
+\begin{align}
+\sigma_{aa}^2 = 4p(1-p)q(1-q)a_{AB}
+\end{align}
+
+Therefore, the additive-by-additive variance disproportionally depends on the locus heterozygosity as compared to the additive variance.
+
+## General two locus model
+
+Lastly, we use a generalized two-locus model where the user can provide all the genotypic values in an interactive table and choose the allele frequencies at the two loci (p and q). The genotypic values as well as the linear regressions are plotted as a function of the A1 allelic dosage for the different genotypes at locus B, as well as the linear regression of the genotypic values weighted by their frequency on the A1 allele dosage. The total genotypic variance ($\sigma_{g}^2$) of this model is then partitioned in five components:
+\begin{align}
+\sigma_{g}^2 = \sigma_{a}^2 + \sigma_{d}^2 + \sigma_{aa}^2 + \sigma_{ad}^2 + \sigma_{dd}^2
+\end{align}
+Where $\sigma_{ad}^2$ is the additive-by-dominance variance and $\sigma_{d}^2$ the dominance-by-dominance variance. 
+
+### Interpretation of different types of genetic variances
+These simple examples illustrates two important findings. First, the genetic architecture of quantitative traits cannot be inferred from variance component analysis (Huang & Mackay 2016). This is because there is not a one-to-one correspondence between gene action (i.e. $a$ and $d$) at underlying causal loci and the partitioning of variance components (e.g. $\sigma_{a}^2$ and $\sigma_{d}^2$) except under very specific and restrictive circumstances (e.g. $p=q$). In the single-locus model both additive and dominant gene actions (i.e. $a$ and $d$) contribute to additive genetic variance $\sigma_a^2=2pq[a+d(q-p)]^2$. Therefore the relative magnitude of different gene actions cannot be inferred from the relative magnitude of different genetic variance components. A large $\sigma_a^2$ and small $\sigma_d^2$ and $\sigma_{aa}^2$ mean nothing more than a specific partition of genetic variance and there are potentially an infinite number of such partitions,some having larger seemingly additive components than others (Huang & Mackay 2016). Second,  the non-additive variance (e.g. dominance and additive-by-additive) disproportionally depends on the locus heterozygosity as compared to the additive variance. Therefore non-additive variance usually do not explain individual differences in a population. However, as stated previously, this does NOT imply that dominance and epistatic gene actions are NOT important.   
+
+## Infinitesimal model
+The infinitesimal model, also known as the polygenic model, is a widely used genetic model in quantitative genetics. Originally developed in 1918 by Ronald Fisher, it is based on the idea that variation in a quantitative trait is influenced by an infinitely large number of genes (or loci), each of which makes an infinitely small (infinitesimal) contribution to the phenotype, as well as by environmental (non-genetic) factors. In the most basic model the phenotype ($P$) is the sum of genetic values ($G$), and environmental values ($E$):
+\begin{align}
+P = G + E
+\end{align}
+
+The genotypic effect ($G$) in the model can be divided into additive values ($A$), dominance deviations ($D$), and epistatic deviations ($I$) such that the expanded infinitesimal model becomes:
+\begin{align}
+P = A + D + I + E
+\end{align}
+
+The genotypic values may also depend on the environment in which they are expressed. Therefore we may consider an extended version of the infinitesimal model where the phenotype ($P$) is the sum of genotypic values ($G$), environmental effect ($E$), and genotype-environment interaction values ($G\times E$):
+\begin{align}
+P = G + E + G \times E
+\end{align}
+
+In practice, the genotype-environment interaction effect can be important for the expression of the phenotype, but for the sake of simplicity we will ignore them in the remainder of this section. Therefore, in the following, we will assume that genotypic values are not impacted by environmental factors.
+
+
+### Infinite number of loci each with small effect on the phenotype
+Quantitative traits do not behave according to simple Mendelian inheritance laws. More specifically, their inheritance cannot be explained by the genetic segregation of one or a few genes. Even though Mendelian inheritance laws accurately depict the segregation of genotypes in a population, they are not tractable with the large number of genes which typically affect quantitative traits. To better understand the infinitesimal model assume Mendelian inheritance to occur at every locus in the genome. Let’s say there are 30,000 gene loci in the genome. The number of alleles at each locus varies from 2 to 30 or more. If we assume that there are only two alleles (3 possible genotypes) per locus, and gene loci segregate independently, then the number of possible genotypes (considering all loci simultaneously) would be $3^{30000}$ which is large enough to give the illusion of an infinite number of loci. Furthermore each of these loci could contribute additive and dominance effects in addition to interaction effects.
+
+
+### Distribution of genotypic and phenotypic values
+When a single locus affects a quantitative trait, a single-locus model is used to model the genetic basis of the trait. The distribution of the genotypic values for a set of individuals will be discrete. The frequency of the genotypic values depend on genotype frequencies, which in turn depend on allele frequencies of $A_1$ and $A_2$. The phenotype is however also influenced by the environment. If we assume that the environmental effects are normally distributed (e.g. $\N(0,\sigma^2=1)$) then we can observe that the phenotype distribution is in fact normally distributed (or a mixture of normal distributions). When multiple loci affect a quantitative trait, a polygenic- or an infinitesimal model is applied to model the genetic basis of the trait. When several loci are causal (i.e., they have an effect on a certain trait), it is referred to as a __polygenic model__. When the number of causal loci tend to infinity, it is referred to as an __infinitesimal model__. From a statistical point of view, the genetic values in an infinitesimal model are considered random with a known distribution. According to the central limit theorem, the distribution of any sum of a large number of very small effects converges to a normal distribution. Therefore, the genetic values in an infinitesimal model tends to a normal distribution, because of the infinitely large number of causal loci. 
+
+### Genetic parameters
+The key genetic parameters in the infinitesimal model include genetic variance, heritability and genetic correlations. These parameters are derived based fundamental statistical methods and concepts introduced by Fisher (1918) and Wright (1921) such as analysis of variance used for the partition of phenotypic variation into heritable (A) and non-heritable components (D, I and E)) and resemblance among relatives which is based on the estimations of the proportion of loci shared by relatives under the infinitesimal model. 
+
+
+#### Genetic variance:
+
+In the model proposed by Fisher (1918), Cockerham (1954) and Kempthorne (1954), covariance among relatives is described in terms of the additive genetic variance $\sigma^2_{A}$ (variance of additive genetic effects, or additive genetic values), dominance variance $\sigma^2_{D}$ (variance of interaction effects between alleles in the same locus), and epistatic variance $\sigma^2_{AA}$, $\sigma^2_{AD}$, $\sigma^2_{DD}$ (variance of interaction effects – additive and/or dominance effects – among loci) (Falconer & Mackay 1996; Lynch & Walsh 1998). 
+
+Thus the overall phenotypic variance ($\sigma^2_{P}$) can be partitioned: 
+\begin{align}
+\sigma^2_{P} &= \sigma^2_{G} + \sigma^2_{E}  \notag \\
+             &= \sigma^2_{A} + \sigma^2_{D} + \sigma^2_{AA} + \sigma^2_{AD} + \sigma^2_{DD} + \sigma^2_{E}
+\end{align}
+These partitions are not dependent on numbers of genes or how they interact, but in practice the model is manageable only when the effects are independent from each other, requiring many important assumptions. These include random mating, and hence Hardy-Weinberg equilibrium (i.e. no inbred individuals), linkage equilibrium (independent segregation of loci, which requires many generations to achieve for tightly linked genes) and no selection.
+
+
+#### Heritability:
+The models and summary statistics defined by Fisher and Wright have remained at the heart of quantitative genetics, not least because they provide ways to make predictions of important quantities, such as
+
+__Broad-sense heritability__, the ratio of total genetic variance $V_{G}$ to the overall phenotypic variance $V_{P}$:
+\begin{align}
+H^2 &= \sigma^2_{G}/\sigma^2_P  \notag \\
+    &= (\sigma^2_{A} + \sigma^2_{D} + \sigma^2_{I})/\sigma^2_P 
+\end{align}
+
+__Narrow-sense heritability__, the ratio of additive genetic variance $V_{A}$ to the overall phenotypic variance $V_{P}$: 
+\begin{align}
+h^2 &= \sigma^2_{A}/\sigma^2_P
+\end{align}
+
+#### Genetic correlation:
+In a general quantitative genetic model in which, for each individual, two traits ($P_1$ and $P_2$) are each defined as the sum of a genetic value ($G_1$ and $G_2$) and an environmental value ($E_1$ and $E_2$), [OR RATHER USE: In a general quantitative genetic model, where two traits ($P_1$ and $P_2$) are each defined as the sum of a genetic value ($G_1$ and $G_2$) and an environmental value ($E_1$ and $E_2$),] 
+\begin{align}
+P_1 = G_1 + E_1 \notag \\
+P_2 = G_2 + E_2 \notag
+\end{align}
+
+the phenotypic correlation ($\rho_{P_{12}}$) between the traits is defined as:
+\begin{align}
+\rho_{P_{12}}=\frac{\sigma_{P_{12}}}{\sqrt{\sigma_{P_{1}}^2 \sigma_{P_{2}}^2}}
+\end{align}
+
+where $\sigma_{P_{12}}$ is the phenotypic covariance and $\sigma_{P_{1}}^2$ and $\sigma_{P_{2}}^2$  are the variances of the phenotypic values for the two traits in the population, 
+
+and the genetic correlation ($\rho_{G_{12}}$) of the traits is defined as:
+\begin{align}
+\rho_{G_{12}}=\frac{\sigma_{G_{12}}}{\sqrt{\sigma_{G_{1}}^2 \sigma_{G_{2}}^2}}
+\end{align}
+
+where $\sigma_{G_{12}}$ is the genetic covariance and $\sigma_{G_{1}}^2$ and $\sigma_{G_{2}}^2$ are the variances of the genetic values for the two traits in the population. 
+
+
+### Resemblance among relatives:
+The variance–covariance matrix of phenotypic values ($V_{P}$) of a group of individuals for a single trait can be partitioned in a similar way
+
+\begin{align}
+V_{P} &= V_{G} + V_{E} \notag \\
+      &= V_{A} + V_{D} + V_{AA} + V_{AD} + V_{E} \notag \\
+      &= A\sigma^2_{A} + D\sigma^2_{D} + A\circ A\sigma^2_{AA} + A\circ D\sigma^2_{AD} + I\sigma^2_{E}
+\end{align}
+
+where $A$ is the additive genetic relation matrix, and $D$ is the dominance relationship matrix. For the epistatic terms, $\circ$ denotes element-by-element multiplication, but applies only for unlinked loci. The genetic relationship matrices ($A$ and $D$) can be constructed using marker or pedigree information as will be shown later in the notes.
+
+Many more terms may be included, such as maternal genetic effects, and genotype by environment interactions. The advantage of this model is that it is all-accomodating, whereas a disadvantage is that datasets may allow to partition only a few components. In practice, assumptions must be made to reduce the complexity of the resemblance among relatives. Usually, the resemblance among relatives is assumed to depend only on additive genetic variance $\sigma_{A}^2$ and dominance variance $\sigma_{D}^2$ ignoring epistatic variance (e.g. $\sigma_{AA}^2$).
+
+\newpage
+
+# Statistical Models
+
+## Single marker regression models 
+In a standard single marker regression analysis, individual phenotypes $y$ are regressed on the number of reference alleles ($x$ ($X$ = 0, 1, 2) ) at a given locus, i.e., the allelic “dosage”, where the reference allele for this dosage count is arbitrarily the major or minor allele (but this arbitrary choice is reflected in the sign of the regression coefficient $\beta$):
+
+\begin{align}
+y = \mu + x\beta + e
+\end{align}
+
+Where $\mu$ is the mean and the residuals $e$ include both the non-additive genetic effects at the locus, the genetic effects (additive and non-additive) at other loci and an environmental and/or chance (non-genetic) effect. The quantity of interest is the slope $\beta$ of the model (the effect size of the locus), which is the average effect of allele substitution, hence $\beta=\alpha$. Note that $\sigma_a^2$ is the variance explained by a biallelic marker in the single marker model shown above $(2p(1-p)\alpha^2 = 2p(1-p)\beta^2)$
+
+#### Marker effect as random or fixed (not finished - include stuff from Wen & Mackay)
+The marker has different effects across populations because at each generation LD between the marker and the causal loci, will be different. Thus the marker effect can be considered as a random and it comes from some distribution. 
+
+
+### Allele coding
+Allele coding is the assignment of marker genotypes to numerical values in a design matrix X that link observed genotypes to phenotypes. The markers commonly used in genetic analysis of complex traits are biallelic. This corresponds to one effect ($a$) per marker. If we assume assume an additive genetic model this can be reduced to one effect by locus, as a regression of genetic value on allele content. In the table below three ways of allele coding and is shown:
+
+Table 1: Allele coding for a biallelic marker with reference allele A1 and allele frequency p.
+
+\begin{center} 
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  Genotype  &  $X_{a}$ & $X_{c}$ & $X_{\alpha}$ \\
+  \hline
+  $A1A1$  &  1  &  2  & (2-2p) \\
+  \hline
+  $A1A2$  &  0  & 1  & (1-2p) \\
+  \hline
+  $A2A2$  &  -1 & 0 & -2p \\
+  \hline
+\end{tabular}
+\end{center}
+
+Table 1: Genotypic values for a biallelic marker with reference allele A1 and allele frequency p.
+
+\begin{center} 
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  Genotype  &  $X_{a}a$ & $X_{c}a$ & $X_{\alpha}a$ \\
+  \hline
+  $A1A1$  &  a  &  2a  & (2-2p)a \\
+  \hline
+  $A1A2$  &  0  & a  & (1-2p)a \\
+  \hline
+  $A2A2$  &  -a & 0 & -2pa \\
+  \hline
+\end{tabular}
+\end{center}
+
+Which allele to pick as a reference is arbitrary. If the other allele is chosen then the number if the table are reversed. As a result, estimates for marker effects $a$ will change sign but the absolute value will be the same. Therefore the genetic value, $X_{\alpha}a$, will be the same regardless of the coding. For the “centered” coding each column of centered genotype matrix ($X_{\alpha}$) sums to 0 if allelic frequencies ($p$) are computed from observed data.
+
+### Genetic variance explained by markers
+A population of n individuals has different additive genetic values $a=(a_1 . . . a_n)'$. 
+These individuals have a certain genetic variance $Var(a) = \sigma_a^2$. 
+If markers are genes: which part of the genetic variance is
+explained by each marker? This is just basic quantitative genetics. 
+If a marker has an effect of $a_i$ 
+for each copy of the A allele, we have $p^2$ individuals with a additive genetic value of $a = 2a_i$, $(1-p)^2$ individuals with a value of $a = 0$, and $2p(1-p)$ individuals with a value of $a = a_i$. Then the variance explained by this marker is $Var(a) = E(a^2)-E(a)^2$ which is presented in the following Table:
+
+\begin{center} 
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  Genotype  &  Frequency & $a^2$ & $a$ \\
+  \hline
+  $A1A1$  &  $p^2$  &  $4a^2$  & $2a$ \\
+  \hline
+  $A1A2$  &  $2p(1-p)$  & $a^2$  & $a$ \\
+  \hline
+  $A2A2$  &  $(1-p)^2$ & 0 & 0 \\
+  \hline
+  Expected  &   & $4p^2a^2 + 2p(1-p)a^2$ & $2pa$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+
+\begin{center} 
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  Genotype  &  Frequency & $X_{\alpha}$ & $X_{\delta}$ & $X_{a}$ & $X_{d}$ \\
+  \hline
+  $A1A1$  &  $p^2$  &  $2-2p_j$  & $-2q_j^2$ &  $1$  & $0$ \\
+  \hline
+  $A1A2$  &  $2p(1-p)$  & $1-2p_j$  & $2p_jq_j$ & $0$  & $1$ \\
+  \hline
+  $A2A2$  &  $(1-p)^2$ & $2p_j$ & $-2p_j^2$ & $-1$ & $0$ \\
+  \hline
+  Expected  &   &  & & & \\
+  \hline
+\end{tabular}
+\end{center}
+
+
+\begin{center} 
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  Genotype  &  Frequency & $u$ & $v$ & $\tilde{u}$ & $\tilde{v}$ \\
+  \hline
+  $A1A1$  &  $p^2$  &  $(2-2p_j)\alpha$  & $-2q_j^2d$ &  $a$  & $0$ \\
+  \hline
+  $A1A2$  &  $2p(1-p)$  & $(1-2p_j)\alpha$  & $2p_jq_jd$ & $0$  & $d$ \\
+  \hline
+  $A2A2$  &  $(1-p)^2$ & $2p_j\alpha$ & $-2p_j^2d$ & $-a$ & $0$ \\
+  \hline
+  Expected  &   &  & & & \\
+  \hline
+\end{tabular}
+\end{center}
+
+
+So, finally the variance explained by one marker is $4p^2a^2 + 2p(1-p)a^2-(2pa)^2=2p(1-p)a^2$. 
+Markers with intermediate frequencies will explain most genetic variation. This is one of the reasons to ignore markers with low allele frequency.
+
+
+### Single marker test
+Genetic background of quantitative traits seems to be highly complex and largely infinitesimal: many causal loci, possibly with interactions among them, to give the genetic determinism of one
+trait. Most of them bearing small effects, some may have large effects. Test of marker effects. This consists in testing, one at a time, markers for its effect on a trait, mostly with a simple linear model as above. The procedure selects those markers with a significant effect after a statistical test, for instance a t-test. This test is usually corrected by Bonferroni to avoid spurious results. However, this way of proceeding leads to lack of power and bias. 
+Replication of marker associations. Can be done by testing the list of associated
+markers and their effects from an independent population. This is typically done in human genetics, but it may be difficult as the true list of causal loci will vary across populations due to drift or selection. Further, nothing guarantees that markers with no effect at one stage will have no effect at another one, for instance, because
+of interactions. 
+
+## Multiple marker regression model 
+
+### Multiple marker regression models
+
+A simple way to avoid both the lack of power and bias (single marker association models is not to use detection thresholds and all markers are assumed to have an effect. First, markers with small effects will be included. Second, no bias will be induced due to the detection process.
+Therefore, one should include all markers in the statistical model. In a way, this makes sense
+because we use all information without discarding anything. But how is this doable? The simplest
+is to fit a linear model with the effects of all markers. Note that for this approach to work, you need to cover all the genome; many markers are needed.
+Individual i has a breeding value $u_i$. According to the previous paragraphs, we will try to
+predict the breeding value of an individual defined as a sum of marker effects $a_k$ (there are m of
+them). An individual has genotypes coded in $z_i$, its breeding value is the sum of marker effects $a_k$ weighted by the coefficients in $zi: ui =Pk=1,m zikak =zia$. For all individuals this becomes
+$u= Za$.
+
+The multiple marker regression is a simple extension of the single marker
+regression shown above. First, we construct a model were the phenotype is a function of all
+marker effects:
+
+\begin{align}
+y=Xb+Za+e
+\end{align}
+
+With biallelic markers, we can reduce the number of unknowns to just
+one effect per marker - the effect of the reference allele. If we fit one
+effect per allele the system of equation is:
+
+But SNP chips yield thousands of markers. This poses two kinds of problems. The first one
+is practical: we can’t (reliably) estimate 50,000 effects from, say, 1,000 data in y. The second
+is conceptual: does it make sense to estimate all these marker effects without imposing any
+constraints? In fact, one should not expect that a marker has a large effect; rather, we expect
+them to be restricted to plausible values. For instance, a marker should not have an effect of,
+say, one phenotypic standard deviation of the trait. In a way, this is an “a priori” information
+and there must be a way to introduce this information. 
+
+#### Bayesian Estimation, or Best Prediction, of marker effects
+Marker effects can be considered as the result of random processes, because they are the result
+of random buildup of linkage disequilibrium, random generation of alleles at genes, and so on.
+Therefore, they have (or may have) an associated distribution (whether you call this a sampling
+distribution or a prior distribution is largely a matter of taste). I will generally call this prior information. It is well known (Casella and Berger 1990) that accurate prediction of random
+effects involves integration of all information, prior information and observed information, that in our case it comes in the form of observed phenotypes. 
+
+If we call a the marker effects, and y the data the conditional expectation of (estimators of) marker effects given the data is:
+
+\begin{align}
+\hat{a} = E(a|y) = \frac{\int ap(y|a)p(a)da}{\int p(y|a)p(a)da}
+\end{align}
+
+This is often called as Best Prediction, because in a frequentist context it does minimize, over conceptual repetitions of the procedure, the distance between “true” a and its estimator, $\hat{a}$ (Casella and Berger 1990). On the other hand, this can be seen as a Bayesian estimator as described above. This estimator has an extraordinary advantage over the regular least squares, because it uses all available information (Gianola and Fernando 1986). The introduction of the prior distribution $p(a)$ has an effect of “regressing” the estimators towards the a priori values, a process that is known as shrinkage. Therefore, the Best Predictors are “shrunken” or “regressed” estimators.
+
+In the context of multiple marker models, the Best Predictor is composed of two parts:
+1. The prior distribution of marker effects $p(a)$
+2. The likelihood of the data given the marker effects, $p(y|a)$
+
+Most often the ikelihood of the data, $p(y|a)$, is writte as a normal likelihood, of the form
+
+\begin{align}
+p (y | a) &= MV N (Xb + Za, R)
+\end{align}
+
+where matrix R contains residual covariances. The model may include further linear terms such
+as pedigree-based covariances, permanent effects, and so on. However, how to write down the
+prior distribution $p(a)$ is far from being clear, and this has been the subject of research
+during the last decade. 
+
+#### Best Predictions as a regularized estimator
+Regularized predictors are much used now in Statistics. They are composed of two parts: a
+likelihood, and a regularization function which prevents the estimators from going “too far away”. 
+For instance, the regular Lasso (Tibshirani 1996) can be understood as an estimator that uses
+a likelihood as above, combined with the restriction $|a| < \lambda$. Another example is the Ridge
+Regression, where there is a penalty function of $a_i^2$ the larger the square of the effect, the
+more penalized. The explanation of these estimators is largely practical. However, from the
+point of view of a Bayesian or a Frequentist (or an animal breeder), they are Bayesian (or Best
+Predictor) estimators with particular sampling or a priori distributions. For instance, the Lasso
+assumes that (marker) effects are a priori distributed following a Laplace (double exponential)
+distribution, and Ridge Regression assumes that effects are a priori normally distributed. A,
+by and large, advantage of this understanding is that it allows the connection between classical
+quantitative genetics theory and prior distributions for marker effects.
+
+### Marker effect models
+For most study populations, the number of markers is greater than the number of genotyped
+individuals, which results in the famous “small n big p problem”. As the number of parameters is
+greater than the data points used for estimation, a solution is to assume SNP effects are random
+(or that they have a prior distribution); in this way, all effects can be jointly estimated. Even if the number of genotyped individuals is large, still it makes sense to fit marker effects as random, because the prior information says that small effects are frequent and large effects are unlikely. 
+Bayesian regression is another name for the Best Predictor or Conditional Expectation described
+above, and it describes the fact that we compute Conditional Expectations (another name for
+regressions (Casella and Berger 1990) ) using Bayesian methods. The term was first introduced in
+the genomic prediction literature by (Campos et al. 2009) and it is being used since. The Bayesian
+regression is, as described above, composed of a likelihood $p(y|a) = MVN (Xb + Za, R)$ and a
+prior distribution for markers, $p(a)$. A full and comprehensive account of Bayesians regressions
+for genomic prediction is in (Campos et al. 2013). However, before presenting the different
+models for Bayesian regressions, we will detail how allele coding should proceed in these methods.
+
+
+#### Effect of prior information on marker estimates
+Bayesian regressions are affected by the prior distribution that we assign to marker effects. One of the concerns is to be “fair” about the prior distribution when making predictions. The problem is that the marker effect can be either too much shrunken (so that its estimate is too small, for instance if there is a major gene) or too little shrunken, in which case the estimate of the marker contains too much error and is completely wrong. Consider one marker. We have a likelihood information for this marker (its effect on the trait) and a prior information from “outside”. What happens if this prior information is wrong?
+
+If we treat the marker as fixed. When $\sigma_a^2= 1$ is “large” the estimator is unbiased (on average there is no error) but each individual estimate has very large error. When some shrinkage is used (i.e., for $\sigma_a^2= 1$) the effect is slightly underestimated but large exaggerations never happen. Thus, across repetitions, the mean square error is minimized for small values of assumed $\sigma_a^2$.
+
+
+#### Total genetic variance explained by markers {-}
+Consider a simple case with two markers, and their effects $a_i$.
+The genetic value of an individual with genotype $z=(z_1 z_2)'$ will be $u = z_1a_1 + z_2a_2$. The variance of the genetic values in the the population comes from sampling of genotypes (i.e., some individuals have one genotype while others have another genotype). Therefore $Var(u) = Var(z_1)a_1^2 + Var(z_2)a_2^2 + 2Cov(z_1, z_2)a_1a_2$.  
+The term $Var(z_i) = 2p_iq_i$. The term $Cov(z_1, z_2)$ turns out to be $Cov(z_1, z_2)=2r\sqrt{p_1q_1p_2q_2}$, where r is the correlation between markers measuring linkage disequilibrium. The term $a_1a_2$ implies that marker effects go in the same direction. Therefore, for the covariance between loci to enter into the genetic
+variance, the two markers need to be on linkage disequilibrium and at the same time their effects
+need to point in the same direction. There is no reason to be so, and on average this term will
+typically cancel out. 
+Either assuming linkage equilibrium or assuming that markers are uncorrelated one to each other, then, $Var(u) = Var(z_1)a_1^2 + Var(z_2)a_2^2$, and variances of each marker can simply be added. If we generalize this result to many markers, we have that
+
+\begin{align}
+\sigma_u^2 = Var(u) = \sum_{i=1}^{m} Var(z_i)a_i^2 = \sum_{i=1}^{m} 2p_iq_ia_i^2
+\end{align}
+
+However, in most cases we do not know the marker effects. We may, though, have some prior
+information on them, like their a priori variance (the a priori mean is usually taken as zero). If this is the case, then we can substitute the term $a_i^2$ by its a priori expectation, that is, $\sigma_{a_i}^2$ and therefore:
+
+\begin{align}
+\sigma_u^2 = \sum_{i=1}^{m} \sum_{i=1}^{m} 2p_iq_i\sigma_{a_i}^2
+\end{align}
+
+#### Genetic variance explained by markers after fitting the data {-}
+This is actually fairly simple. After fitting the model to the data, there is an estimate $\hat{a}$ for each
+marker. We may say that each marker i explains a variance $2p_i(1-p_i)\hat{a}_i^2$
+Therefore, and contrary to common assertions, the genetic variance contributed by each marker is NOT the same across all markers, and this is true for any method. Also, note that $2\sum_i p_i(1-p_i)\hat{a}_i^2$ underestimates the total genetic variance, because estimates $\hat{a}_i$ are shrunken towards 0. Estimators derived from GREML og GBAYES are better.  
+
+#### Effect of allele coding on Bayesian Regressions
+We have explained how allele coding should (or can) proceed. [(Strandén et al. 2017) analyzed
+the result of allele coding in genomic predictions. One need to distinguish carefully two things
+here. What we mean by allele coding is coding of matrix $X$ for genotypes. 
+
+One of their results is that, for any model including a “fixed” effect such as an overall mean $\mu$ or a cross-classified effect (e.g., sex) estimates of marker effects $\hat{a}$ and estimated genetic values $\hat{u}=X\hat{a}$ are invariant to parameterization of $X$ (centered, 101 or 012 or 210), up to a constant. This constant will go into the overall mean or fixed effect. Consider for instance the mean. The mean of the genetic values of the population will be $1'\hat{u}$ , and this mean is not invariant to parameterization, and cannot either be separated from the overall mean of the model, $\mu$. If the centered coding is used, then $1'\hat{u}=1'X\hat{a}=0$. As for the marker variance $\sigma_{a0}^2$ estimated by, say,
+BayesC, they also proved that it is invariant to parameterization of $X$.
+
+In other words, we can use any coding (centered, 101 or 012 or 210) in $X$ for Bayesian methods.
+The estimated ub will be the same, the estimated $\sigma_{a0}^2$ or $\pi$ will be the same, and the estimated genetic variance computed using, for instance, $\sigma_{u}^2=\sum_{i=1}^{m}2p_iq_i\sigma_{a0}^2$ will be the same too.
+
+These results are convenient because they assure us that any allele coding is convenient. However, this result does not apply to the all features. For instance, the standard deviation (and therefore, the “model-based” reliability) of estimated genetic values $\hat{u}$ is not
+invariant to parameterization, because there will be a part of the overall mean absorbed, or not, by $X\hat{a}$. This implies that reports of the posterior variance of $\hat{u}$ will depend on the allele coding.
+
+
+The same result applies to GBLUP, as we will see later.
+
+#### Reliabilities from marker models
+
+Standard errors from Bayesian methods by MCMC
+In these methods, at iteration t, samples of distribution of marker effects is obtained in the form of samples of these effects ($a_{(t)}$). At iteration t, samples of the genetric values can be obtained as $u_{(t)} = Xa_{(t)}$. At the end of the MCMC process, the final estimate of the genetic value for, say, individual i consist of a posterior mean of all $\tilde{u}_i$ for that individual, $\hat{u}_i = \bar{\tilde{u}}_i$
+
+and a posterior variance $Var(\hat{u}_i) = Var(\tilde{u}_i)$. This variance (or rather, its square root: the standard error) can be used in itself as a measure of the uncertainty of the gentic value. A 95% confidence interval for the genetic value is roughly 
+$\hat{u}_i \pm 2sd (\hat{u}_i)$.
+
+
+Reliabilities
+Reliabilities are only well defined for a multivariate normal model - SNP-BLUP with fixed $\sigma_{a0}^2$.
+
+The first method uses $Var(\hat{u}_i)$ as above (i.e. from MCMC). Reliability can be obtained as
+
+\begin{align}
+Rel_i = 1 - \frac{Var(\hat{u}_i)}{x_ix_i'\sigma_{a0}^2}
+\end{align}
+
+The second method uses the complete a posteriori distribution of marker effects:
+\begin{align}
+Var(a|y) = C^{aa}
+\end{align}
+
+That can be obtained by MCMC or by inversion of the SNP-BLUP equations. From here we can
+derive that:
+
+\begin{align}
+Var (u|y) = ZC^{aa}Z'
+\end{align}
+
+And therefore $Var(\hat{u}_i) = x_iC^{aa}x_i^{'}$. 
+The rest proceeds as before.
+Imagine for instance that we have 50K markers and 1 million individuals in predictions. Imagine
+that we use SNP-BLUP equations and we can obtain by inversion $C^{aa}$, which is a 50K by 50K
+matrix. Then, for each individual, we compute $x_iC^{aa}x_i^{'}$ (which has high cost) and $x_ix_i'\sigma_{a0}^2$ (which has negligible cost).
+These reliabilities have a problem. We know that both $\hat{u}_i$ and $Var(\hat{u}_i)$ are invariant to parametrization (coding of $X$). But $x_ix_i^{'}$ depends on the parametrization, and therefore we can obtain exactly the same genetic values but different reliabilities in function of the chosen allele coding.
+
+### Parameterisation of genomic models {-}
+Under quantitative genetics theory, the additive or breeding value for an ith individual ($u_i$) involves the substitution effects of the genes ($\alpha$) 
+
+\begin{align}
+\alpha = a + d(q - p)
+\end{align}
+
+which includes the "biological" additive effect $a$, the “biological” dominant effect $d$ of the genes and the allele frequencies ($p$ and $q$). So, the breeding values of a set of individuals are $u=Z\alpha$. With no
+dominant effect of the gene ($d = 0$), $\alpha = a$ then $u = Za$ as was defined in the previous sections.
+
+If we consider one locus with two alleles (A1 and A2), a biological effect for each genotype can be defined, A1A1 = $a$, A1A2 = $d$ and A2A2 = $-a$, for instance as deviations from the midpoint of the two homozygous as in (Falconer and Mackay 1996). Naturally, a model that fits additive
+and dominant genotypic effects of the gene (or marker) can be written as
+
+\begin{align}
+y = 1\mu + X_a a + X_d d + e
+\end{align}
+
+where “biological” additive effects $a$ and “biological” dominant effects $d$ for a set of individuals are included for each of the n markers (Toro and Varona 2010). 
+
+This “intuitive” and useful model fits “biological” effect of gene or markers, while traditional quantitative genetic talks about “statistical” effects (Hill, Goddard, and Visscher 2008). Breeding values, dominance deviations, epistatic deviations and their variance components are statistical outcomes defined in a population context. In the following two alternative genomic models will be introduced. 
+
+
+### Genomic model including additive and dominance values {-}
+A genomic model directly comparable to the classical genetic model (e.g. pedigree based BLUP) should involve breeding values $u$ and dominance deviation $v$ as
+
+\begin{align}
+y = 1\mu + u + v + e
+\end{align}
+
+As in (Falconer and Mackay 1996) (Table 7.3), the additive genetic value for an individual is $u_{A1A1} = 2q\alpha = (2 - 2p)\alpha$, $u_{A1A2} = (q - p) \alpha = (1 - 2p)\alpha$ or $u_{A2A2} =(-2p)\alpha$, depending on its genotype and $p$ is the frequency of A1. Therefore the additive genetic values for a set of individuals are $u = X_{\alpha}\alpha$ (with $X_{\alpha}$
+coded as in (VanRaden 2008)). The element of $X_{\alpha}$ for an individual i at the marker j is $(2 - 2p_j)$, $(1 - 2p_j)$ or $(-2p_j)$ for genotypes $A1A1$, $A1A2$ and $A2A2$.
+
+
+Also, the dominant deviation of an individual is $v_{A1A1} = -2q^2d$, $v_{A1A2} = 2pqd$ and $v_{A2A2} =-2p^2d$. Hence, for a set of individuals, the dominance deviations are $v=X_{\delta}\delta$ with the element of $X_{\delta}$ for an individual i at the marker j is $-2q_j^2$, $2p_jq_j$ or $-2p_j^2$ for genotypes $A1A1$, $A1A2$ and $A2A2$.
+
+Note that additive genetic value ($u$) involves both additive and dominant effects of the markers (i.e. $a$ and $d$) whereas the dominance deviation ($v$) only includes a portion of the biological dominant effects of the markers ($d$).
+
+The mean of additive genetic values is $E(u)=0$ and the variance is:
+
+\begin{align}
+Var(u) = \sigma_u^2 = 2pq[a + d(q - p)]^2 = 2pq\alpha^2 
+\end{align}
+
+Thus the variance of the additive genetic values includes variation due to the additive and dominant effects of the markers.
+
+The mean of dominance deviations $E(u)=0$ and the variance is $\sigma_v^2=E(v^2)-[E(v)]^2=E(v^2)$:
+
+\begin{align}
+\sigma_v^2 = [2pqd]^2 
+\end{align}
+
+Thus the variance of the dominance deviations only include a portion of the dominant effect of the markers not captured by the additive genetic variance $\sigma_u^2$.
+
+Extended to several markers, and considering marker effects as random, this gives
+
+\begin{align}
+\sigma_u^2=\sum^m_{j=1}2p_jq_j\sigma_{a0}^2 + \sum^m_{j=1}2p_jq_j(q_j-p_j)^2\sigma_{d0}^2
+\sigma_u^2= \sum^m_{j=1}(2p_jq_j)^2\sigma_{d0}^2
+\end{align}
+
+where $\sigma_{a0}^2$ and $\sigma_{d0}^2$ are the marker variances for additive and dominant components, respectively.
+
+The total genetic variance is $\sigma_{g}^2 = \sigma_{a0}^2 +\sigma_{d0}^2$, the first term is the additive genetic variance and the second term corresponds to the dominance genetic variance or dominance deviation variance. Note that the “statistical” partition of the variance in statistical components due to additivity, dominance and epistasis does not reflect the “biological” effects of the genes (Huang and Mackay 2016) though it is useful for prediction and selection decisions. Even when the genes have a
+biological or functional dominant action, this variation is mostly captured by the additive genetic variance (Hill and Mäki-Tanila 2015).
+
+The “statistical” or classical parameterization implies linkage equilibrium and a population in Hardy-Weinberg equilibrium. Assuming uncorrelated random marker effects ($a$, $d$), it can be extended to multiple loci (VanRaden 2008 ; Gianola et al. 2009) and obtained
+
+\begin{align}
+Var(u) = \frac{X_{\alpha}X'_{\alpha}}{2\sum^m_{j=1}p_jq_j}\sigma^2_u = G\sigma^2_a
+\end{align}
+
+as in (Vitezica, Varona, and Legarra 2013) which is the classical additive genomic relationship matrix G-matrix of GBLUP (VanRaden 2008). Note that the variance component is 
+
+\begin{align}
+\sigma^2_u = \sum(2p_jq_j)\sigma^2_{a0} +\sum2p_jq_j(q_j-p_j)^2\sigma^2_{d0}.
+\end{align}
+
+For the dominant deviations $v$, its variance-covariance matrix is:
+\begin{align}
+Var(v) = X_{\delta}X'_{\delta}\sigma^2_{d0}
+\end{align}
+
+After dividing by the variance of the dominance deviations which is
+\begin{align}
+\sigma^2_v =\sum^{m}_{j=1}(2p_jq_j)^2\sigma^2_{d0}
+\end{align}
+
+the dominant genomic relationship matrix, D, is obtained as
+
+\begin{align}
+Var(v) = \frac{X_{\delta}X'_{\delta}}{\sum_{j=1}^m(2p_jq_j)^2}\sigma^2_v = D\sigma^2_v
+\end{align}
+
+
+### Genomic model including additive and dominance effects {-}
+
+A model that fits additive and dominant genotypic effects of the marker can be written as
+
+\begin{align}
+y = 1\mu + X_a a + X_d d + e
+\end{align}
+
+where additive effect $a_j$ and a dominant effect $d_j$ are included for each of the markers. The covariate $X_{a_{ij}}$ is equal to 1, 0, -1, for marker genotypes A1A1, A1A2 and A2A2, respectively. For the dominant component, $X_{d_{ij}}$ is equal to 0, 1, 0 for marker genotypes A1A1, A1A2 and A2A2, respectively. This model is based on “observed” genotypes and in particular in heterozygotes, so it can be called a “genotypic” model.
+From this model we can define $\tilde{u}$ and $\tilde{v}$ as the “genotypic” additive and dominant effects. So, we can write for a set of individuals $\tilde{u}=X_aa$ and $\tilde{v}=X_dd$.
+
+Note that $\tilde{u}$ is not a additive genetic value because $a$ is NOT a substitution effect, is the part attributable to the additive “biological” effect of the marker. The incidence matrix $X_a$ corresponds to the incidence matrix $W$ (used in the classical model defined in terms of breeding values and dominance
+deviations). However, the matrix $X_d \neq X_{\delta}$ ($X_{\delta}$ is used in the classical model for the dominance deviations).
+
+
+The variance of the genotypic additive value can be obtained as 
+$\sigma^2_{\tilde{u}} = E(\tilde{u}^2)-E(\tilde{u})^2$,
+
+and the same for the variance of the genotypic dominant value $\sigma^2_{\tilde{v}}$. Then 
+$\sigma^2_{\tilde{u}} = \sum 2p_jq_j\sigma^2_a$,
+and
+$\sigma^2_{\tilde{v}} = \sum 2p_jq_j(1-22p_jq_j)\sigma^2_d$,
+Quite different from
+
+\begin{align}
+\sigma^2_u = \sum(2p_jq_j)\sigma^2_{a0} +\sum2p_jq_j(q_j-p_j)^2\sigma^2_{d0}.
+\end{align}
+
+For the dominant deviations $v$, its variance-covariance matrix is:
+\begin{align}
+Var(v) = X_{\delta}X'_{\delta}\sigma^2_{d0}
+\end{align}
+
+that we obtained before. The variances $\sigma^2_{\tilde{u}}$ and $\sigma^2_{\tilde{v}}$ estimated under the "genotypic" model as in Su et al. (2012) are NOT genetic variances. In particular, they do not include dominant effects, but by definition of breeding value, the reproductive value of an individual contains substitution effects, which contain dominant effects. Therefore, $\sigma^2_u$ and $\sigma^2_v$ are more useful for selection. Vitezica et al. (2013) showed that also the dominant relationship matrices (D) are different between the classical (statistical) and the “genotypic” model. The parameterization is largely a matter of convenience, both models are able to explain the data ($y$) but their interpretation is different. 
+
+The classical model in terms of breeding values and substitution effects (statistical) is more adequate for selection (both for ranking animals and for predicting genetic improvement). The only variance components comparable with pedigree-based estimates are $\sigma^2_u$ and $\sigma^2_v$ obtained from the statistical genomic model. Using variance components estimated from the “genotypic” model is misleading because they underestimate the importance of additive variance and overestimate the importance of dominance variance (Vitezica, Varona, and Legarra 2013). 
+From the total genetic variance $\sigma^2_g$ it can be verified that $\sigma^2_u + \sigma^2_v$ = $\sigma^2_{\tilde{u}}+\sigma^2_{\tilde{v}}$. Thus, it is simple to switch
+variance component estimates between “statistical” ($\sigma^2_u$ and $\sigma^2_v$) and “biological” ($\sigma^2_{\tilde{u}}$ and $\sigma^2_{\tilde{v}}$) models if the distribution of the allelic frequencies is available (Vitezica et al., 2013).
+
+The “statistical” model of Vitezica et al. (2013). This means that introducing new genetic effect (e.g. additive vs. additive plus dominance) in the model does not change previous estimates. For instance: going from an additive to an additive + dominant model should not change much neither the estimates of variance components, nor the estimates of breeding values and dominant deviations. However, the “genotypic” model of Su et al. (2012) is not orthogonal. Including dominance may change greatly the estimate of additive values and variances, and in addition,
+the estimated additive values are not breeding values - they are “genotypic” additive values.
+
+We need to separate the goal of using quantitative geneticsto predict phenotypes across generations with that of understanding the molecular genetic architecture of complex traits and predicting individual quantitative trait phenotypesfrom genotypes,which is a within-generation
+endeavor
+
+
+
+\newpage
+
+
+# Genomic information
+The use of genomic information due to the dramatic development in genotyping technologies has revolutionized the field of quantitive genetic. Today dense genetic maps are available for most of the most important plant and animal species including humans. The genetic maps are based on DNA markers in the form of single nucleotide polymorphisms (SNP) and they enable us to divide the entire genome into thousands of relatively small chromosome segments. Ultimately the entire genome may be sequenced, but this is still very expensive. 
+
+## Genetic markers
+The different locations in the genome that are considered in genomic analysis are called __markers__. When looking at the complete set of markers making up the genomic information in a population, the so-called __Single Nucleotide Polymorphisms__ (SNPs) have been shown to be the most useful types of markers. These SNPs correspond to differences of single bases at a given position in the genome. Based on empirical analyses of very many SNP-loci, almost all SNP just take two different states. Furthermore it is important that these SNPs are more or less evenly spread over the complete genome. Some SNPs may be located in coding regions and some my be placed in regions of unknown function. 
+
+
+After all, what are SNPs? The genome is composed of 4 different nucleotides (A, C, T, and
+G). If you compare the DNA sequence from 2 individuals, there may be some positions were
+the nucleotides differ. The reality is that SNPs have become the bread-and-butter of DNA
+sequence variation (Stoneking 2001) and they are now an important tool to determine the genetic
+potential of livestock. SNPs have become the main marker used to detect variation
+in the DNA. An important reason is that SNPs are abundant, as they are found
+throughout the entire genome (Schork, Fallin, and Lanchbury 2000). There are about 3 billion
+nucleotides in the bovine genome, and there are over 30 million SNPs or 1 every 100 nucleotides
+is a SNP. Another reason is the location in the DNA: they are found in introns, exons, promoters,
+enhancers, or intergenic regions. In addition, SNPs are now cheap and easy to genotype in an
+automated, high-throughput manner because they are binary.
+One of the benefits of marker genotyping is the detection of genes that affect traits of importance.
+The main idea of using SNPs in this task is that a SNP found to be associated with a trait
+phenotype is a proxy for a nearby gene or causative variant (i.e., a SNP that directly affects the
+trait). As many SNPs are present in the genome, the likelihood of having at least 1 SNP linked
+to a causative variant greatly increases, augmenting the chance of finding genes that actually
+contribute to genetic variation for the trait. 
+
+## Quantitative Trait Loci and linkage disequilibrium
+The loci that are relevant for a quantitative trait are called __Quantitative Trait Loci__ (QTL). Any given SNP-Marker can only be informative for a given QTL, if a certain __linkage disequilibrium__ between the QTL and the marker locus exists. The idea behind linkage disequilibrium is that a certain positive QTL-allele evolved in a certain genetic neighborhood of a number of SNP loci. As a result of that the positive QTL-allele is very often inherited with the same SNP-allele. Over the generations, recombination between the QTL and the neighboring SNP-loci can happen and thereby weaken the statistical association between the positive QTL-allele and the given SNP-allele. This recombination effect is smaller when the QTL and the SNP-loci are physically closer together on the chromosome. The non-random association between QTL and SNP-markers is called linkage disequilibrium. A large number of SNP markers (>1M) are required to get a sufficient coverage of the genetic variation in the human genome.
+ 
+
+Markers may be linked to QTL or genes through linkage disequilibrium (LD). The LD is based on expected versus observed allele frequencies and measures the non-random association of alleles across loci. The strength of the association between two loci is measured by the correlation. We assume that, if neighboring SNPs are tightly correlated, then QTLs that are “in the middle” should be strongly correlated as well (this might not be true – for instance if all QTLs have very low frequency, but that seems unlikely).
+
+
+## Linkage disequilibrium
+Linkage disequilibrium (LD) is often measured by two statistics, $D$ and $r$, which can be interpreted as the covariance and the correlation between loci and across gametes. 
+The marker loci are called $M$ and $Q$, then the LD can be measured by 
+
+\begin{align}
+D &= p(M_1Q_1) * p(M_2Q_2) - p(M_1Q_2) * p(M_2Q_1)
+(\#eq:linkagediseq)
+\end{align}
+
+where $p(M_xQ_y)$ corresponds to the frequency of the combination of marker alleles $M_x$ and $Q_y$ (i.e. haplotype or gamete). Very often the LD measure shown in \@ref(eq:linkagediseq) is re-scaled to the interval between $0$ and $1$ which leads to 
+
+\begin{align}
+r^2 &= \frac{D^2}{p(M_1)*p(M_2) * p(Q_1) * p(Q_2)}
+(\#eq:linkagediseqrescaled)
+\end{align}
+
+In \@ref(eq:linkagediseqrescaled) $r^2$ describes the proportion of the variance at the marker $Q$ which is explained by the marker $M$. Hence the LD must be high such that the marker $M$ can explain a large part of the variance at marker $Q$. 
+
+Both $D$ and $r$ depend on the reference allele (e.g. it is not the same to use as $M_1$ or $M_2$ as reference allele) but $r^2$ is invariant to the reference allele. In order to compute $D$ \@ref(eq:linkagediseq) the frequency of the haplotypes are required. It is possible to infer haplotypes from the genotypes. 
+
+An alternative is to compute Pearson’s correlation coefficient between allele counts of the reference alleles at each marker loci obtained from individuals from LD reference panel (e.g. study population): 
+
+\begin{align}
+r_{kl} &= cor(x_k, x_l)
+(\#eq:linkagediseqpearson)
+\end{align}
+
+where $x_k$ and $x_l$ are vectors of allele counst for markers $k$ and $l$. For diploids $x_k$ = 2, 1, or 0 representing the number of A1 alleles (defined as the reference allele) in genotypes A1A1, A1A2, and A2A, and $x_k$ = 2, 1, and 0 representing the number of B1 alleles in genotypes B1B1, B1B2, and B2B2. It has been shown that this provide an accurate estimator of LD (Rogers and Huff 2009). 
+ 
+# Genetic relationships among individuals 
+Estimating heritability and genetic predisposition requires that the phenotypic covariance between related individuals can be expressed by their additive genetic relationship ($A$) and the additive genetic variance ($\sigma_a^2$). Related individuals share more alleles and thus resemble each other (have correlated phenotypes, to an extent that depends on the genetic relationships). Genetic relationships can be inferred from pedigree og genetic marker data.
+
+## Genetic relationships among individuals estimated from pedigree data 
+The genetic covariance between individuals depends on the additive genetic relationship. Examples of different types of additive genetic relationships can be found in the table below. The additive genetic relationship ($A_{ij}$) between the various sources ($j$) and the individual itself ($i$) can be seen in the table below.
+
+\begin{table}[h!]
+\begin{center}
+\caption{Examples on additive genetic relationship ($A_{ij}$) between individual $i$ and $j$.}
+\begin{tabular}{lc}
+  \hline
+  \textbf{Type of relative}  &  \textbf{$A_{ij}$}\\
+  \hline
+  Self  &  1.0    \\
+  Unrelated  &  0    \\
+  Mother  &  0.5 \\
+  Father  &  0.5 \\
+  Grandparent  &  0.25 \\
+  Child  &  0.5 \\
+  Full-sib  &  0.5 \\
+  Half-sib  &  0.25 \\
+  Twins (MZ/DZ)  &  1/0.5 \\
+  Cousin  &  0.0625 \\
+  \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The $A$ matrix expresses the additive genetic relationship among individuals in a population, and is called the \textbf{numerator relationship matrix $A$}. The matrix $A$ is symmetric, where the diagonal elements (\textit{i.e.}, $A_{ii}$) are equal to $1 + F_i$ where $F_i$ is the \textbf{coefficient of inbreeding} of individual $i$. $F_i$ is defined as the probability that two alleles taken at random from individual $i$ are identical by descent (\textit{i.e.}, that the two alleles originate from the same common ancestor). As such, $F_i$ is also the kinship coefficient of its parents (half their genetic relationship).
+
+Each off-diagonal elements $(A_{ij})$ is the additive genetic relationship between individuals $i$ and $j$. Multiplying the matrix $A$ by the additive genetic variance $\sigma_a^2$ leads to the covariance among the individual genetic values. Thus, if $a_i$ is the genetic value of individual $i$ then,
+
+\begin{equation}
+Var(a_i) = A_{ii} \sigma_a^2 = (1 + F_i) \sigma_a^2.
+\end{equation}
+
+The additive genetic relationship matrix $A$ can be computed using a recursive method. 
+
+\begin{comment}
+In what follows, the recursive method to compute the components of $A$ is described. Initially, individuals in a pedigree are numbered from $1$ to $n$ and ordered such that parents precede their children. The following rules are then  used to compute the components of $A$. 
+
+* If both parents $s$ and $d$ of individual $i$ are known, then 
+    + the diagonal element $A_{ii}$ corresponds to: $A_{ii} = 1 + F_i = 1 + \frac{1}{2} A_{sd}$ and
+    + the off-diagonal element $A_{ji}$ is computed as:  $A_{ji} = \frac{1}{2} (A_{js} + A_{jd})$
+    + because $A$ is symmetric $A_{ji} = A_{ij}$
+    
+* If only one parent $s$ of individual $i$ is known and assumed unrelated to the mate
+    + $A_{ii} = 1$
+    + $A_{ij} = A_{ji} = \frac{1}{2} (A_{js})$
+    
+* If both parents are unknown    
+    + $A_{ii} = 1$
+    + $A_{ij} = A_{ji} = 0$
+  
+
+#### A numeric example {-}
+```{r pedexamplesetup, echo=FALSE, results='hide'}
+suppressPackageStartupMessages( library(pedigreemm) )
+n_nr_ani_ped <- 6
+n_nr_parent <- 2
+tbl_ped <- tibble::tibble(Child = c((n_nr_parent+1):n_nr_ani_ped),
+                             Father = c(1, 1, 4, 5),
+                             Mother  = c(2, NA, 3, 2))
+ped <- pedigree(sire = c(rep(NA, n_nr_parent), tbl_ped$Father), dam = c(rep(NA, n_nr_parent), tbl_ped$Mother), label = as.character(1:n_nr_ani_ped))
+matA <- as.matrix(getA(ped = ped))
+matAinv <- as.matrix(getAInv(ped = ped))
+```
+
+We are given a pedigree as described in Table \@ref(tab:tabpedexample) and we want to compute the matrix $A$ using the recursive algorithm described in section \@ref(algorithmtocomputea). 
+
+```{r tabpedexample, echo=FALSE, results='asis'}
+knitr::kable(tbl_ped,
+             format = 'latex',
+             booktabs = TRUE,
+             longtable = TRUE,
+             caption = "Example pedigree to compute additive genetic relationship matrix.")
+```
+
+The first step of the computations of $A$ is the numbering and the ordering of all the individuals. This is already done in the pedigree shown in Table \@ref(tab:tabpedexample). The components of $A$ are then computed row-by-row starting with $A_{11}$. 
+
+\begin{align}
+A_{11} &= 1 + F_1 = 1 + 0 = 1 \notag \\
+A_{12} &= 0 = A_{21} \notag \\
+A_{13} &= \frac{1}{2} (A_{11} + A_{12}) = 0.5 = A_{31} \notag \\
+A_{14} &= \frac{1}{2} A_{11} = 0.5 = A_{41}  \notag \\
+A_{15} &= \frac{1}{2} (A_{14} + A_{13}) = 0.5 = A_{51} \notag \\
+A_{16} &= \frac{1}{2} (A_{15} + A_{12}) = 0.25 \notag
+\end{align}
+
+The same computations are done for all the other components of the matrix $A$. The final result for the matrix looks as follows:
+
+```{r displaymatrixa, echo=FALSE, results='asis'}
+cat("$$\n")
+# cat("A = \\left[")
+# cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = matA, pnDigits = 4), sep = "\n"), "\n")
+# cat("\\right]\n")
+cat(paste(rmdhelp::bmatrix(pmat = matA, ps_name = 'A'), sep = '\n'), '\n')
+cat("$$\n")
+```
+
+As a result, we can see from the components of the above shown matrix $A$ that individuals $1$ and $2$ are not related to each other. Furthermore, from the diagonal elements of $A$, it follows that individuals $5$ and $6$ are inbred while individuals $1$ to $4$ are not inbred. Finally, we can see that different types of relationships were included in this data. In comparison, only two types of relationships could exist in regression and ANOVA analyses: unrelated (e.g., $A_{ij}$=0 between individuals from different families) or not (e.g., $A_{ij}$=0.5 between individuals from the same full-sib family). 
+
+\end{comment}
+
+
+## Genetic relationships among individuals estimated from genetic markers 
+
+A large number of genetic marker are required to get an accurate estimate of the genomic relationships among individuals. The elements in genotype matrix $M$ can be encoded in different ways. Genotypes represent the nucleotide configuration that can be found at a given SNP position. For the use in the linear model we have to use a different encoding. Let us assume that at a given SNP-position, the bases $G$ or $C$ are observed and $G$ corresponds to the allele with the positive effect on our trait of interest. Based on the two observed alleles, the possible genotypes are $GG$, $GC$ or $CC$. One possible code for this SNP in the matrix $M$ might be the number of $G$-Alleles which corresponds to $2$, $1$ and $0$. Alternatively, it is also possible to use the codes $1$, $0$ and $-1$ instead which corresponds to the factors with which $a$ is multiplied to get the genotypic values in the single locus model.
+
+Multiplying the matrix $M$ with its transpose $M^T$ results in a $n\times n$ square matrix $MM^T$. On the diagonal of this matrix we get counts of how many alleles in each individual have a positive effect. The off-diagonal elements count how many individual share the same alleles across all SNP-positions. The additive genomic relationship matrix $G$ is constructed using all genomic markers as follows: 
+
+\begin{equation}
+G = \frac{WW^T}{\sum_{i=1}^m 2p_i(1-p_i)}
+(\#eq:genomicrelmat)
+\end{equation}
+
+where $W$ is the centered and scaled genotype matrix, and m is the total number of markers. Each column vector of $W$ was calculated as follows: $w_i=M_i-2p_i-0.5$, where $p_i$ is the minor allele frequency of the i'th genomic marker and $M_i$ is the i'th column vector of the allele count matrix, $M$, which contains the genotypes coded as 0, 1 or 2 counting the number of minor allele. The centering of the allele counts and scaling factor $\sum_{i=1}^m 2p_i(1-p_i)$ ensures that the genomic relationship matrix $G$ has similar properties as the numerator relationship matrix $A$. 
+
+The main difference between the two types of genetic relationship matrices ($A$ and $G$) is that $A$ is based on the concept of identity by descent (sharing of the same alleles, transmitted from common ancestors) whereas $G$ is based on the concept of identity by state (sharing of the same alleles, regardless of their origin). 

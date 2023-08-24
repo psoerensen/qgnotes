@@ -1,0 +1,369 @@
+---
+title: "Linear Mixed Models used in Quantitative Genomics"
+author: "Stefan McKinnon Høj-Edwards & Peter Sørensen"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    citation_package: natbib
+    number_sections: yes
+    includes:
+      in_header: preamble.tex
+  html_document:
+    number_sections: yes
+    includes:
+      in_header: mathjax_header.html
+  word_document: default
+bibliography: [qg2021.bib, book.bib, packages.bib]
+link-citations: yes
+---
+
+# Linear mixed models
+
+Linear mixed effect models (LMMs) are widely used in genetics and application includes single marker association analysis, estimation of genetic variance and heritability, and prediction of genetic predisposition or disease risk. In this chapter we will start with a general introduction to the linear mixed models to establish the notation and assumptions used throughout the notes. Two models that are used to model the relationship between genotype and phenotype are introduced, but the application and usage is reserved for chapter \ref{ch:lmm2}. We will show that the two models are equivalent and then expand the models to contain two (or more) random effects (section \ref{sec:model.expansion}), followed by a comparison of the models used in these notes (section \ref{sec:model.comparison}).
+
+The two models are M-BLUP, which models the \emph{marker effects} of each observed genetic marker, and G-BLUP, which models the \emph{genetic values} of an individual. `BLUP' in this context is an abbreviation for Best Linear Unbiased Predictor, and the solutions to these two BLUP models are shown in the 'BLUP' chapter of these notes.
+
+It is important here to understand the distinction between what is known as the 'true model' and an 'instrumental model'. The true model is what generated the data; in the context of these notes, this would be the biological machinery of genes being expressed and that ultimately produce the observed phenotypes. As we are still trying to infer the workings of this complex biological machinery,
+we instead refer to an instrumental model that reflects our understanding and what we are trying to compute.
+
+For the following, we refer to the number of genotyped individuals as $q$, number of observations as $n$, and number of markers as $m$. To introduce the two models, we are starting with simplified versions of the models, assuming one observation per individual. This removes the necessity for the ${Z}$ matrix, which will be introduced in chapter \ref{ch:lmm2}. We also assume that fixed effects have been reduced to a single intercept, i.e.\ $X\beta = \mu$.
+
+\section{Linear mixed model for marker effects (M-BLUP)}
+\label{sec:mblup}
+\index{M-BLUP|textbf}
+
+The M-BLUP linear mixed model is a simple starting point, assuming the linear combination of marker effects for each individual.
+
+\begin{equation}
+  \vect{y} = \mu + \matr{W}\vect{b} + \vect{e}
+  \label{eq:mblup}
+\end{equation}
+
+where 
+
+\begin{compactdesc}
+  \item[$\vect{y}$] is the $n$-length vector of observations and is the \emph{linear combination} of the \emph{random variables} $\vect{b}$ and $\vect{e}$ plus 
+	\item[$\mu$] the intercept.
+	\item[$\matr{W}$] is the $n \times m$ genotype matrix\footnote{Generally, $\matr{W}$ has $q$ rows, one row for each individual.},
+	\item[$\vect{b}$] is the $m$-length vector of marker effects, and
+	\item[$\vect{e}$] is the $n$-length residual vector.
+\end{compactdesc}
+
+The genotype matrix $\matr{W}$ is the (scaled and centred) marker matrix, linking each of the $q$ individuals to the genotype at each of the $m$ loci.
+See section \ref{sec:genotype.matrix} for a discussion of this matrix.
+
+
+\subsection{Assumptions}
+\label{sec:mblup.assumptions}
+\index{M-BLUP!Assumptions}
+
+The M-BLUP assumes a priori that the \emph{marker effects} $\vect{b}$ are uncorrelated, 
+i.e.\ $\vect{b} \sim N\left(\vect{0}, \matr{I} \sigma^2_b \right)$, where $\sigma^2_b$ is the variance component and $\matr{I}$ is a $m \times m$ identity matrix. That is, the marker effects are assumed to be independently sampled from a normal distribution with mean $0$ and variance $\sigma^2_b$. Do not confuse this assumption with that the markers themselves might or might not be correlated!
+
+Residuals are assumed uncorrelated, but might be weighted, i.e.\ $\vect{e} \sim N\left(\vect{0}, \matr{D} \sigma^2_e \right)$ where $\matr{D}$ is a $n \times n$ diagonal matrix and each diagonal element may take a value corresponding to the uncertainty of the observation. The residuals and marker effects are uncorrelated, as displayed in \eqref{eq:mblup.cov.3}.
+
+Expectations of $\vect{y}$ are $\E(\vect{y} | \mu) = \mu$, as the expectation of the random variables are $0$. 
+
+\begin{subequations}
+Variance is given as
+\begin{align}
+  \Var(\vect{y} | \mu) &= \Var(\matr{W}\vect{b} + {e} | \mu) \label{eq:mblup.var.1} \\
+  &= \Var(\matr{W}\vect{b}) + \Var(\vect{e}) + \Cov(\matr{W}\vect{b},\vect{e}) + \Cov(\vect{e},\matr{W}\vect{b})  \label{eq:mblup.var.2} \\
+  &= \matr{WW^\prime} \Var(\vect{b})  + \Var(\vect{e}) + 0 + 0\label{eq:mblup.var.3}  \\
+  &= \matr{WW^\prime} \matr{I} \sigma^2_b + \matr{D} \sigma^2_e \label{eq:mblup.var.4} 
+\end{align}
+\end{subequations}
+
+Step \ref{eq:mblup.var.3} is possible because the two random variables are uncorrelated.
+
+\subsection{Covariances}
+\index{M-BLUP!Covariances}
+
+\begin{subequations}
+\label{eq:mblup.cov}
+Covariances can be expressed as
+\begin{align}
+  \Cov(\vect{y}, \vect{b}) &= \matr{W} \sigma^2_b \\
+  \Cov(\vect{y}, \vect{e}) &= \matr{D} \sigma^2_e
+\end{align}
+which can be summarised as
+\begin{equation}
+  \Var\begin{pmatrix} \vect{b} \\ \vect{e} \\ \vect{y} \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \matr{I} \sigma^2_b & \matr{0} & \matr{W}' \sigma^2_b \\
+    \matr{0} & \matr{D} \sigma^2_e &  \matr{D} \sigma^2_e \\
+    \matr{W} \sigma^2_b & \matr{D} \sigma^2_e & \matr{WW^\prime} \matr{I} \sigma^2_b + \matr{D} \sigma^2_e
+  \end{pmatrix}
+  \label{eq:mblup.cov.3}
+  .
+\end{equation}
+\end{subequations}
+
+\section{Linear mixed model for individual effects (G-BLUP)}
+\label{sec:gblup}
+\index{G-BLUP|textbf}
+
+This model is similar to M-BLUP, although we are instead modelling the \emph{genetic values} (sometimes referred to as Genomic Estimated Breeding Values; GEBV\index{GEBV}) instead of the marker effects. We assume the connection between marker effects and genetic values is $\matr{W}\vect{b} = \vect{g}$. There are some computational advantages for using G-BLUP when $n \ll m$, but this will be covered later.
+
+The G-BLUP model can be written as
+\begin{equation}
+  \vect{y} = \mu + \vect{g} + \vect{e}
+  \label{eq:gblup}
+\end{equation}
+where 
+$\vect{y}$, $\mu$ and $\vect{e}$ are as for \eqref{eq:mblup}, and $\vect{g}$ is the $q$-length vector of genetic values.
+
+\subsection{Assumptions}
+\label{sec:gblup.assumptions}
+\index{G-BLUP!Assumptions}
+
+In G-BLUP we make no (explicit) assumptions on the marker effects, instead we assume that the genetic values are correlated by the relationship between the individuals, i.e.\ by pedigree or genetic similarity, such that $\vect{g} \sim N(\vect{0}, \matr{G}\sigma^2_g)$, where $\matr{G}$ is the $q \times q$ genomic relationship matrix; see remarks in section~\ref{sec:genotype.matrix}.
+
+For the observations ($\vect{y}$) and residuals ($\vect{e}$), the assumptions are as in section~\ref{sec:mblup.assumptions}.
+Variance is given as
+
+\begin{subequations}
+\begin{align}
+  \Var(\vect{y}|\mu) &= \Var(\vect{g} + {e} | \mu) \label{eq:gblup.var.1} \\
+    &= \Var(\vect{g}) + \Var(\vect{e}) + \Cov(\vect{g},\vect{e}) + \Cov(\vect{e},\vect{g}) \label{eq:gblup.var.2} \\
+    &= \matr{G}\sigma^2_g + \matr{D} \sigma^2_e \label{eq:gblup.var.3}
+    .
+\end{align}
+\end{subequations}
+
+As in M-BLUP, step \ref{eq:gblup.var.3} is possible due to the two random variables are assumed uncorrelated.
+
+\subsection{Covariances}
+\index{G-BLUP!Covariances}
+
+\begin{subequations}
+\label{eq:gblup.cov}
+Covariances for G-BLUP can be expressed as
+\begin{align}
+  \Cov(\vect{y}, \vect{g}) &= \matr{G} \sigma^2_g \\
+  \Cov(\vect{y}, \vect{e}) &= \matr{D} \sigma^2_e
+\end{align}
+and the entire model can be summarised as
+\begin{equation}
+  \Var \begin{pmatrix} \vect{g} \\ \vect{e} \\ \vect{y} \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \matr{G} \sigma^2_g & \matr{0} & \matr{G}' \sigma^2_g \\
+    \matr{0} & \matr{D} \sigma^2_e &  \matr{D} \sigma^2_e \\
+    \matr{G} \sigma^2_g & \matr{D} \sigma^2_e & \matr{G}\sigma^2_g + \matr{D} \sigma^2_e
+  \end{pmatrix}
+  \label{eq:gblup.cov.4}
+  .
+\end{equation}
+\end{subequations}    
+
+
+\section{Proof of equivalence of M-BLUP and G-BLUP}
+\label{sec:SNP-G-BLUP}
+
+To prove that G-BLUP and M-BLUP are equivalent, we must show that the expectation and variance of the models are identical. In the two sections above, the expectations are shown to be $\E(\vect{y} | \mu) = \mu$, and the variances are derived in \eqref{eq:mblup.var.4} and \eqref{eq:gblup.var.3}. We must therefore show the following equivalence:
+
+\begin{align*}
+  \Var\left(\mu + \matr{W}\vect{b} +\vect{e}\right)
+  &=
+  \Var(\mu + \vect{g} + \vect{e})
+  \\
+  \matr{WW^\prime I} \sigma^2_b + \matr{D} \sigma^2_e
+  &=
+  \matr{G} \sigma^2_g + \matr{D} \sigma^2_e
+\end{align*}
+
+Assuming that $\matr{G}$ is 
+calculated\footnote{The assumptions and implications of this are too cumbersome to discuss here, so the reader is directed to section \ref{sec:genotype.matrix} for a discussion on the calculation of $\matr{W}$ and $\matr{G}$.} as $\frac{\matr{WW^\prime}}{m}$, cancelling the component from the residual, and dropping the identity, we get
+
+\begin{equation}
+  m \cdot \sigma^2_b = \sigma^2_g
+\end{equation}
+  
+Alas, we are left to show that the two variance components differ by a factor of $m$. Assuming that the columns of genotype matrix ${W}$ has been centred and scaled \citep{VanRaden2008}, 
+we can assume
+
+\begin{equation*}
+   \matr{W} \sim (0, 1)
+\end{equation*}
+
+That is, that $\matr{W}$ is sampled from an unknown distribution with mean zero and variance 1.
+The genetic value for the i\textsuperscript{th} individual is the linear combination of the marker effects, i.e.\
+
+\begin{equation}
+  g_i = \vect{w}_i \vect{b} = \sum_j^m w_{ij} b_j
+\end{equation}
+where $\vect{w}_i$ is the i\th row vector of $\matr{W}$ and $j$ is the j\th locus.
+Thus the conditional expectation of $g_i$ given $\matr{W}$ is
+\begin{equation}
+  \E(g_i | \vect{w}_i) = \vect{w}_{i} \E(\vect{b}) = \vect{w}_{i} \cdot 0 = 0
+\end{equation}
+and the conditional variance is
+\begin{align*}
+  \Var(g_i|\vect{w}_i) &= \vect{w}_i \Var(\vect{b}) \vect{w}_i^\prime \\
+    &= \vect{w}_i \vect{w}_i^\prime \sigma^2_b \\
+    &= \left[ \sum_j^m w_{ij} \right] \sigma^2_b
+\end{align*}
+
+\begin{subequations}
+Hence, the marginal variance of $g_i$ is:
+\begin{align}
+	\Var(g_i) &= \Var_{\vect{w}_i}[\E(g_i|\vect{w}_i)] + \E_{\vect{w}_i}[\Var(g_i|\vect{w}_i)] \\
+	 &= 0 + \E_{\vect{w}_i}[\Var(g_i|\vect{w}_i)] \\
+   &= \E_{\matr{w}_i}\left[\sigma^2_b \sum_j^m w_{ij}^2\right] \\
+	 &= \sigma^2_b \sum_j^m \E(w_{ij}^2) \label{eq:marginal.gi.4} \\
+	 &= \sigma^2_b \sum_j^m \left[ \Var(w_{ij}) + [\E(w_{ij})]^2 \right] \\
+	 &= \sigma^2_b \sum_j^m \left[ 1 + 0 \right] \\
+	\sigma^2_g &= \sigma^2_b m 
+\end{align}
+\end{subequations}
+
+Expanding the expectation of a squared variable in step \eqref{eq:marginal.gi.4} is done by the rule displayed in the stat box \ref{stat:1}. The notation of $\E_{\vect{w}_i}$ and $\Var_{\vect{w}_i}$ indicates the expectation and variance are with respect to the
+\emph{distribution} of $\vect{w}_i$.
+
+
+
+\section{Some notes on calculation of \texorpdfstring{$\matr{W}$}{W}}
+\label{sec:genotype.matrix}
+
+The genotype matrix $\matr{W}$ can be designed in several ways. The overall assumption is that it links the $q$ genotyped individuals to the $m$ markers (after quality control, etc.). It is therefore an $q \times m$ matrix, where each row corresponds to an individual and each column to a marker.
+
+The most basic matrix is the \indx{marker count matrix} $\matr{M}$ or \indx{minimal allele count matrix}, where each element in $\matr{M}$ takes the value 0, 1 or 2 (in diploid species).
+\citet{LegarraMisztal2008} use an allele coding of -1, 0 and 1, and in this case, diagonals of $\matr{MM^\prime}$ count the number of homozygous loci per individual, and diagonals of $\matr{M^\prime M}$ count the homozygous individuals per locus \citep{VanRaden2008}.
+
+Choice of allele coding should not affect the statistical inference of variance, but it can affect the reliabilities of estimated breeding values \citep{StrandenChristensen2011}. Besides the papers mentioned, \citet{StrandenChristensen2011} also has a useful discussion of the coding and the consequences in e.g.\ estimating breeding values.
+
+\bigskip
+\noindent
+Here, unless otherwise noted, each column vector ($\vect{w}_i$) of the genotype matrix $\matr{W}$ is defined as
+\begin{subequations}
+\label{eq:W.matrix}
+\begin{equation}
+  \vect{w}_i = \frac{\vect{m}_i - \mathrm{Mean}(\vect{m}_i)}{\sqrt{\Var(\vect{m}_i)}}
+\end{equation}
+or equivalently
+\begin{equation}
+  \vect{w}_i = \frac{\vect{m}_i - 2p_i}{\sqrt{2p_i(1-p_i)}}
+\end{equation}
+\end{subequations}
+
+where $p_i$ is the allele frequency of the i\textsuperscript{th} marker\footnote{The allele frequency is preferable from an unselected base population \citep{VanRaden2008}.}.
+
+This calculation \emph{scales and centres} each column of the resulting $\matr{W}$ matrix to expectation equal 0 and variance equal 1. 
+
+Setting the mean equal to 0 is done in order to give more emphasis to the rare alleles which are thought to have a larger impact on most of the traits of interest. Another consequence is that the resulting genomic relationship matrix better describes family relationships, as the rare alleles usually only exist within closely related individuals. The resulting genomic relationship matrix $\matr{G}$ is calculated as in \citet{VanRaden2008}:
+
+\begin{equation}
+\label{eq:G.matrix}
+  \matr{G} = \frac{\matr{WW^\prime}}{m}
+\end{equation}
+
+Another method widely used to calculate the genomic relationship matrix is explained in \citet{VanRaden2008}. Instead of centring and scaling each column of  $\matr{M}$ to obtain $\matr{W}$, the scaling is done on the relationship matrix using the total variance, $\nu_p$.:
+
+\begin{align}
+\label{eq:W*.matrix}
+	\vect{w}^\ast_i &= \vect{m}_i - 2p_i \\
+	\matr{G}^\ast   &= \frac{\matr{W^\ast W^{\ast\prime}}}{\nu_p}
+\end{align}
+
+where $\nu_p = 2 \sum_{i} p_i(1-p_i)$.
+The resulting $\matr{G}^\ast$ matrix has been scaled by the total variance at all loci ($\nu_p$) rather than scaling each locus (i.e.\ column) by their own variance.
+
+ 
+The last method produces a genomic relationship matrix having the same scale as the Numerator Relationship Matrix, $\matr{A}$, calculated using the pedigree. This means that the genomic inbreeding coefficient for an individual $i$ can be calculated as $\matr{G}^\ast_{ii}-1$, 
+and the genomic relationship among two individuals $j$ and $k$ as $\matr{G}^\ast_{jk} / (\sqrt{\matr{G}^\ast_{jj}} + \sqrt{\matr{G}^\ast_{kk}})$ \citep{VanRaden2008}.
+Further, \citet{Ober2012} showed that $\E(\matr{G}^\ast) = \matr{A}$.%, confirming all the properties listed above.  
+
+
+\begin{table}[!ht]%
+	\centering
+	\begin{threeparttable}
+		\caption{Two forms of genotype matrix $\matr{W}$.
+		}
+		\label{tab:w.matrices}
+		
+		\begin{tabular}{llll}
+		 \toprule 
+		   Variant & Calculation & Relationship & Properties \\
+		 \midrule
+		   $\matr{W}$ & $\vect{w}_i = \frac{\vect{m}_i - 2p_i}{\sqrt{2p_i(1-p_i)}}$ & $\matr{G} = \frac{\matr{WW^\prime}}{m}$ & $\matr{W} \sim (0, 1)$ \\
+		   $\matr{W}^\ast$ & $\vect{w}^\ast_i = \vect{m}_i - 2p_i$ & $\matr{G}^\ast = \frac{\matr{W^\ast W^{\ast\prime}}}{\nu_p}$ & $\matr{W} \sim (0, ?)$  \\ % \textsuperscript{\dag \ddag} 
+		 \bottomrule
+		\end{tabular}
+		
+		\begin{tablenotes}[flushleft,para]
+		  \small
+			%\item[] 
+			$\nu_p = 2 \sum_{i} p_i(1-p_i)$
+			%\item[\dag] \citet{LegarraMisztal2008}
+			%\item[\ddag] \citet{VanRaden2008}; in \citet{VanRaden2008}, the ${Z}$ corresponds to the ${W}^\ast$ in this table.
+		\end{tablenotes}
+	\end{threeparttable}
+\end{table}
+
+
+We note here that when utilising $\matr{W}$ to construct the genomic relationship matrix, the markers with high heterozygosity are weighted more than rare alleles due to the scaling by $\sqrt{2p_i (1-p_i)}$. %With the alternative genotype matrix, $W^\ast$, all markers are weighted equally.
+
+As noted in the beginning of this section, the allele coding should not affect the estimated variance  \citep{StrandenChristensen2011}. The scaling, however, will. Furthermore, the M-BLUP model assumes a priori that the estimated marker effects are sampled from the same distribution.
+If we had any notion that some of the markers might be more informative towards a complex trait,
+we have two choices: we can specify a weight for each marker based on e.g.\ results from a GWAS,
+or, if we want to isolate the contribution from a set of markers, we can extend the BLUP models to having two random effects. The latter is described in the following section.
+
+\section{Expansion of G-BLUP and M-BLUP to handle multiple marker sets}
+\label{sec:model.expansion}
+
+Here, we will expand M-BLUP and G-BLUP to having two random genetic effects, indexed by $1$ and $2$. Assumptions for these models are generally as above, and in the following example we have split the markers into two groups $1$ and $2$. We start with the equations:
+
+\begin{subequations}
+\begin{align}
+  \vect{y} &= \mu + \matr{W}_1 \vect{b}_1 + \matr{W}_2 \vect{b}_2 + \vect{e} \\
+  \vect{y} &= \mu + \vect{g}_1 +  \vect{g}_2 + \vect{e} 
+\end{align}
+\end{subequations}
+
+where the variables are as in \eqref{eq:mblup} and \eqref{eq:gblup}, but indexed for marker group 1 and 2.
+
+We can summarise the distributions of these as
+\begin{subequations}
+\begin{equation}
+  \begin{pmatrix} \vect{b}_1 \\ \vect{b}_2 \\ \vect{e} \end{pmatrix}
+  \sim
+  N\left[
+    \begin{pmatrix} \matr{0} \\ \matr{0} \\ \matr{0} \end{pmatrix}
+    ,
+    \begin{pmatrix}
+      \matr{I}_{m_1} \sigma^2_{b_1} & \matr{0} & \matr{0} \\
+      \matr{0} & \matr{I}_{m_2} \sigma^2_{b_2}  & \matr{0} \\
+      \matr{0} & \matr{0} & \matr{D}_n \sigma^2_e
+    \end{pmatrix}
+  \right]
+\end{equation}
+for M-BLUP and for G-BLUP as
+\begin{equation}
+  \begin{pmatrix} \vect{g}_1 \\ \vect{g}_2 \\ \vect{e} \end{pmatrix}
+  \sim
+  N\left[
+    \begin{pmatrix} \matr{0} \\ \matr{0} \\ \matr{0} \end{pmatrix}
+    ,
+    \begin{pmatrix}
+      \matr{G}_1 \sigma^2_{g_1} & \matr{0} & \matr{0} \\
+      \matr{0} & \matr{G}_2 \sigma^2_{g_2}  & \matr{0} \\
+      \matr{0} & \matr{0} & \matr{D}_n \sigma^2_e
+    \end{pmatrix}
+  \right]
+\end{equation}
+\end{subequations}
+
+where $G_1$ and $G_2$, respectively, are genetic relationship matrices constructed on the subsets of markers, respectively, instead of all markers, and are a priori assumed uncorrelated.
+
+The keen observer will notice that these are very similar to those in \eqref{eq:mblup.cov.3} and \eqref{eq:gblup.cov.4}, although here, the two random variables $\vect{b}_1$ and $\vect{b}_2$ (and $\vect{g}_1$ and $\vect{g}_2$) are assumed completely independent, an assumption that might be disputed.
+
+\begin{statbox}[label={stat:1}]{Marginalising conditional expectations}
+  \label{stat:1}
+  \begin{align*}
+    E(X) &= E_Y \left[ E(X | Y) \right] \\
+    Var(X) &= E(X^2) - \left[E(X)\right]^2 \\
+    &\Rightarrow E(X^2) = Var(X) + \left(E(X)\right)^2
+  \end{align*}
+\end{statbox}  
