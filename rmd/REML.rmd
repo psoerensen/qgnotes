@@ -1,0 +1,305 @@
+---
+title: "Restricted Maximum Likelihood"
+author: "Stefan McKinnon Høj-Edwards & Peter Sørensen"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    citation_package: natbib
+    includes:
+      in_header: preamble.tex
+  html_document:
+    number_sections: yes
+    includes:
+      in_header: mathjax_header.html
+  word_document: default
+bibliography: [qg2021.bib, quantmd.bib, book.bib, packages.bib]
+link-citations: yes
+---
+
+
+
+# Introduction
+Genetic parameters (heritability and genetic correlations) can be estimated using a restricted maximum likelihood (REML) method. This method allow for estimation of genetic parameters using phenotypic information and genetic relationships for individuals in a study population. Genetic relationships are inferred from a general pedigree or from genetic marker data. REML allow for unbalanced data and account for genetic relationships within and between families. REML is based on linear mixed model methodology and use a restricted likelihood approach for estimating genetic parameters.
+
+
+
+# Estimation of Genetic Parameters using REML
+The REML method was developed by \citet{Patterson1971} as an improvement of the standard Maximum Likelihood (ML). The ML method was originally proposed by \citet{Fisher1922} but was introduced to variance components estimation by \citet{Hartley1967}. ML assumes that fixed effects are known without error which is in most cases false and, as consequence, it produces biased estimates of variance components (usually, the residual variance is biased downward). To solve this problem, REML estimators maximize only the part of the likelihood not depending on the fixed effects,
+by assuming that the fixed effects have been, so to speak, fixed. This entails that when comparing multiple models by their REML likelihoods, they must contain the same fixed effects,
+and that REML, by itself, does not estimate the fixed effects. A benefit of this is that the number of parameters in the model is restricted\footnote{Whether this is the origin of the name may be debatable, as some claim REML is an abbreviation for \emph{REsidual} Maximum Likelihood \citep[p. 250]{SearleVC}.}.
+
+REML does not produce unbiased estimates owing to the inability to return negative values of variance components of many methods to obtain REML estimators, but it is still the method of choice due to the fact that this source of bias is also present in ML estimates \citep{LynchWalsh1998}.
+
+There are no simple one-step solutions for estimating the variance components based on ML and REML \citep{LynchWalsh1998}. Instead, we infer the partial derivatives of the likelihoods with respect to the variance components. The solutions to these involve the inverse of the variance-covariance matrix, which themselves includes the variance components, so the variance components estimates are non-linear functions of the variance components. It is therefore necessary to apply iterative methods to obtain the estimates.
+
+In order to better understand the following derivation of ML and REML, it is useful to recall that the likelihood ($L(\theta|{y})$) is any function of the parameter ($\theta$) that is proportional to $p({y}|\theta)$. Maximizing $L(\theta|{y})$ leads to obtaining the most likely value of $\theta$ ($\hat{\theta}$) given the data ${y}$. Usually the likelihood is expressed in terms of its logarithm ($l(\theta|\bf{y})$) as it makes the algebra easier. 
+
+We will start by first getting the ML estimators and, then, will move on to REML as it is a modification of the first, as explained above. For both, this involves writing the likelihood function, taking the partial derivatives with respect to the parameters and equating these to zero. Once the likelihood function is found, the remaining work is purely algebraic and we will not immerse in these details, but instead simply show the important intermediate steps.
+
+
+\subsection{Maximum Likelihood}
+The likelihood for the general G-BLUP model, $\vect{y}=\matr{X}\bfbeta+\matr{Z}\vect{g}+\vect{e}$ is simply the probability density function of a multivariate normal distribution,
+conditional on the known elements. 
+The log-transformed likelihood can therefore be written as:
+\begin{equation}
+	l(\bfbeta, \matr{V}|\matr{X}, \vect{y}) = 
+	-\frac{n}{2} \ln(2\pi)
+	-\frac{1}{2}\ln|\matr{V}|
+	-\frac{1}{2}(\vect{y}-\matr{X}\bfbeta)'\matr{V}^{-1}(\vect{y}-\matr{X}\bfbeta)
+	\label{eq:maximum.likelihood}
+\end{equation}
+where $\matr{V}$ is the variance-covariance matrix, $\matr{G}\sigma^2_g + \matr{D}\sigma^2_e$.
+The first term is just a constant that does not involve any parameter estimation and therefore it is usually omitted from computation. 
+
+We then derive the first derivatives with respect to the parameters $\bfbeta$, $\sigma^2_g$ and $\sigma^2_e$. For the variance components, however, we will make use of a general expression using $\sigma^2_i$ and the derivatives can later be adjusted to fit the specific variance components. To help with the derivation, appendix \ref{app:matrix} contains some useful properties for derivatives of matrices.
+
+\begin{align}
+  \frac{\partial l(\bfbeta, \matr{V}| \matr{X}, \vect{y})}{\partial\bfbeta}
+  &=
+    \frac{\partial[(\vect{y}-\matr{X}\bfbeta)'\matr{V}^{-1}(\vect{y}-\matr{X}\bfbeta)]}{\partial\bfbeta} \notag \\
+  &= \matr{X' V}^{-1} (\vect{y} - \matr{X}\bfbeta)
+  \label{eq:ml.der.beta}
+\end{align}
+
+For the derivatives for the variance components, we introduce the short-hand notation $V_i$ as
+
+\begin{equation}
+	\matr{V}_i = \frac{\partial \matr{V}}{\partial \sigma^2_i} =   \begin{cases} \matr{D} & \text{when} ~\sigma^2_i = \sigma^2_e \\ \matr{ZGZ}' & \text{when} ~\sigma^2_i = \sigma^2_g \end{cases}
+\end{equation}
+
+and so we can write
+
+\begin{equation}
+  \frac{\partial l(\bfbeta, \matr{V}| \matr{X}, \vect{y})}{\partial \sigma^2_i}
+  =
+  - \frac{1}{2} \Tr(\matr{V}^{-1} \matr{V}_i) +
+  \frac{1}{2} (\vect{y}-\matr{X}\bfbeta)' \matr{V}^{-1} \matr{V}_i \matr{V}^{-1} (\vect{y}-\matr{X}\bfbeta)
+  \label{eq:ml.der.sigma}
+\end{equation}  
+
+
+To get ML estimates of the parameters, the differential equations in \eqref{eq:ml.der.beta} and \eqref{eq:ml.der.sigma} are set equal to zero and we would attempt to solve for the variable.
+This is possible for $\bfbeta$, but not for $\sigma^2_i$ as both terms in RHS of \eqref{eq:ml.der.sigma} contains $\matr{V}^{-1}$, which is a function of the variance components.
+For $\bfbeta$, we have the estimate:
+
+\begin{equation}
+  \betahat = (\matr{X}'\Vhat^{-1}\matr{X})^{-1}\matr{X}'\Vhat^{-1}\vect{y}
+\end{equation}  
+
+which, incidentally, is the BLUE (Best Linear Unbiased Estimator) for $\bfbeta$.
+Notice that the $\betahat$ estimate requires an estimate on the variance components, hence the $\Vhat$.
+
+We now turn our attention to the ML estimators for the variance components. 
+If given an estimate of the fixed effects $\betahat$, we can rewrite the last term in \eqref{eq:ml.der.sigma}, 
+to take into account the difference between our estimate and the true fixed effects (by adding and subtracting $\matr{X}\betahat$ into the parenthesis):
+\begin{align}
+\hspace{-0.5cm}
+  (\vect{y}-\matr{X}\bfbeta)' \matr{V}^{-1} \matr{V}_i \matr{V}^{-1} (\vect{y}-\matr{X}\bfbeta)
+  = (\vect{y}-\matr{X}\betahat)' \matr{V}^{-1} \matr{V}_i \matr{V}^{-1} (\vect{y}-\matr{X}\betahat) \notag \\
+  + (\betahat - \bfbeta)' \matr{X' V}^{-1} \matr{V}_i \matr{V}^{-1} (\betahat - \bfbeta)
+  \label{eq:ml.beta.betahat}
+\end{align}  
+
+The ML assumes that the fixed effects are known `without error', i.e.\ we assume we have the true fixed effects.
+We can then set $\bfbeta = \betahat$ in \eqref{eq:ml.beta.betahat}, cancelling the last term, and \eqref{eq:ml.der.sigma} is altered to
+\begin{equation}
+  \frac{\partial l(\bfbeta, \matr{V}| \matr{X}, \vect{y})}{\partial \sigma^2_i}
+  =
+  - \frac{1}{2} \Tr(\matr{V}^{-1} \matr{V}_i) +
+  \frac{1}{2} (\vect{y}-\matr{X}\betahat)' \matr{V}^{-1} \matr{V}_i \matr{V}^{-1} (\vect{y}-X\betahat)
+  \label{eq:ml.der.sigma2}
+\end{equation}  
+
+The change can easily be overlooked, but it is the core of the bias of the ML: it ignores the deviation between our estimate of the fixed effects and the true fixed effect.
+
+As noted above, the ML estimators of the variance components are non-linear functions of the variance components.
+To get an estimate of the variance components, an iterative approach is needed, but before looking into this, we will cover the restricted maximum likelihood.
+
+
+
+
+\subsection{Restricted Maximum Likelihood}
+\label{sec:reml}
+
+The fallacy of ML towards the use of `true' fixed effects has in Restricted Maximum Likelihood (REML) been countered. 
+The trick that REML uses in order to obtain unbiased estimates of variance components is a linear transformation of the observations, $\vect{y}$, that removes fixed effects from the model. 
+For this purpose, a matrix $\matr{K}$ is used, such that $\matr{KX}=0$. 
+$\matr{K}$ does not need to be computed, as it humbly leaves the equations before we reach the results.
+
+The REML model is thus:
+\begin{equation}
+	\vect{y}* = \matr{K}\vect{y} = \matr{K}(\matr{X}\bfbeta+\matr{Z}\vect{g}+\vect{e}) = \matr{KZ}\vect{g} + \matr{K}\vect{e}
+	\label{eq:restricted.gblup}
+\end{equation}
+
+By substituting the following into the likelihood in \eqref{eq:maximum.likelihood}
+
+\begin{equation*}
+	\matr{K}\vect{y} \hspace{8pt} \text{for} \hspace{8pt}\vect{y}; 
+		\hspace{11pt} 
+	\matr{KX}=0 \hspace{8pt}\text{for} \hspace{8pt}\matr{X}; 
+		\hspace{11pt} 
+	\matr{KZ} \hspace{8pt}\text{for} \hspace{8pt}\matr{Z}; 
+		\hspace{11pt} 
+	\matr{KVK}' \hspace{8pt}\text{for} \hspace{8pt}\matr{V}
+\end{equation*}
+
+we can obtain restricted log-likelihood (the constant term and terms that do not include variance components are not included for brevity):
+
+\begin{equation}
+	l(\matr{V}|\vect{y}) \propto -\frac{1}{2}\ln|\matr{K}'\matr{VK}|-\frac{1}{2}(\matr{K}\vect{y})'(\matr{K'VK})^{-1}(\matr{K}\vect{y})
+\end{equation}
+
+However \citet{SearleVC} proved that:
+\begin{equation*}
+	\ln|\matr{K}'\matr{VK}| = \ln|\matr{V}|+\ln|\matr{X}'\matr{V}^{-1}\matr{X}|
+\end{equation*}
+
+and
+\begin{equation*}
+	(\matr{K}\vect{y})'(\matr{K}'\matr{VK})^{-1}(\matr{K}\vect{y}) = \vect{y}'\matr{P}\vect{y} = (\vect{y}-\matr{X}{\bfbeta})'\matr{V}^{-1}(\vect{y}-\matr{X}{\bfbeta})
+\end{equation*}
+
+leading to the Restricted likelihood:
+
+\begin{equation} 
+	l(\matr{V}|\vect{y}, \matr{X}, \bfbeta) 
+	\propto
+	 -\frac{1}{2}\ln|\matr{V}|
+	 -\frac{1}{2}\ln|\matr{X'V}^{-1}\matr{X}|
+	 -\frac{1}{2}(\vect{y}-\matr{X}{\bfbeta})'\matr{V}^{-1}(\vect{y}-\matr{X}{\bfbeta})
+	\label{eq:reml.likelihood}
+\end{equation}
+
+Comparing this to ML,
+\begin{equation}
+	l(\beta, \matr{V}|\matr{X}, \vect{y}) \propto 
+	-\frac{1}{2}\ln | \matr{V}|
+	-\frac{1}{2}(\vect{y}-\matr{X}\bfbeta)'\matr{V}^{-1}(\vect{y}-\matr{X}\bfbeta)
+	\tag{\ref{eq:maximum.likelihood}}
+\end{equation}
+
+we find the only difference is that the term with second quadratic form is included in REML, 
+because they are assumed known (without error) in ML.
+
+
+Again, an iterative approach is needed to get the estimates of the variance components, and further derivation of the variance component estimators depends on the iterative approach. The approaches used here are based on finding the set of parameters that maximises the likelihood. The problem can now be treated as a general problem in the sense that we have to search the parameter space for the combination of parameters that result in the largest likelihood and/or improve the likelihood from a given set of parameters.
+
+We mention briefly the derivative free methods, as they circumvented inverting the coefficient matrix, which is required in the derivative-based algorithms \citep{Hofer1998}. The Simplex method only uses the REML likelihood, and relies on other means for guessing the updated variance components \citep{Nelder1965}. Another approach by \citet{Smith1986} and \citet{Graser1987} rewrites the restricted likelihood, so a computational demanding operation can be solved by Gaussian elimination. These are simple, but may be plagued by numerical problems, especially if many parameters (are) to be estimated \citep{Jensen1997} and can be less efficient when used with increasing number of traits \citep{Misztal1994,Jensen1997}.
+
+An alternate heuristic is the Expectation-Maximization (EM) algorithm \citep{Dempster1977}, which is based on the first derivatives. The idea here is that the model comprises observed data, unobserved, latent variables, and parameters. If any two of the three are known, the third is quite tractable. In terms of G-BLUP, the genetic values $g$ are the unobserved, latent variables, and the parameters are the variance components. If the variance components and observations (and covariance matrices) are known, genetic values can be calculated from BLUP methods.
+If it was the genetic values, instead of variance components, that was known, the latter can be deduced by reflecting on the assumptions placed on the random variables. However, we rarely know both the genetic values \emph{and} the variance components.
+
+The EM algorithm consists of two steps, the E step which expresses the expectation of the unobserved variables conditional on the observed data and estimates of the parameters; and the M step which maximises the parameters, based on the observed data and expectation of the unobserved variables. This is still an iterative approach, and it is started with some initial guesses for the parameters, but by alternating between the E- and M-step, the algorithm approximates the (restricted) maximum likelihood \citep{Knight2008}. There are however computational issues with the EM algorithm, as it a) requires inverting the coefficient matrix (although workarounds exists), and b) may require an extensive number of iterations to converge \citep{Hofer1998}.
+
+
+\subsection{Average-Information REML}
+\label{sec:AI-REML}
+
+We have now described the progress of estimating variance components from Maximum Likelihood, to Restricted Likelihood, with means of using the REML estimators of derivative free and first derivatives. The time has now come to the second derivatives, starting with the Newton-Raphson approach, and the Fisher Scoring Method, which naturally leads to the Average Information REML.
+
+The section will conclude on commenting on convergence criteria and a short discussion on the interpretation of the estimated variances.
+
+
+The Average-Information REML (AI-REML) algorithm is based on the Newton-Raphson (NR) approach to approximate a function's root, the function here being the first derivative of REML. It uses the first and second derivatives of the likelihood to estimate in which direction and distance (in the parameter space) an update to the parameters that increases the likelihood might be found.
+
+Following the NR approach, the parameters $\theta$ at the t\th\, step can be updated by
+\begin{equation}
+  \theta^{(t+1)} = \theta^t - \left( \frac{\partial^2 l(\theta^t)}{\partial \theta^t \partial \theta^t} \right) ^{-1} \frac{\partial l(\theta^t)}{\partial \theta^t} 
+	\label{eq:newton.raphson}
+\end{equation}
+
+where $\theta$ is the vector of variance components, i.e.\ $\theta = (\sigma^2_e,~ \sigma^2_g)$,
+and $l(\theta^t)$ is the restricted likelihood in \eqref{eq:reml.likelihood}, but written with emphasis on the vector of variance components at the t\th\, step.
+This is similar to Euler's method for approximating a differential equation, but instead of a fixed step size, the step size is determined by the second derivative. 
+Note: The above is \emph{not} the AI-REML algorithm.
+
+The first derivative ($\partial l(\theta^t) / \partial \theta^t$) is a r-length vector,  where $r$ is the number of variance components, including the residual, to be estimated.
+
+The second derivative is an $r \times r$ matrix. Normally referred to as a \indx{Hessian} matrix, in this context it is the \indx{observed information matrix}. Skipping the algebra of derivation, it can be expressed, cf.\ \citet{LynchWalsh1998}, as
+
+\begin{equation}
+ \frac{\partial^2 l(\theta)}{\partial \sigma^2_i \partial \sigma^2_j} = \frac{1}{2} \Tr(\matr{PV}_i\matr{PV}_j) - \vect{y}'\matr{PV}_i\matr{PV}_j\matr{P}\vect{y}
+	\label{eq:observed.information.matrix}
+\end{equation}
+
+Note however that entries relating to the residual can be reduced to simpler expressions. The NR approach is not necessarily stable, as initial guesses that lie far from the maxima will lead to large steps that step past the maxima, resulting in an oscillating iteration that only -- if it does -- slowly converges. Furthermore, the calculation of the observed information matrix in \eqref{eq:observed.information.matrix} can be computational straining.
+
+
+An alternate approach is the Fisher Method of Scoring. The basic principle is the same, except instead of the Hessian matrix, the negative expected Hessian matrix is used. This is said to always be positive and stabilizes the algorithm \citep{LynchWalsh1998}. The \indx{expected information matrix} can be calculated as 
+\begin{equation}
+ - E_y \left[ \frac{\partial^2 l(\theta)}{\partial \sigma^2_i \partial \sigma^2_j} \right] = 
+ - \frac{1}{2} \Tr(\matr{PV}_i\matr{PV}_j)
+\label{eq:expected.information.matrix}
+\end{equation}
+
+and as before, entries including the residual variance component can be simplified. D.L. Johnson and Robin Thompson, Per Madsen, Just Jensen, and Esa A. Mantysaari \citep{Johnson1995,Madsen1994,Jensen1997} showed that using the average of the observed and expected information matrix was easier to compute \citep{Jensen1997}, hence \emph{Average-Information REML}.
+
+It was shown that the average-information matrix, $\matr{I}_A$, could be calculated by
+\begin{equation}
+  \matr{I}_A (\theta) = \matr{F' P F} = \matr{F' R}^{-1} \matr{F - T' W' R}^{-1} \matr{F}
+  \label{eq:dmu.ai.matrix}
+\end{equation}
+where
+$\matr{F}$ is a $n \times r$ matrix and the j\th\, column ($\vect{f}_j$) corresponds to $\frac{\partial \matr{V}}{\partial \theta_j}\matr{P}\vect{y}$.
+$\matr{W}$ is the total design matrix, i.e.\ $\matr{W} = (\matr{X~Z})$,
+and $\matr{T}$ is a $n \times r$ matrix whose columns are the solutions to the MME using $\vect{f}_j$ instead of $\vect{y}$.
+\citet{Jensen1997} note that once $\matr{F}$ is known the average information can be computed easily by solving the MME once for each parameter in $\theta$ using efficient techniques for solving large and sparse linear systems, such that the solutions can be found without computing the full inverse of the MME coefficient matrix.
+
+For G-BLUP the two columns of $\matr{F}$ can be calculated as:
+\begin{align}
+  \vect{f}_g &= \frac{\matr{Z} \hat{\vect{g}} }{\sigma^2_g} \\
+	\vect{f}_e &= \frac{\partial \matr{V}}{\partial \sigma^2_e} (\matr{D} \sigma^2_e)^{-1} (\vect{y} - \matr{X}\betahat - \matr{Z}\hat{\vect{g}}) = \frac{\ehat}{\sigma^2_e}
+\end{align}
+
+where $\betahat$ and $\uhat$ are the MME solutions.
+
+It should therefore be seen, that the AI-REML approach is easier to compute than the respective approaches mentioned prior to this. We briefly mention that the inverse of $\matr{G}$ can be calculated while constructing $\matr{G}$, and the inverse of $\matr{D} \sigma^2_e$ is fool proof.
+The algorithm has additional advantages, as the elements of the first derivatives can be calculated at the same time as calculating the second derivatives, without processing the data again.
+
+However, the parameter update might result in negative estimates of the variance components,
+and the implementation must be safeguarded against this by using a weighted average of the AI update and an EM update, that is modified to use the average information matrix. If the parameter update is still outside the parameter space, the update is re-attempted while gradually increasing the weight on the EM update.
+
+Finally, when the algorithm has converged, the observed information matrix contains estimates of the uncertainty of the parameter estimate where the inverse of the expected information matrix contains the standard errors of the parameter estimates \citep[p. 796]{LynchWalsh1998}.
+
+
+\subsubsection{Convergence}
+The question now goes towards when to stop updating the parameter estimates. We do this when we believe they have converged. One example is when the change in values of the parameter estimates are sufficient small, i.e. $\| \theta^{t+1} - \theta^t\| < \epsilon_1$, where $\epsilon_1$ is a very small value such as $10^{-5}$ or $10^{-8}$. However, \citet{Jensen1997} notes that this criterion might be fulfilled under the EM algorithm, before the EM algorithm has found a maximum.
+
+Another criterion would be to see if the first derivatives are small enough, in line with the idea behind the (RE)ML approaches. \citet{Jensen1997} emphasises that parameters estimated with low accuracy should be weighted heavier, thus another criterion could be
+\begin{equation}
+\left\|\frac{diag(\matr{I}^{-1}_{A})}{\sqrt{r}} \cdot
+\frac{\partial l(\theta)}{\partial \theta} 
+\right\| < \epsilon_2
+\end{equation}
+
+but this criterion suffers from being very large when estimates are at the boundary of the parameter space.
+
+\begin{comment}
+
+\subsection{Advantages of REML}
+\label{sec:Advantage-REML}
+
+Although REML does not produce unbiased estimates it is still the method of choice due to the fact that this source of bias is also present in ML estimates \citep{LynchWalsh1998}.
+
+REML requires that $y$ have a multivariate normal distribution although various authors have indicated that ML or REML estimators may be an appropriate choice even if normality does not hold (Meyer, 1990). 
+
+REML can account for selection when the complete mixed model is used with all genetic relationships and all data used for selection included (Sorensen and Kennedy, 1984; Van der Werf and De Boer, 1990). 
+
+There is obviously an advantage in using (RE)ML methods that are more flexible in 
+handling complex pedigrees (and possibly several random effects). However, the use of such methods has a danger in the sense that we need not to think explicitly anymore about data structure. To estimate, as an example, additive genetic variance, we need to have a data set that contains a certain family structure that allows us to separate differences between families from differences within families. Or in other words, we need to separate genetic and residual variance. 
+
+Early REML applications were generally limited to models largely equivalent to those in corresponding ANOVA type analysis, considering one random effect only and estimating genetic variances from paternal half sib covariances (so-called sire model). Today, heritability can be estimated based on genetic relationships inferred from general pedigrees or estimated from genetic markers. Linear mixed models is also used genetic evaluation schemes, allowing information on all known relationships between individuals to be incorporated in the analysis. Linear mixed models can include maternal, permanent environmental, dominance effects or effects at QTL thereby more accurately describe the observed data. These effects are fitted as additional random effects. 
+
+
+\subsubsection{Which genomic variance are we really inferring?}
+\label{sec:whatvar}
+
+We have so far used nine pages to detail the estimation of the variance components, among these the genomic variance. The interpretation of this variance, however, has lacked. And with good reason. Under the BLUP models, the observed phenotypic variance, $\Var(\vect{y})$, 
+is assumed to be made up of a contribution from the genetics and a contribution from the environment \eqref{eq:gblup.var.3}. So the genomic variance is the proportion that can be \emph{statistically} attributed to the markers, conditional on the model \citep{Pigliucci2006}.
+We write statistically attributed because the model does not allow us to infer a causal link.
+
+
+Although we can estimate the genomic variance by use of the statistical model, the biological interpretation is difficult. If the genomic variance was estimated by using a relationship matrix based on pedigree, the genomic variance would refer to the founding population (base population) where all the individuals are assumed unrelated. However, when using the genomic relationship matrix $\matr{G}$, we are relying on identity by state among the alleles, rather than identity by descent, as is the case with the pedigree based relationship matrix. This implies that, in theory, the genomic variance estimated by using $\matr{G}$ would be referred to a more ancestral population where all the loci are in Hardy-Weinberg Equilibrium (HWE), in linkage equilibrium, and all the individuals are unrelated. All in all, the concept of genomic variance is difficult to interpret.
+
+\end{comment}

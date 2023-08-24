@@ -1,0 +1,814 @@
+---
+title: "Best Linear Unbiased Prediction used in Quantitative Genomics"
+author: "Stefan McKinnon Høj-Edwards & Peter Sørensen"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    citation_package: natbib
+    number_sections: yes
+    includes:
+      in_header: preamble.tex
+  html_document:
+    number_sections: yes
+    includes:
+      in_header: mathjax_header.html
+  word_document: default
+bibliography: [qg2021.bib, quantmd.bib, book.bib, packages.bib]
+link-citations: yes
+---
+
+# Introduction
+Breeding value estimation in animal and plant breeding programmes are nowadays based on the BLUP (Best Linear Unbiased Prediction) method. The estimation of breeding values based on multiple sources of informations must correct for the redundancy between them (e.g., the redundant information provided by parents and grandparents). Moreover, they need to be adjusted for average effects in the populations, "fixed effects". So far we have referred to that fixed effect as the population mean and we have assumed this asjustment $\mu$ to be known. Indeed, we defined the true breeding value $a$ and the non-identifiable environmental effects $e$ as deviations from a common mean, the average effect of all fixed genetic and environmental factors captured by the population mean $\mu$. But this is only true in a single idealized population where all selection candidates are kept in the same environment in which they deliver their performances at the same time. In practice the phenotypic records often need to be adjusted for systematic (fixed) environmental effects, such as age, parity, litter size, days open, sex, herd, year, season, management, etc. Several of those effects fluctuate very little over time, so accurate estimates of their effect may be obtained from previous (“historical”) sets of data. Effects of factors like herd, year, season, and management fluctuate more and are therefore best estimated directly from the data to be used in the genetic evaluations.
+
+Compared to the idealized cases described in the previous section, a practical breeding scenario poses two problems: accounting for heteregeneous sources of genetic information (different types of relatives); and adjusting for fixed effects in the breeding population(s) (fixed environmental or genetic effects). The BLUP solution to these problems was presented by Charles R. Henderson in several publications (e.g. Henderson1973a) and Henderson1975). The key idea behind the solution is to estimate the identifiable environmental factors as fixed effects and to predict the breeding values as random effects simultaneously in a linear mixed model. Here, mixed refers to the presence of two types of effects: fixed effects (identifiable effects from environmental or genetic factors) and random effects (non-identifiiable effects from segregating genetic factors and fluctuating environmental conditions). The methodology developed by Henderson is called __BLUP__ and the properties of this methodology are directly incorporated into its name: 
+
+* __B__ stands for __best__ which means that the correlation between the true ($a$) and the predicted breeding value ($\hat{a}$) is maximal or the prediction error variance ($var(a - \hat{a})$) is minimal.
+* __L__ stands for __linear__ which means the predicted breeding values are linear functions of the observations ($y$)
+* __U__ stands for __unbiased__ which means that the expected values of the predicted breeding values are equal to the true breeding values
+* __P__ stands for __prediction__ 
+
+BLUP approaches are widely used in genetic evaluations, for both traditional predictions of breeding values and also for predicting genomic breeding values. The popularity of BLUP is not only due to the theoretical foundations behind BLUP, but also the efficient algorithms developed by Henderson for computing predicted breeding values, even in very large breeding populations. The theoretical foundations, and the development of efficient algorithms, together with the availability of large computational resources at a very low price, have made BLUP the de-facto standard for breeding value estimation.
+
+This chapter focuses on the usage and application of linear mixed models, as they are applied in these notes. The first section applies standard probability theory and linear algebra to predict genetic values and marker effects, assuming the variances are known. Because the solutions provided in section \ref{sec:predicting.values.and.effects} are not always computational feasible, the Mixed Models Equations have been developed, which are described in section \ref{sec:MME}. These solutions however also require that the variances are known, so estimating these with Maximum Likelihood and Restricted Maximum Likelihood methods. Finally, we will return to predicting genetic values and estimating a model's predictive ability in section \ref{sec:cross.validation}.
+
+For the following chapter, we will extend the simple model notation of M-BLUP and G-BLUP to a general form that allows multiple observations per individual, hence the matrix $\matr{Z}$ emerges; an $n \times q$ incidence matrix relating observations to individuals. We also expand the intercept $\mu$ to $\matr{X}\bfbeta$, the $n \times p$ incidence matrix relating observations to the $p$-length vector of fixed effects, $\bfbeta$. Written in their entirety, the models become:
+
+\begin{align}
+  \vect{y} &= \matr{X}\bfbeta + \matr{ZW}\vect{b} + \vect{e} \label{eq:snpblup.full} \\
+  \vect{y} &= \matr{X}\bfbeta + \matr{Z}\vect{g} + \vect{e}  \label{eq:gblup.full}.
+\end{align}  
+
+
+We are using the terms 'Estimating' and 'Predicting' almost interchangeable, and the terms might led to some confusion as to whether they are merely synonyms or intone a more subtle difference.
+It appears that it has become common practice to 'estimate' fixed effects and 'predict' random effects \citep{Robinson1991}, but, as it usually is with field specific jargon, it depends on the school of thought, e.g.\ classical statistics or Bayesian inference. Another view on the difference is that we predict future performances or values yet to be observed, while we estimate values (e.g.\ variance components) inherent in the data.
+
+\section{Predicting genetic values and marker effects}
+\label{sec:predicting.values.and.effects}
+
+Predicting genetic values has generally been the most important task for animal geneticists as they are used by farmers to select animals for reproduction. Originally, genetic values have been calculated by using the expected relationships among individuals by using the pedigree based relationship matrix $A$. Nowadays, the advent of genome-wide genotyping at cheaper cost is revolutionizing the field by allowing the construction of the relationship matrix taking into account the realized relationships among individuals by using SNP marker data: the genetic relationship matrix $\matr{G}$. 
+
+For this section, we will cover three scenarios, all based on the M-BLUP and G-BLUP models. To solve the conditional expectations, we will be relying on standard probability theory and linear algebra. These tools are briefly described in the `Stat boxes'.
+
+The first scenario is predicting genetic values based on the observed values, i.e.\ finding the solution to $\E[\vect{g}|\vect{y}]$. In the second scenario, we will predict the genetic values after predicting the marker effects, i.e.\ $\E[\vect{g}|\vect{b}]$. The third scenario is the reverse of the second, predicting marker effects from predicted genetic values, i.e.\ $\E[\vect{b}|\vect{g}]$.
+
+
+\subsection{Predicting genetic values from observations: \texorpdfstring{$\E[\vect{g} | \vect{y}]$}{E[g | y]}}
+\label{sec:E(g|y)}
+
+Here, we want to predict the genetic values, or put in another way, predict the effects that can be attributed to the genetic relationship after correcting for fixed effects.
+
+We will in the following show that
+
+\begin{equation}
+  \E\left[\vect{g}|\vect{y}\right] 
+  = 0 +  \matr{GZ'}\sigma^2_g  (\matr{ZGZ'}\sigma^2_g + \matr{D}\sigma^2_e)^{-1} (\vect{y} - \matr{X}\bfbeta) 
+  \label{eq:gblup.blup}
+\end{equation}
+
+by applying stat box \ref{stat:lin.eq.dist}. 
+
+Our starting point is the general G-BLUP equation written as a set of linear equations for $\vect{y}$ and $\vect{g}$:
+\begin{subequations}
+\begin{equation}
+  \underbrace{\begin{pmatrix} \vect{y} \\ \vect{g} \end{pmatrix}}_{y^\ast}
+  =
+  \underbrace{\begin{pmatrix} \matr{X}\bfbeta \\ \matr{0} \end{pmatrix}}_{c}
+  +
+  \underbrace{
+	  \begin{pmatrix} 
+	  	\matr{Z} & \matr{I} \\
+	  	\matr{I} & \matr{0}
+	  \end{pmatrix}
+	  }_{A}
+  \underbrace{\begin{pmatrix} \vect{g} \\ \vect{e} \end{pmatrix}}_{x}
+  \label{eq:joint.gblup}
+\end{equation}
+
+and $\vect{g}$ and $\vect{e}$
+
+\begin{equation}
+  \begin{pmatrix} \vect{g} \\ \vect{e} \end{pmatrix}
+  \sim
+  N
+  \left[\vphantom{\begin{pmatrix} \vect{0} \\ \vect{0} \end{pmatrix}}\right. 
+  \underbrace{\begin{pmatrix} \vect{0} \\ \vect{0} \end{pmatrix}}_{m}  ,
+\underbrace{
+	  \begin{pmatrix} 
+	  	\matr{G}\sigma^2_g & \matr{0} \\
+	  	\matr{0} & \matr{D}\sigma^2_e
+	  \end{pmatrix}
+	  }_{V}  
+  \left. \vphantom{\begin{pmatrix} \vect{0} \\ \vect{0} \end{pmatrix}}\right] 
+\end{equation}
+\end{subequations}
+
+where the top line in \eqref{eq:joint.gblup} corresponds to the conditional expectation of ${y}$, the bottom line corresponds to the marginal expectation of ${g}$, and where the notations below both equations corresponds exactly to those in stat box \ref{stat:lin.eq.dist}.
+
+We can now derive the joint distribution of G-BLUP by applying stat box \ref{stat:lin.eq.dist}:
+\begin{equation}
+  \begin{pmatrix}	\vect{y} \\ \vect{g} \end{pmatrix}
+  \sim  
+  N\left[
+	  \begin{pmatrix} \mu \\ \vect{0}	\end{pmatrix}
+	  , 
+		\begin{pmatrix}
+	    \matr{ZGZ'}\sigma^2_g + \matr{D}_n \sigma^2_e & \matr{ZG}\sigma^2_g \\
+	    \matr{GZ'}\sigma^2_g & \matr{G}\sigma^2_g		
+    \end{pmatrix}
+	\right]
+	.
+\end{equation}  
+
+The proof is followed, first for the joint expectation of \eqref{eq:joint.gblup}:
+
+\begin{align*}
+  \E\left[ \begin{pmatrix} \vect{y} \\ \vect{g} \end{pmatrix} \right]
+  &= 
+	\E\left[
+	  \begin{pmatrix} \matr{X}\bfbeta \\ \matr{0} \end{pmatrix}
+	  +
+	  \begin{pmatrix} 
+	  	\matr{Z} & \matr{I} \\
+	  	\matr{I} & \matr{0}
+	  \end{pmatrix}
+	  \begin{pmatrix} \vect{g} \\ \vect{e} \end{pmatrix}
+  \right]
+  \\ &= 
+  \E\left[\begin{pmatrix} \matr{X}\bfbeta \\ \matr{0} \end{pmatrix}\right] 
+     + \begin{pmatrix} 
+			  	\matr{Z} & \matr{I} \\
+			  	\matr{I} & \matr{0}
+			  \end{pmatrix}
+			 \E\left[
+			  \begin{pmatrix} \vect{g} \\ \vect{e} \end{pmatrix}
+			 \right]
+  \\ &=
+    \begin{pmatrix} \matr{X}\bfbeta \\ \matr{0} \end{pmatrix}
+     + \begin{pmatrix} 
+			  	\matr{Z} & \matr{I} \\
+			  	\matr{I} & \matr{0}
+			  \end{pmatrix}
+			 \E\left[
+			  \begin{pmatrix} \matr{0} \\ \matr{0} \end{pmatrix}
+			 \right]
+  \\ &= 			 
+  	\begin{pmatrix} \matr{X}\bfbeta \\ \matr{0} \end{pmatrix}
+\end{align*}
+
+The variance is derived as:
+\begin{align*}
+  \Var\left[\begin{pmatrix} \vect{y} \\ \vect{g} \end{pmatrix} \right] 
+  &= \Var\left[
+	  \begin{pmatrix} 
+	  	\matr{Z} & \matr{I} \\
+	  	\matr{I} & \matr{0}
+	  \end{pmatrix}
+	  \begin{pmatrix} \vect{g} \\ \vect{e} \end{pmatrix}
+	\right] \\
+&= 
+	\begin{pmatrix} 
+  	\matr{Z} & \matr{I} \\
+  	\matr{I} & \matr{0}
+  \end{pmatrix}
+  \Var\left[ \begin{pmatrix} \vect{g} \\ \vect{e} \end{pmatrix} \right]
+	\begin{pmatrix} 
+  	\matr{Z} & \matr{I} \\
+  	\matr{I} & \matr{0}
+  \end{pmatrix}^\prime \\
+&=
+	\begin{pmatrix} 
+  	\matr{Z} & \matr{I} \\
+  	\matr{I} & \matr{0}
+  \end{pmatrix}
+  \begin{pmatrix} 
+  	\matr{G} \sigma^2_g  & \matr{0} \\ 
+  	\matr{0} & \matr{D} \sigma^2_e 
+  \end{pmatrix}
+	\begin{pmatrix} 
+  	\matr{Z} & \matr{I} \\
+  	\matr{I} & \matr{0}
+  \end{pmatrix}^\prime \\
+&= 
+  \begin{pmatrix}
+    \matr{ZGZ'}\sigma^2_g + \matr{D} \sigma^2_e & \matr{ZG}\sigma^2_g \\
+    \matr{GZ'}\sigma^2_g & \matr{G}\sigma^2_g
+  \end{pmatrix}
+\end{align*}	
+
+By applying stat box \ref{stat:2mvn}, the conditional expectation of $\vect{g}$ given $\vect{y}$ is therefore
+
+\begin{equation}
+  \E\left[\vect{g}|\vect{y}\right] 
+  = 0 +  \matr{GZ'}\sigma^2_g  (\matr{ZGZ'}\sigma^2_g + \matr{D}\sigma^2_e)^{-1} (\vect{y} - \matr{X}\bfbeta) 
+  \tag{\ref{eq:gblup.blup}}
+\end{equation}
+
+which is the Best Linear Unbiased Predictor of $\vect{g}$. 'Best' because it has the minimum mean squared error among the possible predictors,'Linear' because it is a linear function of the data, 'Unbiased' because the average value of the predictor is equal to the one of the quantity being predicted.  
+
+The construct $\matr{ZGZ'}$ expands the genomic relationship matrix from $q \times q$ to $n \times n$ and, if there are multiple observations per individual, the result is rank deficient. So when the data set to be analysed contains a lot of observations it might not possible to calculate the inverse in \eqref{eq:gblup.blup},
+partly due to the structure, partly due to the sheer size. The Mixed Model Equations (MME), described in section \ref{sec:MME}, can therefore be used as the dimensions of the matrices are in the order of the sum of number of fixed effects and genetic values (or marker effects).
+Furthermore, the matrices needed inverted in MME can be sparse so more effective inversion algorithms can be applied, except in animal breeding where the genomic relationship matrix usually are dense -- but the inverse of these can usually be made while constructing the ordinary matrix.
+
+
+\subsection{Predicting \texorpdfstring{$\vect{g}$}{genetic values} from \texorpdfstring{$\vect{b}$}{marker effects}: \texorpdfstring{$\E[\vect{g} | \vect{b}]$}{E[g|b]}}
+\label{sec:b2g}
+
+Having predicted values of marker effects (${\bhat}$), we can predict genetic values based on the linear combination:
+\begin{subequations}
+\begin{equation}
+  \ghat = \matr{W}\bhat
+\end{equation}
+or
+\begin{equation}
+  \hat{g}_i =   \sum_{j=1}^m w_{i,j}\hat{b}_j.
+\end{equation}
+\end{subequations}
+
+
+\subsection{Predicting \texorpdfstring{$\vect{b}$}{marker effects} from \texorpdfstring{$\vect{g}$}{genetic values}: \texorpdfstring{$\E[\vect{b} | \vect{g}]$}{E[b|g]}}
+\label{sec:g2b}
+
+This is the reverse of the above, but as $W$ is not necessarily a square and invertible matrix, the solution is not straightforward. The solution is 
+
+\begin{equation}
+	\E\left[\vect{b}|\vect{g}\right] = \matr{W^\prime}(\matr{WW^\prime})^{-1}\vect{g}
+	\label{eq:backsolve}
+\end{equation}
+
+which will be derived in the following. We could do as for $\E[\vect{g}|\vect{y}]$, but we will here use another approach that is a more general solution.
+
+To achieve the goal, it is useful to write down the joint distribution of $\vect{b}$, $\vect{g}$ and $\vect{y}$. The starting point to build this joint distribution is to keep in mind the assumptions of M-BLUP and G-BLUP as summarised in table \ref{tab:blup.assumptions} for the general form.
+
+\begin{table}[!b]
+	\centering
+	\begin{threeparttable}
+		\caption{Summary of assumptions for the BLUPs.}
+		\label{tab:blup.assumptions}
+		\begin{tabular}{ll}
+		  \toprule
+		  $\vect{y} = \matr{X}\bfbeta + \matr{ZW}\vect{b}+\vect{e}$  & $\E(\vect{y}) = \matr{X}\bfbeta$ \\
+		  $\vect{g} = \matr{W}\vect{b}$ & $\vect{g} \sim N(0, \matr{G} \sigma^2_g)$ \\
+		  & $\vect{b} \sim N(0, \matr{I} \sigma^2_b)$ \\
+		  & $\vect{e} \sim N(0, \matr{D} \sigma^2_e)$ \\
+		  \midrule
+		  \multicolumn{2}{l}{$\Cov(\vect{b},\vect{e}) = 0$, $\Cov(\vect{g,e}) = 0$, $\Cov(\vect{y},\vect{g})=\matr{ZG}\sigma^2_g$  } \\
+		  \bottomrule
+		\end{tabular}
+	\end{threeparttable}
+\end{table}
+
+The (co)variances are easily derived from this:
+\begin{align*}
+	\Cov(\vect{b}, \vect{b}) &= \Var(\vect{b}) = \matr{I} \sigma^2_b \\ 
+	\Cov(\vect{b}, \vect{g}) &= \Cov(\vect{b}, \matr{W}\vect{b}) = \Cov(\vect{b}, \vect{b}) \matr{W'} = \matr{W'} \sigma^2_b \\
+	\Cov(\vect{b}, \vect{y}) &= \Cov(\vect{b}, \matr{ZW}\vect{b}+\vect{e}) = \Cov(\vect{b}, \matr{ZW}\vect{b}) \\
+								 &= \Cov(\vect{b}, \vect{b}) (\matr{ZW})'  = \matr{W'Z'}\sigma^2_b \\
+	\Cov(\vect{g}, \vect{b}) &= \Cov(\matr{W}\vect{b}, \vect{b}) = \matr{W} \Cov(\vect{b}, \vect{b}) = \matr{W}\sigma^2_b \\
+	\Cov(\vect{g}, \vect{g}) &= \Cov(\matr{W}\vect{b}, \matr{W}\vect{b}) = \matr{W} \Cov(\vect{b}, \vect{b}) \matr{W'} \\ 
+	               &= \matr{WW'}\sigma^2_b \\
+	\Cov(\vect{g}, \vect{y}) &= \Cov(\vect{y}, \vect{g})' = (\matr{ZG})'\sigma^2_g = \matr{WW'Z'}\sigma^2_b \\
+	\Cov(\vect{y}, \vect{b}) &= \Cov(\matr{ZW}\vect{b} + \vect{e}, \vect{b}) = \Cov(\matr{ZW}\vect{b}, \vect{b}) = \matr{ZW} \sigma^2_b \\
+	\Cov(\vect{y}, \vect{g}) &= \matr{ZG} \sigma^2_g = \matr{ZWW'}\sigma^2_b \\
+	\Cov(\vect{y}, \vect{y}) &= \Var(\vect{y}) = \Var(\matr{ZW}\vect{b}+\vect{e}) = \matr{ZWW'Z'}\sigma^2_b + \matr{D} \sigma^2_e \\ 
+\end{align*}
+
+Having now all the necessary information we can build the joint distribution of $\vect{b}$, $\vect{g}$ and $\vect{y}$ by hand:
+\begin{equation}
+  \begin{pmatrix} \vect{b}\\  \vect{g}\\  \vect{y} \end{pmatrix}
+	\sim 
+	N\left[
+		\begin{pmatrix} \matr{0} \\ \matr{0} \\ \mu \end{pmatrix}
+		,
+		\begin{pmatrix}
+    \matr{I} \sigma^2_b & \matr{W'} \sigma^2_b  & \matr{W'Z'} \sigma^2_b  \\
+    \matr{W} \sigma^2_b  & \matr{WW'} \sigma^2_b  & \matr{WW'Z'} \sigma^2_b  \\
+    \matr{ZW} \sigma^2_b  & \matr{ZWW'}  \sigma^2_b  & \matr{ZWW'Z'} \sigma^2_b + \matr{D}\sigma^2_e
+  \end{pmatrix}
+	\right]
+	\label{eq:gblup.degenerate-first}
+\end{equation}
+
+Dividing $\sigma^2_b$ out of the matrix, we get the result
+
+\begin{equation}
+  \begin{pmatrix} \vect{b}\\  \vect{g}\\  \vect{y} \end{pmatrix}
+	\sim 
+	N\left[
+		\begin{pmatrix} \matr{0} \\ \matr{0} \\ \mu \end{pmatrix}
+		,
+		\begin{pmatrix}
+    \matr{I}  & \matr{W'}   & \matr{W'Z'}   \\
+    \matr{W}   & \matr{WW'}   & \matr{WW'Z'}   \\
+    \matr{ZW}   & \matr{ZWW'}    & \matr{ZWW'Z'}  + \matr{D}\lambda
+  \end{pmatrix}
+	\right]	\label{eq:gblup.degenerate}
+\end{equation}
+
+where $\lambda = \frac{\sigma^2_e}{\sigma^2_b}$.
+
+This is a degenerated distribution, as the two left columns in the bottom matrix are linear dependent by multiplying with $\matr{W}$, i.e.\ the variance-covariance matrix is not full rank \footnote{ A degenerate distribution will only return a single value; a normal distribution with zero variance -- at first an as absurd concept as a black hole -- has its entire mass in a single point, and will only return a single value. Writing the probability distribution for a matrix normal distribution, it requires the inversion and determinant of the variance-covariance matrix. Hence, a non-invertible variance-covariance matrix will give a normal distribution with zero variance, thus a degenerated distribution.}.
+
+By applying stat box \ref{stat:2mvn} on $\vect{b}$ and $\vect{g}$, we get the conditional expectation of $\vect{b}$ given $\vect{g}$:
+
+\begin{equation}
+	\E\left[\vect{b}|\vect{g}\right] = 0+ \matr{W^\prime}(\matr{WW^\prime})^{-1}\vect{g}
+\end{equation}
+
+However, the inverse of $\matr{WW^\prime}$ does not exist, as $\matr{W}$ is not full rank, due to the definition of $\matr{W}$. The inverse of $\matr{WW^\prime}$ exists only if $\matr{WW^\prime}$ is non-singular, which might be possible if the genotypes are in the original allele coding (i.e.\ 0,1,2). This problem can be easily circumvented by conditioning on $\vect{y}$ rather than on $\vect{g}$, leading to:  
+
+\begin{equation}
+	\E\left[\vect{b}|\vect{y}\right] = 0+ \matr{W'Z'}(\matr{ZWW'Z'} + \matr{D} \lambda)^{-1}(\vect{y} - \matr{X}\bfbeta)	
+	\label{eq:snpblup.blup}
+	,
+\end{equation}
+a solution similar to \eqref{eq:gblup.blup}.
+
+\bigskip
+\noindent
+The joint distribution found in \eqref{eq:gblup.degenerate-first} could also have been derived from a set of linear equations, in a similar manner to section \ref{sec:E(g|y)}, by starting from
+
+\begin{equation*}
+  \begin{pmatrix} \vect{b} \\ \vect{g} \\ \vect{y} \end{pmatrix}
+  =
+  \begin{pmatrix} \matr{0} \\ \matr{0} \\ \matr{X}\bfbeta \end{pmatrix}
+  +
+  \begin{pmatrix}
+    \matr{I} & \matr{0} \\
+    \matr{W} & \matr{0} \\
+    \matr{ZW} & \matr{I}
+  \end{pmatrix}
+  \begin{pmatrix} \vect{b} \\ \vect{e}  \end{pmatrix}
+\end{equation*}  
+.
+
+
+\section{Mixed Model Equations} 
+\label{sec:MME}
+
+The mixed model equations (MME) were first introduced by \citeauthor{Henderson1949} in 1949. This set of equations is used to jointly obtain estimates of fixed and random effects while avoiding the need of $(\matr{G}\sigma^2_g + \matr{D}\sigma^2_e)^{-1}$, which is difficult to compute when the data set is large (computational time is proportional to $n^3$). A fundamental property of the estimates of random and fixed effects obtained is that they are, respectively, the BLUP and the BLUE (i.e.\ same properties as BLUP but for fixed effects; `E' stands for Estimator). 
+The proof of this was published by \citet{Goldberger1962} and  \citet{Henderson1963} (with the help of Searle). This discovery has revolutionized the field of animal breeding since it has allowed to estimate breeding values in relatively short time, providing that variance components are known (if they are not, they can be estimated from the data).
+
+
+\subsection{MME for G-BLUP}
+
+The derivation for MME below follows the approach by \citet{Henderson1959}. It involves the maximization of the joint density of $\vect{y}$ and $\vect{g}$ with respect to $\bfbeta$ and $\vect{g}$, assuming a multivariate normal distribution and known variances. This joint density can be written as:
+
+\begin{align}
+	p(\vect{y,g}) &= p(\vect{y|g}) p(\vect{g}) \notag \\
+	&\propto \exp\left[-\half(\vect{y}-\matr{X}\bfbeta-\matr{Z}\vect{g})' \matr{R}^{-1}(\vect{y}-\matr{X}\bfbeta-\matr{Z}\vect{g})\right] \notag \\
+	&~~~~ \exp\left[-\frac{1}{2}\vect{g}' \matr{F}^{-1}\vect{g}\right] \label{eq:mme.joint.1}
+\end{align}
+
+where
+$\matr{R} = \matr{D}\sigma^2_e$, and $\matr{F} = \matr{G}\sigma^2_g$.
+
+
+Transferring \eqref{eq:mme.joint.1} into log-space, it becomes:
+
+\begin{align}
+	\ln p(\vect{y},\vect{g}) &= constant \, -  \\
+	  & ~~~~ \frac{1}{2}(\vect{y}-\matr{X}\bfbeta-\matr{Z}\vect{g})' \matr{R}^{-1}(\vect{y}-\matr{X}\bfbeta-\matr{Z}\vect{g}) - 
+		\half \vect{g}' \matr{F}^{-1}\vect{g}  \notag
+\end{align}
+
+
+To maximize this function, the derivatives with respect to $\vect{b}$ and $\vect{g}$ have to be taken:
+\begin{subequations}
+\begin{align}
+	\frac{\partial\ln p(\vect{y},\vect{g})}{\partial\bfbeta} &= (-\matr{X}')[-\matr{R}^{-1}(\vect{y}-\matr{X}\bfbeta-\matr{Z}\vect{g})]
+	\label{eq:mm.der.b}
+  \\
+	\frac{\partial\ln p(\vect{y},\vect{g})}{\partial \vect{g}} &= (-\matr{Z}')[-\matr{R}^{-1}(\vect{y}-\matr{X}\bfbeta-\matr{Z}\vect{g})]+(-\matr{F}^{-1}\vect{g})
+	\label{eq:mm.der.g}
+\end{align}
+\end{subequations}
+
+Setting \eqref{eq:mm.der.b} and \eqref{eq:mm.der.g} equal to $0$ gives the estimates of $\bfbeta$ and $\vect{g}$, expressed by:
+
+\begin{subequations}
+\begin{equation}
+		\matr{X}' \matr{R}^{-1}\matr{X}\hat{\bfbeta}+\matr{X}' \matr{R}^{-1}\matr{Z}\ghat = \matr{X}' \matr{R}^{-1}\vect{y}
+\end{equation}
+and
+\begin{equation}
+		\matr{Z}' \matr{R}^{-1}\matr{X}\hat{\bfbeta}+\matr{Z}'\matr{R}^{-1}\matr{Z}\ghat+\matr{F}^{-1}\ghat=\matr{Z}' \matr{R}^{-1}\vect{y}
+\end{equation}
+\end{subequations}
+
+These equations can then be rearranged in the traditional mixed model notation:
+
+\begin{equation}
+	\begin{bmatrix}
+		\matr{X}' \matr{R}^{-1}\matr{X} & \matr{X}'\matr{R}^{-1}\matr{Z}\\ 
+		\matr{Z}' \matr{R}^{-1}\matr{X} & \matr{Z}'\matr{R}^{-1}\matr{Z} + \matr{F}^{-1}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\betahat \\ 
+		\ghat
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		\matr{X}'\matr{R}^{-1}\vect{y}\\ 
+		\matr{Z}'\matr{R}^{-1}\vect{y}
+	\end{bmatrix}
+	\label{eq:g.blup.mme}
+\end{equation}
+
+Assuming $\matr{R}$ and $\matr{F}$ to be non-singular, $\matr{R}^{-1}$ can be factored out from both sides as it is an identity matrix times a scalar. This leads to:
+
+\begin{equation}
+	\begin{bmatrix}
+		\matr{X}'\matr{X} & \matr{X}'\matr{Z}\\ 
+		\matr{Z}'\matr{X} & \matr{Z}'\matr{Z} + \matr{G}^{-1}\lambda_g
+	\end{bmatrix}
+	\begin{bmatrix}
+		\betahat\\ 
+		\ghat
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		\matr{X}'\vect{y}\\ 
+		\matr{Z}'\vect{y}
+	\end{bmatrix}
+	\label{eq:gblup.mme.kernel}
+\end{equation}
+
+where $\lambda_g = {\sigma^2_e}/{\sigma^2_g}$ which determines to what extent estimates of genetic values are regressed back towards the mean, i.e.\ how much contribution from the genetic relationship will we allow to be included.
+
+
+\subsection{MME for M-BLUP}
+
+The derivation of the MME for M-BLUP follows that for G-BLUP, resulting in 
+
+\begin{equation}
+	\begin{bmatrix}
+		\matr{X}'\matr{X} & \matr{X}'\matr{ZW}\\ 
+		\matr{W}'\matr{Z}'\matr{X} & \matr{W}'\matr{Z}'\matr{ZW} + \matr{I}\lambda_b
+	\end{bmatrix}
+	\begin{bmatrix}
+		\betahat \\ 
+		\hat{\vect{b}}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		\matr{X}'\vect{y}\\ 
+		\matr{W}'\matr{Z}'\vect{y}
+	\end{bmatrix}
+	\label{eq:snpblup.mme.kernel}
+\end{equation}
+
+where $\lambda_b = {\sigma^2_e}/{\sigma^2_b}$.
+
+
+\subsection{Solving the Mixed Models Equations}
+\label{sec:mme.gblup.vs.snpblup}
+
+This is straightforward. 
+The MME is a linear set of equations consisting of (left to right), the \indx{kernel} or \indx{coefficient matrix}, vector of unknowns to be estimated/predicted, and on the right hand side, a matrix of known values. The solution requires the inversion of the kernel, which can be done by any of the large number of standard matrix inversion approaches. However easy this might seem, solving MME have become even easier with methods directed at solving systems of linear equations, such as the MME. These methods include the Cholesky decomposition or Gauss-Seidel method, that involve decomposing the coefficient matrix, or matrix-free variants that can save considerable computation time, by relying on functions of the coefficient matrix instead of whole-matrix operations \citep{LegarraMisztal2008}.
+
+The kernel on the left hand side determines the size of the equation to be solved. For G-BLUP \eqref{eq:gblup.mme.kernel}, the kernel is a $(p+q) \times (p+q)$ matrix, or $O(q^2)$ using the Big O notation\footnote{The Big O notation describes the growth rate of a function; here that the size of the kernel quadruples if $q$ doubles.}, assuming that $p$, the number of fixed effects, is much smaller than $q$.
+
+For M-BLUP however, the size of the kernel is $O(m^2)$. This implies that if $q \ll m$, it might be computational beneficial to use G-BLUP instead of M-BLUP as the order of the set of equations to be solved would be much smaller for G-BLUP than M-BLUP.
+
+\subsection{MME for two random marker or genetic factors}
+
+Here, we will briefly display the MME for G-BLUP and M-BLUP with two random factors.
+
+The MME for both G-BLUP and M-BLUP are presented in \eqref{eq:gblup2.mme.kernel} and \eqref{eq:snpblup2.mme.kernel}:
+
+\begin{equation}
+\begin{bmatrix}
+  \matr{X'X} & \matr{X'Z} & \matr{X'Z} \\
+  \matr{Z'X} & \matr{Z'Z} + \matr{G}^{-1}_1 \lambda_{g_1} & \matr{Z'Z} \\
+  \matr{Z'X} & \matr{Z'Z}  & \matr{Z'Z} + \matr{G}^{-1}_2 \lambda_{g_2}
+\end{bmatrix}
+\begin{bmatrix}
+	\betahat\\ 
+	\ghat_1\\ 
+	\ghat_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+	\matr{X'y}\\ 
+	\matr{Z}'_1\vect{y}\\ 
+	\matr{Z}'_2\vect{y}
+\end{bmatrix}
+\label{eq:gblup2.mme.kernel}
+\end{equation}
+
+where $\lambda_{g_1} = \sigma^2_e / \sigma^2_{g_1}$ and $\lambda_{b_2} = \sigma^2_e / \sigma^2_{b_2}$.
+
+\noindent
+For M-BLUP, we have
+
+\begin{align}
+\begin{split}
+&\begin{bmatrix}
+  \matr{X'X} & \matr{X'ZW}_1 & \matr{X'ZW}_2 \\
+  \matr{W}_1' \matr{Z'X} & \matr{W}_1'\matr{Z'ZW}_1 + \matr{I} \lambda_{b_1} & \matr{W}_1'\matr{Z'ZW}_2  \\
+  \matr{W}_2'\matr{Z'X} &  \matr{W}_2'\matr{Z'ZW}_1 & \matr{W}_2'\matr{Z'ZW}_2 + \matr{I}\lambda_{b_2}
+\end{bmatrix}
+\begin{bmatrix}
+	\betahat\\ 
+	\bhat_1\\ 
+	\bhat_2
+\end{bmatrix} 
+\notag \\
+&=
+\begin{bmatrix}
+	\matr{X'}\vect{y}\\ 
+	\matr{W}'_1\matr{Z}'\vect{y}\\ 	
+	\matr{W}'_2\matr{Z}'\vect{y}
+\end{bmatrix}
+\label{eq:snpblup2.mme.kernel}
+\end{split}
+\end{align}
+
+
+where $\lambda_{b_1} = \sigma^2_e / \sigma^2_{b_1}$ and $\lambda_{b_2} = \sigma^2_e / \sigma^2_{b_2}$.
+
+
+\subsection{Some useful notations and properties of MME}
+
+We now consider the variances and standard errors of the predicted effects. These differ from the variance components ($\sigma^2_g$, $\sigma^2_e$, etc.) as giving the uncertainty of the predicted values of $\bhat$, $\ghat$, and $\betahat$. In other words, the variance components are scalars and properties of the model, while the following are vectors (variance-covariance matrices) that detail the uncertainty (correlation) of the realised values. To express these vectors, some useful notations of the coefficient matrix are presented.
+
+Recall the MME from section \ref{sec:MME}, page \pageref{sec:MME} for G-BLUP:
+\begin{equation}
+	\begin{bmatrix}
+		{X}' {R}^{-1}{X} & {X}'{R}^{-1}{Z}\\ 
+		{Z}' {R}^{-1}{X} & {Z}'{R}^{-1}{Z} + {F}^{-1}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\hat{\beta}\\ 
+		\hat{{g}}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		{X}'{R}^{-1}{y}\\ 
+		{Z}'{R}^{-1}{y}
+	\end{bmatrix}
+	\tag{\ref{eq:g.blup.mme}}
+\end{equation}
+
+where $R = D_n \sigma^2_e$ and $F = G\sigma^2_g$. Denoting the coefficient matrix as $\matr{C}$, it and its inverse can be written as
+
+\begin{equation}
+\matr{C} = \begin{bmatrix} \matr{C}_{\beta\beta} & \matr{C}_{\beta g} \\ \matr{C}_{g\beta} & \matr{C}_{gg} \end{bmatrix}
+\hspace{12pt}
+\text{and}
+\hspace{12pt}
+\matr{C}^{-1} = \begin{bmatrix} \matr{C}^{\beta\beta} & \matr{C}^{\beta g} \\ \matr{C}^{g\beta} & \matr{C}^{gg} \end{bmatrix}.
+\end{equation}
+
+Incidentally, $\Var\binom{\betahat}{\ghat - \vect{g}} = \matr{C}^{-1}$. Following from this, the covariance matrix for the estimated fixed effects are given by
+
+\begin{equation}
+  \Var(\betahat) = \matr{C}^{\beta\beta}
+\end{equation}
+
+and the standard errors are simply the square roots of the diagonal elements. The covariance matrix for the predicted genetic values is
+
+\begin{equation}
+  \Var(\ghat) = \matr{G} - \matr{C}^{gg}
+  \label{eq:var.ghat}
+\end{equation}  
+
+but it is more viable to consider the prediction errors $\ghat - \vect{g}$, as the variance of this `includes variance from both the prediction error and the random effects $\vect{g}$ themselves' \citep[p. 754]{LynchWalsh1998};
+
+
+\begin{equation}
+  \Var(\ghat - \vect{g}) = \matr{C}^{gg}.
+\end{equation}
+  
+We will also introduce the \indx{hat matrix}\footnote{It puts the hat on $\vect{y}$.}\index{hat matrix}\index{H@$\matr{H}$|see {hat matrix}}, which is the matrix that transforms the $\vect{y}$ into $\yhat$, i.e.
+
+\begin{equation}
+  \yhat = \matr{H}\vect{y}
+\end{equation}
+
+For G-BLUP, $\yhat = \matr{X}\betahat + \matr{Z}\ghat$, $\yhat$ can be expressed as either the marginal or the conditional predictions \citep{Orenti2012}:
+
+\begin{subequations}
+\begin{align}
+  \yhat_M &= \matr{X}\betahat \\
+  \yhat_C &= \matr{X}\betahat + \matr{X}\ghat 
+\end{align}
+\end{subequations}
+
+with corresponding hat matrices
+
+\begin{subequations}
+\begin{align}
+  \matr{H}_M &= \matr{X}(\matr{X'V}^{-1}\matr{X})^{-1}\matr{X'V}^{-1} \\
+  \matr{H}_C &= \matr{I} - \matr{V}^{-1} + \matr{X}(\matr{X'V}^{-1}\matr{X})^{-1}\matr{X'V}^{-1} \label{eq:H_C}
+  .
+\end{align}
+\end{subequations}
+
+We can also derive the two \emph{hat like} matrixes, $\matr{H}_\beta$ and $\matr{H}_g$, such that $\yhat = \matr{H}_\beta \vect{y} + \matr{H}_g \vect{y}$. These will be useful in later chapters for the sums of squares.
+
+\begin{align*}
+  \matr{Z}\vect{g} &= \matr{Z}\left[ \matr{C}^{g\beta} ~~ \matr{C}^{gg} \right ] \begin{bmatrix} \matr{X'R}^{-1} \\ \matr{Z'R}^{-1} \end{bmatrix} \vect{y} = \matr{H}_g \vect{y} \\
+ \matr{H}_g &= \matr{Z}\left[ \matr{C}^{g\beta} ~~ \matr{C}^{gg} \right ] \begin{bmatrix} \matr{X'R}^{-1} \\ \matr{Z'R}^{-1} \end{bmatrix} \addtocounter{equation}{1}\tag{\theequation} \label{eq:Hg}  
+\end{align*}
+ 
+and similarly for $\matr{H}_\beta$:
+
+\begin{align*}
+  \matr{X}\bfbeta &= \matr{X}\left[ \matr{C}^{\beta\beta} ~~ \matr{C}^{\beta g} \right] \begin{bmatrix} \matr{X'R}^{-1} \\ \matr{Z'R}^{-1} \end{bmatrix} \vect{y} = \matr{H}_\beta \vect{y} \\
+  \matr{H}_\beta &= \matr{X}\left[ \matr{C}^{\beta\beta} ~~ \matr{C}^{\beta g} \right] \begin{bmatrix} \matr{X'R}^{-1} \\ \matr{Z'R}^{-1} \end{bmatrix}  \addtocounter{equation}{1}\tag{\theequation} \label{eq:Hb}
+  .
+\end{align*}
+
+
+\section{Cross validation}
+\label{sec:cross.validation}
+
+So far we have been discussing model fit, predicted marker effects and genetic values, and estimated variance components for evaluating a model.
+But a model may be used for more than trying to understand how the biological machinery produces the observed phenotypes. In animal breeding and personalised medicine, predicting future outcomes is highly valuable, and thus evaluating a models predictive ability has its merit. The predictive ability stems from the models' ability to generalise to another dataset, a feature that is penalized if the model has been overfitted. 
+
+
+Cross-validation is one method for estimating the predictive ability of a model.The data is split into a training set and a validation set, the model is fitted to the training set, and then used to predict the observations of the validation set. The observations of the validation set are then compared to the predicted observations, and this is the basis of the predictive ability.
+
+
+A typical approach is the $K$-fold cross-validation, where the data is split into $K$ sets, and each is in turn used as the validation set while the rest are used to fit the model. The predictive ability is then the mean of the $K$ comparisons.Typical choices for $K$ are 5 or 10 \citep{Legarra2008,Hastie2009}. Other approaches exists such as `Leave-one-out' or `Repeated random sub-sampling validation', where the first corresponds to $K$-fold with $K$ equals to number of data points. For the latter, the data points for the validation set are sampled at randomly for each `fold', thus the validation subsets may overlap. For now, we will focus on the $K$-fold approach.
+
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{crossvalidation}
+	  %%\put (21,34) {\footnotesize Mendelian}
+	  %\put (4, 50) {\footnotesize A)}
+	  %\put (4, 23) {\footnotesize C)}
+	  %\put (53, 50) {\footnotesize B)}
+	  %\put (53, 23) {\footnotesize D)}
+  %\end{overpic}
+  \caption[Illustration of splitting data for cross-valdiation.]{\figcap{Illustration of splitting data for cross-valdiation.}
+    Circles are used as training set, stars as validation set.
+  	A) Simplistic 3-fold cross-validation where data set is homogeneous.
+  	B) Overfitted model on training set following bad prediction of validation set.
+  	C) Extrapolating from training set, resulting in increased confidence interval.
+  	D) Data not homogeneous and/or splitting data set based on a prior screen
+  }
+  \label{fig:cv}
+\end{figure}  
+
+How to split the data set needs to be considered. If the dataset is homogeneous, samples may be divided at random, as seen in A) in figure \ref{fig:cv}. However, the division should always reflect how the resulting model is intended to be used, but this can introduce different sources of error. In animal breeding, the data might span several generations and/or multiple herds, in which case the dataset is no longer homogeneous and one has to be attentive to this. So to the use of cross validation and prediction, we will quickly find ourselves with an extrapolation which comes with an inherent cost, see C) in figure \ref{fig:cv}. We might also attempt to do cross-validation across multiple breeds, a situation akin to D).
+
+As we will see below, the prediction ability of the models depend on the size of the variance components and the relationship between the two groups.
+
+However, many other strategies have been tested and used to divide the data set. For example, \citet{Luan2009} divided the data set according to the year of birth of progeny and chose the animals for TD in number equal to the number of sires selected that particular year. By contrast, \citet{Legarra2008} sampled both within and across families. There is still uncertainty whether it is necessary to have close relatives and close population LD among individuals in TD and VD; what is sure is that there must be genomic relationships among the two sets of individuals. \citet{Legarra2008} obtained better predictive ability with close relatives whereas \citet{Ober2012} and \citet{Habier2007} found sufficient to good predictive abilities with distant relatives (even inbred lines in the case of Ober's paper) showing that long range LD could be useful as well. Further, this is also influenced by the method used to estimate parameters - G-BLUP makes more use of the genetic relationships while BayesB uses more the population LD.
+
+  
+\subsection{Prediction in cross-validation: Individuals without phenotype}
+
+We will now cover the cross-validation for G-BLUP. We will denote the observations in the validation set as $\vect{y}_2$ and those in the training set as $\vect{y}_1$. Even though we mask the observations in $\vect{y}_2$ as unknown or missing, the genetic relationship for these observations are still known. The challenge now is to estimate $\vect{y}_2$ based on the training data set. For this, we derive the joint distribution of two G-BLUP models:
+
+\begin{equation}
+  \binom{\vect{y}_2}{\vect{y}_1} 
+  =
+  \binom{\matr{X}_2\bfbeta_2}{\matr{X}_1\bfbeta_1}
+  +
+  \binom{\vect{g}_2}{\vect{g}_1}
+  +
+  \binom{\vect{e}_2}{\vect{e}_1}
+\end{equation}
+in the same manner as we did in section \ref{sec:g2b}. The genomic values for individuals in the valdiation set $\vect{a}_2$ and those in the training set as $\vect{a}_1$ are assumed to follow a multivariate normal distribution:
+
+\begin{equation}
+  \binom{\vect{g}_2}{\vect{g}_1}
+  \sim
+  N\left[
+    \vect{0},
+    \begin{pmatrix}
+      \matr{G}_{22} & \matr{G}_{21} \\
+      \matr{G}_{12} & \matr{G}_{11}
+    \end{pmatrix}
+    \sigma^2_g
+  \right]
+\end{equation} 
+We emphasise that the variance components here are the same for the training and validation set!
+The variance components are typically estimated from training set.
+
+The joint distribution requires the marginal expectation of $\binom{\vect{y}_2}{\vect{y}_1}$,
+as well as the marginal variances for $\vect{y}_2$ and $\vect{y}_1$ and the covariances between these two. The marginal expectation is, as in `ordinary' G-BLUP, the fixed effects, $\binom{\matr{X}_2\bfbeta_2}{\matr{X}_1\bfbeta_1}$. The marginal variances are easily derived from \eqref{eq:gblup.var.3} and applying the indices for the training and validation set.
+The covariance will be derived as follows:
+
+\begin{subequations}
+\begin{align}
+  \Cov(\vect{y}_2, \vect{y}_1) &= \Cov(\matr{X}_2\bfbeta_2 + \vect{g}_2 + \vect{e}_2, \matr{X}_1\bfbeta_1 + \vect{g}_1 + \vect{e}_1) \\
+  &= \Cov(\vect{g}_2 + \vect{e}_2, \vect{g}_1 + \vect{e}_1) \label{eq:two.gblups.cov.2} \\
+  &= \Cov(\vect{g}_2, \vect{g}_1) + \Cov(\vect{g}_2, \vect{e}_1) + \notag \\
+  &\phantom{=}~\, \Cov(\vect{e}_2, \vect{g}_1) + \Cov(\vect{e}_2, \vect{e}_1) \label{eq:two.gblups.cov.3} \\
+  &= \Cov(\vect{g}_2, \vect{g}_1) = \matr{G}_{21} \sigma^2_g
+\end{align}
+\end{subequations}
+
+Step \eqref{eq:two.gblups.cov.3} is achieved by applying the last property in stat box \ref{stat:covariance.props} and the last three terms are set to zero as all residuals are independent and as well are genetic values and residuals.
+
+
+
+With this in place, we can set up the join distribution as
+
+\begin{equation}
+\begin{bmatrix}
+	\vect{y}_2\\ 
+	\vect{y}_1
+\end{bmatrix}
+\sim N
+\begin{bmatrix}
+	\begin{pmatrix}
+		\matr{X}_2\bfbeta_2\\ 
+		\matr{X}_1\bfbeta_1
+	\end{pmatrix}, 
+	& 
+	\begin{pmatrix}
+		\matr{G}_{22}\sigma ^2_g + \matr{D}_n\sigma ^2_e & \matr{G}_{21} \sigma ^2_g\\ 
+		\matr{G}_{12} \sigma ^2_g & \matr{G}_{11} \sigma ^2_g + \matr{D}_n\sigma ^2_e
+	\end{pmatrix}
+\end{bmatrix}
+\end{equation}
+
+Hence, the expectation of $\vect{y}_2$ given $\vect{y}_1$ is, by applying stat box \ref{stat:2mvn}:
+
+\begin{equation}
+	\E[\vect{y}_2|\vect{y}_1] = \matr{X}_2\bfbeta_2 + \matr{G}_{21}\sigma^2_g [\matr{G}_{11}\sigma^2_g + \matr{D}_n \sigma^2_e]^{-1} (\vect{y}_1 - \matr{X}_1\bfbeta_1) 
+	\label{eq:lmm2:E.y2.y1}
+\end{equation}
+
+This emphasises the importance of the relationship between the two groups and the variance component $\sigma^2_g$. If there is no or low relationship between the training and validation set, $\matr{G}_{21}$ is close to zero and the prediction of values of $\vect{y}_2$ is entirely controlled by the fixed effects. Likewise, if the genetic model cannot account for any of the observed variance, i.e.\ the variance component is close to zero, predicting with said genetic model is ... pointless.
+
+\hfill
+\begin{statbox}[floatplacement=!h,label={stat:lin.eq.dist}]{Joint distribution of linear equations}
+  Given a vector of multivariate normal random variables, ${x} \sim N({m}, {V})$,
+  and a set of linearly independent linear functions, ${A}$, 
+  then ${y}^\ast = {c + Ax}$ is a vector of multivariate normal random variables,
+  where ${c}$ is a vector of constants.
+  The joint distribution of ${y}^\ast$ is
+  \begin{equation*}
+    {y}^\ast \sim N[{Am + c}, {AVA}'].
+  \end{equation*}
+  
+  {\bfseries Example:} Using the M-BLUP model, $y^\ast = y$,
+  and we can set ${A} = (W ~ I_n)$, ${x} = {\binom{b}{e}}$, ${c} = {1}_n\mu$, and ${m} = {0}$.
+  The variance-covariance matrix for $b$ and $e$ is ${V} = \bigl(\begin{smallmatrix} {I}_m \sigma^2_b & {0} \\ {0} & {D}_n \sigma^2_e   \end{smallmatrix} \bigr)$.
+  Thus, the joint distribution from above becomes:
+  \begin{align*}
+    {y} &\sim N\left[ 
+    		{0} + {I}_n \mu 
+	    	\!,~ 
+	    	\begin{pmatrix} {W} & {I}_n \end{pmatrix}
+	    	\begin{pmatrix} {I}_n \sigma^2_g & {0} \\ {0} & {D}_n \sigma^2_e \end{pmatrix}
+	    	\begin{pmatrix} {W}^\prime \\ {I}_n \end{pmatrix}
+    	\right] \\
+    	&= N\left[
+    	  {I}_n \mu 
+    	  \!,~
+    	  {WW}^\prime \sigma^2_g + {D}_n \sigma^2_e
+    	  \right]
+  \end{align*}
+  
+\end{statbox}
+    	
+\begin{statbox}[floatplacement=hb,label={stat:joint}]{A joint distribution}
+  We take notice in standard probability theory, that
+  \begin{equation*}
+    P(X, Y) = P(X | Y) P(Y)
+  \end{equation*}
+  hence the conditional expectation of $X$ on $Y$ is dependent on the marginal distribution of $Y$ and the joint distribution of both variables.
+\end{statbox}
+
+\begin{statbox}[floatplacement=!ht,label={stat:2mvn}]{Conditional expectation of a bivariate normal distribution}
+	Given:
+	\begin{equation*}
+	  \begin{pmatrix} {X}_1 \\ {X}_2 \end{pmatrix}
+	  \sim
+	  N\left[
+	    \begin{pmatrix} \mu_1 \\ \mu_2 \end{pmatrix}
+	    ,
+	    \begin{pmatrix} 
+	    	{V}_{11} & {V}_{12} \\
+	    	{V}_{21} & {V}_{22}
+	    \end{pmatrix}
+	  \right]
+	\end{equation*}  
+	Conditional expectation is
+	\begin{equation*}
+	  \E[{X}_1 | {X}_2] = \mu_1 + {V}_{12} {V}_{22}^{-1} ({X}_2 - \mu_2)
+	\end{equation*}
+\end{statbox}
+
+
+\begin{statbox}[label={stat:covariance.props},floatplacement=t]{Properties of covariances} 
+If $x$, $y$, $w$ and $v$ are random variables, and $a$, $b$, $c$ and $d$ are non-random  (i.e.\ constant), the following applies:
+  \begin{align*}
+    \Cov(x, a) &= 0 \\
+    \Cov(x, y) &= \Cov(y, x) \\
+    \Cov(ax, by) &= ab \Cov(x, y) \\
+    \Cov(a + x, b + y) &= \Cov(x, y) \\
+    \Cov(ax, + by, cw + dv) &= ac \Cov(x,w) +  ad \Cov(x,v) +  \\
+    &\phantom{=}~\, bc \Cov(y,w) + bd \Cov(y, v)
+  \end{align*}
+\end{statbox}
