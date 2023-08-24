@@ -32,247 +32,81 @@ In the following the statistical model, prior distributions of model parameters,
 # Bayesion Linear Regression Model for Marker Effects
 
 ## Statistical model and model parameters
-The linear model contains the observation vector for the trait(s) of interest ($y$), the `fixed effects` that explain systematic differences in $y$, and the `random genetic effects` $a$ and random residual effects $e$.
-
-A matrix formulation of a general model equation is:
-\begin{align}
-y &= Xb + a + e \notag
-\end{align}
-
-where
-\begin{align}
-y &: \text{is the vector of observed values of the trait,} \notag \\
-b &: \text{is a vector of fixed effects,} \notag \\
-a &: \text{is a vector of random genetic effects,} \notag \\
-e &: \text{is a vector of random residual effects,} \notag \\
-X &: \text{is a known design matrix that relates the elements of b to their corresponding element in y.} \notag 
-\end{align}
-
-The phenotype is related to the set of genetic markers under the multiple linear regression model:
+In the multiple regression model the phenotype is related to the set of genetic markers:
 
 \begin{align}
-\bf{y} = \bf{Wb} + \bf{e}
+y = Xb + e
 \end{align}
 
-where $\bf{y}$ is the phenotype, $\bf{W}$ a matrix of SNP genotypes, where values are standardised to give the ijth element as: $w_{ij} = \left( {x_{ij} - 2p_j} \right){\mathrm{/}}\sqrt {2p_j\left( {1 - p_j} \right)}$, with $x_{ij}$ the number of minor (or alternative) alleles (0, 1 or 2) for the ith individual at the jth SNP and $p_j$ the minor (or alternative) allele frequency. $\bf{b}$ are the genetic effects for each SNP, and $\varepsilon$ the residual error. The dimensions of $\bf{y}$, $\bf{W}$, $\bf{b}$ and $\bf{e}$ are dependent upon the number of traits, $k$, the number of SNP markers, $m$, and the number of individuals, $n$, and are described in the sections below. 
-
-The residuals, ${\bf{e}}$, are a priori assumed to be independently and identically distributed multivariate normal with null mean and covariance matrix ${\bf{I}\sigma}_{\epsilon}^2$. 
+where $y$ is the phenotype, $X$ a matrix of SNP genotypes, where values are standardised to give the ijth element as: $x_{ij} = \left( {x_{ij} - 2p_j} \right){\mathrm{/}}\sqrt {2p_j\left( {1 - p_j} \right)}$, with $x_{ij}$ the number of copies of the effect allele (e.g. 0, 1 or 2) for the ith individual at the jth SNP and $p_j$ the allele frequency of the effect allele. $b$ are the genetic effects for each SNP, and $e$ the residual error. The dimensions of $y$, $X$, $b$ and $e$ are dependent upon the number of traits, $k$, the number of SNP markers, $m$, and the number of individuals, $n$. The residuals, $e$, are a priori assumed to be independently and identically distributed multivariate normal with null mean and covariance matrix $I\sigma_{e}^2$. 
 
 
-## Prior distributions of model parameters
+## Estimation of parameters using Bayesian methods
+In the Bayesian multiple regression model the posterior density of the model parameters ($b$,$\sigma_b^2$,$\sigma_e^2$) depend on the likelihood of the data given the parameters and a prior probability for the model parameters:
+\begin{align}
+p(b,\sigma_b^2,\sigma_e^2|y) \propto p(y|b,\sigma_b^2,\sigma_e^2)p(b|\sigma_b^2)p(\sigma_b^2)p(\sigma_e^2)
+\end{align}
 
-Most complex traits and diseases are likely highly polygenic, with hundreds to thousands of causal variants, most frequently of small effect. So, the prior distribution must include many small and few large effects. Furthermore marker effects are a priory assumed to be uncorrelated (but markers can be in strong linkage disequilibrium and therefore a high posterior correlation). Many priors for marker effects have been proposed. These priors come more from practical (ease of computation) than from biological reasons. Each prior originates a method or family of methods, and we will describe them next, as well as their implications.
+The prior density of marker effects, $p(b|\sigma_b^2)$, defines whether the model will induce variable selection and shrinkage or shrinkage only. Also, the choice of prior will define the extent and type of shrinkage induced. Ideally the choice of prior for the marker effect should reflect the genetic architecture of the trait, and will vary (perhaps a lot) across traits. Most complex traits and diseases are likely highly polygenic, with hundreds to thousands of causal variants, most frequently of small effect. So, the prior distribution must include many small and few large effects. Furthermore marker effects are a priory assumed to be uncorrelated (but markers can be in strong linkage disequilibrium and therefore a high posterior correlation). Many priors for marker effects have been proposed. These priors come more from practical (ease of computation) than from biological reasons. Each prior originates a method or family of methods, and we will describe some of them next, as well as their implications.
 
-1. Normal distribution: Random regression BLUP (RR-BLUP), SNP-BLUP, G-BLUP
-2. Normal distribution with unknown variances: BayesCPi0, GREML
-3. Student (t) distribution : BayesA
-4. Mixture of Student (t) distribution and spike at 0: BayesB
-5. Mixture of Normal distributions and spike at 0: BayesCPi and BayesR
-6. Double exponential: Bayesian Lasso
 
-### Prior marker variance SNP-BLUP (RR-BLUP and G-BLUP) {.unlisted .unnumbered}
-
-In SNP-BLUP the prior for each marker effect follows a priori a normal distribution with a variance $\sigma_b^2$ which is constant across markers:
-
+### Prior marker variance Bayes N {.unlisted .unnumbered}
+In the Bayes N approach the prior the marker effect, b, follows a priori a normal distribution with a variance $\sigma_b^2$ which is constant across markers:
 \begin{align}
 p(b)=\prod_ip(b_i)
 \end{align}
-
 where
-
 \begin{align}
 p(b_i) = N\left(0, \sigma_b^2 \right)
 \end{align}
-
 In a normal distribution most effects are concentrated around 0, whereas few effects will be large. Therefore, the prior assumption of normality precludes few markers of having very large effects – unless there is a lot of information to compensate for this prior information. 
 
-The allele frequencies should be the ones in the population where the genetic variance was estimated (e.g., the base population of the pedigree) and not the current, observed populations. 
-
-We assume that markers are independent one from each other. This can be equivalently written
-as:
-
-\begin{align}
-p(b)=MVN(0,D)
-\end{align} 
-
-\begin{align} 
-Var(b)=D=I\sigma_b^2
-\end{align} 
-
-where MVN stands for multivariate normal. This formulation including D will be used again
-throughout these notes.
-
-
-### Prior marker variance
-Marker “variances”, can, however, be included within a Bayesian framework. The Bayesian framework will postulate a non-normal distribution for marker effects, and this non-normal distribution can be explained as a two-stages (or hierarchical) distribution. 
-In the first stage, we postulate that each marker has a priori a different variance from each other:
-\begin{align}
-p(b_i|\sigma_{{b}_i}^2) = N\left(0, \sigma_{{b}_i}^2 \right)
-\end{align}
-In the second stage, we postulate a prior distribution for the variance themselves:
-\begin{align}
-p(\sigma_{{b}_i}^2 | something) = p\left(..... \right)
-\end{align}
-This prior distribution helps (the estimate of $\sigma_{{b}_i}^2$ is more accurate, in the sense of lower mean square error) although it will still be far from reality (e.g. (Gianola et al. 2009)). This is very convenient because the solving algorithm simplifies greatly and most Bayesian regression models are based in this idea.
 
 ### Prior marker variance Bayes A {.unlisted .unnumbered}
-
-The simplest idea is to assume that a priori we have some information on the marker variance. For instance, this can be $\sigma_b^2$. Thus, we may attach some importance to this value and use it as prior information for $\sigma_{{b}_i}^2$. A natural way of doing this is using an inverted chi-squared distribution with with  $\upsilon_{b}$ degrees of freedom and scale parameter  $S_{b}^{2}=\upsilon_{b}\sigma_b^2$ 
-
+In the Bayes A approach it is assumed that a priori we have some information on the marker variance. For instance, this can be $\sigma_b^2$. Thus, we may attach some importance to this value and use it as prior information for $\sigma_{{b}_i}^2$. A natural way of doing this is using an inverted chi-squared distribution with with  $\upsilon_{b}$ degrees of freedom and scale parameter  $S_{b}^{2}=\upsilon_{b}\sigma_b^2$ 
 \begin{align}
 p(b_i|\sigma_{{b}_i}^2) = N\left(0, \sigma_{{b}_i}^2 \right)
 \end{align}
-
 In the second stage, we postulate a prior distribution for the variance themselves:
-
 \begin{align}
 p(\sigma_{{b}_i}^2 |\upsilon_{b},S_{b}^{2}) = S_{b}^{2}\chi_{\upsilon_{b}}^{-1}
 \end{align}
-
-The value of $\sigma_b^2$ should be set as 
-
-$\sigma_b^2=\frac{\upsilon_{b}-2}{\upsilon_{b}}\frac{\sigma_g^2}{2\sum_{i}p_i(1-p_i)}$ because the variance of a t distribution is $\frac{\upsilon_{b}}{\upsilon_{b}-2}$. It can be shown
-that this corresponds to a prior on the marker effects corresponding to a scaled t distribution (Gianola et al. 2009):
-
+The value of $\sigma_b^2$ should be set as $\sigma_b^2=\frac{\upsilon_{b}-2}{\upsilon_{b}}\frac{\sigma_g^2}{2\sum_{i}p_i(1-p_i)}$ because the variance of a t distribution is $\frac{\upsilon_{b}}{\upsilon_{b}-2}$. It can be shown that this corresponds to a prior on the marker effects corresponding to a scaled t distribution (Gianola et al. 2009):
 \begin{align}
 p(b_i|\sigma_{b}^2,\upsilon_{b}) = \sigma_{b}t\left(0, \upsilon_{b} \right)
 \end{align}
-
 which has the property of having “fat tails”. This means that large marker effects are more likely a priori compared to a normal distribution.
-
-### Prior marker variance Bayes B {.unlisted .unnumbered}
-
-A very common thought was that there were not many causal loci. So a natural thinking is to consider that many markers do not have effect because they cannot trace causal loci. This originated the method known as BayesB, that simply states that the individual marker variance, $\sigma_{{b}_i}^2$, is potentially zero. Note that this cannot happen for BayesA as the a priori chi-squared distribution prevents any marker variance from being zero. This idea corresponds to a more complex prior as follows:
-
-\begin{align}
-p(b_i|\sigma_{{b}_i}^2) = N\left(0, \sigma_{{b}_i}^2 \right)
-\end{align}
-
-
-
-\begin{align}
-p(\sigma_{{b}_i}^2|S_{b}^{2},\upsilon_{b}) = \left\{ {\begin{array}{*{20}{l}} 0 \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,\pi,} \hfill \\ {S_{b}^{2}\chi_{\upsilon_{b}}^{-1}} \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,1-\pi,}  \end{array}} \right.
-\end{align}
-
-then when $\sigma_{{b}_i}^2=0$ it follows that $b_i=0$. BayesB has a complex algorithm because it does involve the computation of a complex likelihood and experience suggest that this methods is not very robust.
 
 
 ### Prior marker variance Bayes C {.unlisted .unnumbered}
-
-Habier et al. 2011 suggests the possibility of a simpler prior scheme where markers having an effect would be assigned a “common” variance such as $\sigma_{b}^2$. This is simpler to be explained by introducing additional variables $\delta_i$ which explain if the i-th marker has an effect or not. In turn, these variables $\delta$ have a prior distribution called Bernouilli with a probability $\pi$ of being 0. Therefore the hierarchy of priors is:
-
+In the Bayes C approach the marker effects, b, are a priori assumed to be sampled from a mixture with a point mass at zero and univariate normal distribution conditional on common marker effect variance  $\sigma_{b}^2$. This reflect a very common thought was that there were not many causal loci. This can be implemented by introducing additional variables $\delta_i$ which explain if the i-th marker has an effect or not. In turn, these variables $\delta$ have a prior distribution called Bernouilli with a probability $\pi$ of being 0. Therefore the hierarchy of priors is:
 \begin{align}
-p(\beta_j|\delta_i,\sigma_{{b}_i}^2,\pi) = \left\{ {\begin{array}{*{20}{l}} 0 \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,\pi,} \hfill \\ {\sim N(0,\sigma_{{b}_i}^2)} \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,1-\pi,}  \end{array}} \right.
+p(b_j|\delta_i,\sigma_{{b}_i}^2,\pi) = \left\{ {\begin{array}{*{20}{l}} 0 \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,\pi,} \hfill \\ {\sim N(0,\sigma_{{b}_i}^2)} \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,1-\pi,}  \end{array}} \right.
 \end{align}
 
 \begin{align}
 p(\sigma_{{b}_i}^2 |\upsilon_{b},S_{b}^{2}) = S_{b}^{2}\chi_{\upsilon_{b}}^{-1}
 \end{align}
-
-where $S_{b}^{2}=\sigma_b^2\upsilon_{b}$ with
-
-$\sigma_b^2=\frac{\sigma_g^2}{(1-\pi)2\sum_{i}p_i(1-p_i)}$ because the variance of a t distribution is $\frac{\upsilon_{b}}{\upsilon_{b}-2}$. Experience shows that this prior hierarchy is more robust than BayesB (not shown), the reason being that, at the end (after fitting the data), the values of $\sigma_{{b}_i}^2$ are little dependent on the prior. Thus the model may be correct even if the prior is wrong.
-
-
-### Prior marker variance Bayesian Lasso {.unlisted .unnumbered}
-
-The Bayesian Lasso (Park and Casella 2008 ; Campos et al. 2009 ; A. Legarra, Robert-Granié, Croiseau, et al. 2011) suggests a different way to model the effect of markers. Instead of setting a priori some of them to 0, it sets them to very small values which corresponds to the following a priori distribution of markers:
-
-\begin{align}
-p(b_i|\sigma_{{b}_i}^2) = N\left(0, \sigma_{{b}_i}^2 \right)
-\end{align}
-
-
-In the second stage, we postulate a prior distribution for the variance themselves:
-
-\begin{align}
-p(\sigma_{{b}_i}^2 |\lambda) = \frac{\lambda^2}{2}exp(-\frac{\lambda^2}{2}\frac{\sigma_{{b}_i}^2}{\sigma_e^2})
-\end{align}
-
-In this case, a natural way of fitting the prior value of $\lambda$ is as (Pérez et al. 2010)
-
-\begin{align}
-\frac{2}{\lambda^2}=\frac{\sigma_g^2}{\sigma_e^22\sum_{i}p_i(1-p_i)}
-\end{align}
-
-In this case, $\lambda$ can be thought of as a ratio between marker variance and residual variance (signal-to-noise). 
-
-We can use any coding (centered, 101 or 012 or 210) in W for Bayesian methods. The estimated $\hat g$ will be the same, the estimated $\sigma_b^2$ or $\pi$ will be the same, and the estimated genetic variance computed using, for instance, $\sigma_g^2=\sigma_b^22\sum_{i}p_i(1-p_i)$, will be the same too. These results are convenient because they assure us that any allele coding is convenient. However, this result does not apply to the all features. For instance, the standard deviation (and therefore, in animal breeding words, the “model-based” reliability) of estimated genetic values $\hat g$ is not
-invariant to parameterization, because there will be a part of the overall mean absorbed, or not, by $W\hat b$. This implies that reports of the posterior variance of $\hat g$ will depend on the allele coding.
+where $S_{b}^{2}=\sigma_b^2\upsilon_{b}$ with $\sigma_b^2=\frac{\sigma_g^2}{(1-\pi)2\sum_{i}p_i(1-p_i)}$ because the variance of a t distribution is $\frac{\upsilon_{b}}{\upsilon_{b}-2}$. 
 
 
 ### Prior marker variance Bayes R {.unlisted .unnumbered}
-
-The marker effects, b, are a priori assumed to be sampled from a mixture with a point mass at zero and univariate normal distributions conditional on common marker effect variance $\sigma_{\beta}^2$,and variance scaling factors, ${\bf{\gamma}}$:
-
+In the Bayes R approach the marker effects, b, are a priori assumed to be sampled from a mixture with a point mass at zero and univariate normal distributions conditional on common marker effect variance  $\sigma_{b}^2$,and variance scaling factors, ${\gamma}$:
 \begin{align}
-\beta _j|\pi ,\sigma _\beta ^2 = \left\{ {\begin{array}{*{20}{l}} 0 \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,\pi _1,} \hfill \\ {\sim N(0,\gamma _2\sigma _\beta ^2)} \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,\pi _2,} \hfill \\ \vdots \hfill & {} \hfill \\ {\sim N(0,\gamma _C\sigma _\beta ^2)} \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,1 - \mathop {\sum}\nolimits_{c = 1}^{C - 1} {\pi _c,} } \hfill \end{array}} \right.
+b_j|\pi ,\sigma _b ^2 = \left\{ {\begin{array}{*{20}{l}} 0 \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,\pi _1,} \hfill \\ {\sim N(0,\gamma _2\sigma _b ^2)} \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,\pi _2,} \hfill \\ \vdots \hfill & {} \hfill \\ {\sim N(0,\gamma _C\sigma _b ^2)} \hfill & {{\mathrm{with}}\,{\mathrm{probability}}\,1 - \mathop {\sum}\nolimits_{c = 1}^{C - 1} {\pi _c,} } \hfill \end{array}} \right.
 \end{align}
+where  $\pi = \left(\pi _{1}, \pi _{2}, ...., \pi _{C} \right)$  is a vector prior probabilities and  $\gamma = \left(  \gamma _{1}, \gamma _{2}, ....., \gamma _{C} \right)$ is a vector of variance scaling factors for each of C marker variance classes. The $~\gamma$ coefficients are prespecified and constrain how the common marker effect variance $\sigma _{b }^{2}$ scales within each mixture distribution. Typically $\gamma = \left( 0,0.01,0.1,1.0 \right)$. and  $\pi=\left(0.95,0.02,0.02,0.01\right)$. 
 
-where  $\pi = \left(\pi _{1}, \pi _{2}, ...., \pi _{C} \right)$  is a vector prior probabilities and  $\gamma = \left(  \gamma _{1}, \gamma _{2}, ....., \gamma _{C} \right)$ is a vector of variance scaling factors for each of C marker variance classes. The $~\gamma$ coefficients are prespecified and constrain how the common marker effect variance $\sigma _{\beta }^{2}$ scales within each mixture distribution. Typically $\gamma = \left( 0,0.01,0.1,1.0 \right)$. and  $\pi=\left(0.95,0.02,0.02,0.01\right)$. 
-
-
-The prior distribution for the marker variance $\sigma_{\beta}^{2}$  is assumed to be an inverse Chi-square prior distribution,$\chi^{-1}\left(S_{\beta},\nu_{\beta}\right)$.
+The prior distribution for the marker variance $\sigma_{b}^{2}$  is assumed to be an inverse Chi-square prior distribution,$\chi^{-1}\left(S_{b},\nu_{b}\right)$.
 
 The proportion of markers in each mixture class $\pi$ follows a Direchlet $(C,c+\alpha)$ distribution, where c is a vector of length C that contains the counts of the number of variants in each variance class and $\alpha=(1,1,1,1)'$.   
 
-Using the concept of data augmentation, an indicator variable ${\bf{d}}=(d_1,d_2,..,d_{m-1},d_m)$, is introduced, where $d_j$ indicates whether the j’th marker effect is zero or nonzero.
+Using the concept of data augmentation, an indicator variable ${d}=(d_1,d_2,..,d_{m-1},d_m)$, is introduced, where $d_j$ indicates whether the j’th marker effect is zero or nonzero.
 
+### Estimation of model parameters
+Bayesian linear regression methods use an iterative algorithm for estimating joint marker effects. Estimation of the joint marker effects depend on additional model parameters such as a probability of being causal ($\pi$), an overall marker variance ($\sigma_{b}^2$), and residual variance ($\sigma_e^2$). Estimation of model parameters can be done using MCMC techniques by sampling from fully conditional posterior distributions.
 
-### Marker variance {.unlisted .unnumbered}
-
-The total genetic variance explained by markers can be expressed as (assuming linkage equilibrium): 
-
-\begin{align}
-\sigma_g^2 = 2\sum_{i} p_i(1-p_i){\hat{b}}_i^2
-\end{align}
-
-In most cases we do not know the marker effects, but may have some information prior variance then we can substitute the term ${\hat{b}}_i^2$ by it expectation which is $\sigma_{{b}_i}^2$ and therefore
-
-\begin{align}
-\sigma_g^2 = 2\sum_{i} p_i(1-p_i)\sigma_{{b}_i}^2
-\end{align}
-
-and if we assume that all markers have the same variance a priori then   
-
-\begin{align}
-\sigma_{{b}_i}^2 = \frac{\sigma_g^2}{2\sum_{i} p_i(1-p_i)}
-\end{align}
-
-which puts the prior variance of the markers as a function of the genetic variance of the population. This result is widely used in many applications in genomic prediction.
-
-
-\begin{comment}
-## Estimation of marker variance
-Often, estimates of variance components from field data are unreliable, too old, or not directly available. In this case, it is simpler to estimate those variances from marker data. Although this is typically done using GREML, it can also be done in marker models. This was the case of (A.Legarra, Robert-Granié, Manfredi, et al. 2008) in mice, and it has later been used to estimate genetic variances in wild populations (Sillanpaa 2011). It is very simple to do using Bayesian inference, and posterior estimates of the variances $\sigma_b^2$ and $\sigma_e^2$ are obtained. This method has been described by (Habier et al. 2011) as BayesC with $\pi=0$ and that is how we will cite it. The algorithm is fairly simple from a GSRU iteration scheme. Instead of iterating the solution, we sample it, 
-
-The algorithm requires initial values of variances and also prior information for them. Typical prior distributions for variance components are inverted-chi squared ($\chi^-2$) scaled by constants ( $S_{b}^{2},S_{e}^{2}$ for marker and residual variances) with some degrees of freedom ($\upsilon_{b}, \upsilon_{e}$). The degrees of freedom represent the amount of information put on those variances and therefore wheras 4 is a small value (and almost “irrelevant”) 10,000 is a very strong prior. Typical values used in practice can be 4, for instance. 
-
-On expectation, if we use a priori $S_{e}^{2}$ and $\upsilon_{e}$ then $E(\sigma_e^2|S_{e}^{2},\upsilon_{e})=S_{e}^{2}/\upsilon_{e}$ One may use previous estimates and put therefore
-
-$S_{e}^{2}=\sigma_e^2\upsilon_{e}$
-and
-$S_{b}^{2}=\sigma_b^2\upsilon_{b}$
-
-
-$\sigma_b^2=\frac{\sigma_g^2}{2\sum_{i}p_i(1-p_i)}$
-
-Please note that in other parameterizations $E(\sigma_e^2|S_{e}^{2},\upsilon_{e})=S_{e}^{2}$ and $E(\sigma_b^2|S_{b}^{2},\upsilon_{b})=S_{b}^{2}$ and therefore the Scale factor is in the same scale as the regular variances, and we can use $S_{e}^{2}=\sigma_e^2$ and $S_{b}^{2}=\sigma_b^2$
-
-## Effect of allele coding on BLR
-
-## Reliabilities from BLR
-Daniel/Gustavo BLUP notes + Legarra paragraph
-
-\end{comment}
-
-## Estimation of model parameters
-
-Bayesian linear regression methods use an iterative algorithm for estimating joint marker effects. Estimation of the joint marker effects depend on additional model parameters such as a probability of being causal ($\pi$), an overall marker variance ($\sigma_{\beta}^2$), and residual variance ($\sigma_e^2$). Estimation of model parameters can be done using MCMC techniques by sampling from fully conditional posterior distributions or by using an EM based approximation (emBayesR) as a fast counterpart to a MCMC version of BayesR ([Wang et al. 2015](https://gsejournal.biomedcentral.com/articles/10.1186/s12711-014-0082-4#MOESM2)). 
-
-### An MCMC algorithm for BayesR (mcBayesR)
-
-An MCMC algorithm can be used to obtain estimates of parameters in BayesR models.
+To illustrate consider the following MCMC algorithm used to obtain estimates of parameters in BayesR models.
 The multiple linear regression model is parameterized in terms of  $\theta= (  \sigma_{e}^{2}, \sigma_{ \beta}^{2}, \gamma , \pi ,~b,~d)$. The full conditional sampling distributions for these parameters are presented below. 
 
 The joint posterior for all parameter in the multiple regression model can be written as :
@@ -314,54 +148,62 @@ The full conditional posterior distribution for  $\sigma _{ \beta }^{2}~$ is a s
 The full conditional posterior distribution for $\sigma_{e}^{2}$ is a scaled inverse chi-squared distribution with $\upsilon_{e}=\widetilde{\nu}_{e}+n$ degrees of freedom and scale parameter $S_{\beta}^{2}=\frac{\widetilde{\nu}_{e}\widetilde{S}_{e}^{2}+sse}{\widetilde{\nu }_{e}+n}$  where $\widetilde{\nu}_{e}$ and $\widetilde{S}_{e}^{2}$ are the prior degrees of freedom and scale parameters and $sse=y^{'}y-b^{'}r^{\ast}-b^{'}X^{'}y$.
 
 
-## Mapping of variants
-
-The value of $1-\pi$ (the number of markers having an effect) can be either fixed to a value or estimated from data. This is achieved in the last lines of the code above. How is this possible? Intuitively, we look at the number of markers who have ($\delta_i=1$) or not ($\delta_i=0$) an effect. Then we add a prior information on $\pi$. This comes in the form of a Beta(a, b) distribution, which is a distribution of fractions between 0 and 1, saying that our fraction is a priori 'like if' we had drawn a black balls and b red balls from an urn to make $\pi= \frac{a}{a+b}$. The total genetic variance explained by markers in the Bayes C model is equal to
-
-\begin{align}
-\sigma_g^2=\sigma_b^2(1-\pi)2\sum_{i}p_i(1-p_i)
-\end{align}
-
-Thus, the same total genetic variance can be achieved with large values of $\sigma_b^2$ and small values of $(1-\pi)$ or the opposite. This implies that there is a confusion between both, and it is not easy to find out how many markers should be in the model.
-How can we declare significance? There is no such thing as p-values. We may though use the Bayes Factor (Wakefield 2009 ; Varona 2010) :
+## Extensions to summary statistics
+The key parameter of interest in the multiple regression model are the marker effects. These can be obtained by solving an equation system similar to:
 
 \begin{align}
-BF_i=\frac{1-\pi}{\pi}\frac{p(\delta_i=1|y)}{1-p(\delta_i=1|y)}
+b &= \left( X'X +I\frac{\sigma_{e}^{2}}{\sigma_{b}^{2}} \right)^{-1}X'y
 \end{align}
 
-What thresholds should we use for BF? We can use a scale adapted by (Kass and Raftery 1995) sometimes used in QTL detection (Varona,García-Cortés, and Pérez-Enciso 2001 ; Vidal et al. 2005):
-BF= 3-20 'suggestive'
-BF= 20-150 'strong'
-BF>150 'very strong'
+In order to solve this equation system individual level data (genotypes $X$ and phenotypes $y$) is required. 
+If these are not available, it is possible to reconstruct $X'y$  and $X'X$ from a LD correlation matrix $B$ (from a population matched LD reference panel) and summary statistics: 
 
-Something remarkable is that there is no need for multiple testing (Bonferroni) correction because all SNP were introduced at the same time, and the prior already penalizes their estimates (Wakefield 2009). 
+\begin{align}
+ X'X &= D^{0.5}BD^{0.5} \\
+ X'y &= Db_{m} 
+\end{align}
+
+where $D_{i}=\frac{1}{\sigma_{b_{i}}^{2}+b_{i}^{2}/n_{i}}$ if the genotypes have been centered to mean 0 or $D_{i}=n_{i}$ if the genotypes have been centered to mean 0 and scaled to unit variance, and $b_{m} = D^{-1}X'y$ is the marginal marker effects obtained from a standard GWAS. The construction of a LD correlation matrix, B, is shown in session 5. 
+
+The summary statistics methods used require the construction of a reference LD correlation matrix. Typically this is done through the use of a fixed 1–10-Mb window approach, as in GCTA-SBLUP or LDpred, which sets LD correlation values outside this window to zero. Zhu and Stephens detail the reasons for using the shrinkage estimator of the LD matrix, which shrinks the off-diagonal entries of the LD correlation matrix towards zero and is required for the implementation based on summary statistics. Experimentation with different types of sparse LD correlation matrices led to the conclusion that the shrinkage estimator was the most stable for SBayesR implementation. Briefly, each element of the reference LD correlation matrix Bij is shrunk by the factor $exp(-\varrho_{ij}/2m)$, where m is taken to be the sample size used to generate the genetic map, $(\varrho _{ij})$ is an estimate of the population-scaled recombination rate between SNPs i and j taken as $\varrho _{ij} = 4N_{\mathrm{e}}c_{ij}$, for Ne the effective population size and $c_{ij}$ the genetic distance between sites i and j in centimorgans as stated in Li and Stephens. LD matrix entries are set to zero if $exp(-\varrho _{ij}/2m)$ is less than a user-chosen cutoff.
+
+Genetic distance between sites is derived from the genetic map files containing interpolated map positions for the CEU population generated from the 1000G OMNI arrays (Data availability). The calculation of the shrunk LD matrix requires the effective population sample size, which we set to be 11,400 (as in Zhu and Stephens), the sample size of the genetic map reference, which corresponds to the 183 individuals from the CEU cohort of the 1000G and the hard threshold on the shrinkage value, which we set to $10^{-3}$. This threshold gave a good balance between computational efficiency and accuracy with, on average, each SNP having a window width of 10.6 Mb (SD=5.6Mb) across the autosomes. The shrunk LD matrix is stored in a sparse matrix format (ignoring matrix elements equal to 0) for efficient SBayesR computation. Currently, the LD matrix construction can only be performed with PLINK hard-call genotypes.
+
+
+## Fine mapping approaches based on BLR models 
+BLR models used for fine-mapping have been specialized in order to focus on the markers that have the largest chance of being causal. The challenge of BLR models is determining which markers have non-zero effect sizes on a trait. The BLR models are fitted using all markers simultaneously, and fine mapping approaches must therefore consider sets of markers in a genomic region rather than individual markers, because the effect of a causative mutation may be distributed across multiple markers. Although markers with non-zero effect sizes may be referred to as causal, it is important to realize that statistical methods alone cannot determine causality.  
+
+For BLR models, several association statistics have been developed to identify which markers or windows of markers can be considered as explaining a substantial or significant proportion of the genetic variance.
+
+The genomic region used for defining the marker set can be defined by  non-overlapping or sliding windows across the genome. The genomic region used in the fine mapping procedure may be determined by a fixed number of markers (e.g. 1000 markers) or by physical (e.g. 1 Mb) or genetic maps (e.g. 1 cM). 
+
+In general a BLR model for fine-mapping can be represented by an indicator variable for each marker (or marker set), with values of 1 for causal and 0 for not, and by organizing these indicators for all markers (or marker set) of interest in vector d. For m markers, there are $2^m$ possible d vectors (hence, $2^m$ possible models), ranging from all values of d equal to 0 for no markers causal to all values equal to 1 for all markers causal. There are several ways to specify the prior probability for a model, such as assuming that variants are independent and equally likely to be causal or assuming a fixed number of causal variants out of the total variants. 
+
+- To what extend mapping power and false discoveries of the BLR models depends on the choice of prior require further investigation. 
+
+- To what extend mapping power and false discoveries of the BLR models depends on the choice of association statistics require further investigation. 
+
+- To what extend mapping power and false discoveries of the BLR models depends on the choice of genomic region require further investigation. 
 
 
 ## Extensions to Multiple Traits and Multiple Components
 
 Bayesian linear regression models have been extended to multiple trait analyses. A multiple trait analysis is a natural choice in quests for understanding and dissecting genetic correlations between traits using genetic markers, e.g., evaluating whether pleiotropy or linkage disequilibrium are at the root of between-trait associations. Furthermore pleiotropy among traits can be utilised to increase accuracy of genomic predictions. 
 
-Multiple trait Bayesian linear regression models can implemented under an restrictive assumption that a locus simultaneously affects all the traits or none of them. However this assumption is not biologically meaningful, especially in multiple trait analyses involving many traits. This assumption of genetic architecture is violated if some loci have no effect on at least one of the traits while having an effect on the remaining traits.   
+Multiple trait Bayesian linear regression models can implemented under an restrictive assumption that a locus simultaneously affects all the traits or none of them (Jia and Jannick 2012). This approach has the advantage of simplicity, but the disadvantage that many effects might need to be estimated for loci that have no effect on a trait, and this may erode the accuracy of prediction. This should not be a problem for asymptotically large datasets, as in that case the fitted locus effects should converge to zero for those traits not influenced by that locus. Furthermore, this assumption is not biologically meaningful, especially in multiple trait analyses involving many traits. This assumption of genetic architecture is violated if some loci have no effect on at least one of the traits while having an effect on the remaining traits.   
 
-Therefore a general multiple trait Bayesian regression model allowing a broad range of mixture priors have been proposed. In this model a locus is allowed to affect any combination of traits, e.g., in a 2-trait analysis, the “restrictive” model only allows two situations, whereas in the general model allow all $2^2=4$ situations. This model is particularly interesting because it provides insight into whether markers affect all, some, or none of the traits addressed.For example, the proportion of markers in each of the (0,0), (1,0), (0,1) and (1,1) categories, where (0,0) means “no effect,” and (1,1) denotes “effect” on both traits. 
+Therefore a general multiple trait Bayesian linear regression model based on the Bayes C prior have been proposed (Cheng et al. 2018). In this model a locus is allowed to affect any combination of traits, e.g., in a 2-trait analysis, the “restrictive” model only allows two situations, whereas in the general model allow all $2^2=4$ situations. This model is particularly interesting because it provides insight into whether markers affect all, some, or none of the traits addressed.For example, the proportion of markers in each of the (0,0), (1,0), (0,1) and (1,1) categories, where (0,0) means “no effect,” and (1,1) denotes “effect” on both traits. This model becomes computational intensive for a multiple trait analysis of a large number of traits. To partly reduce the computational complexicity it can be implemented such that the multi-variate prior distributions used for marker effects assume the same correlation for all markers. 
 
-A further extensions Bayesian regression model is to partioning the markers into multiple sets based on prior knowledge on genomic features.
+A multiple trait Bayesian linear regression model based on the Bayes R prior (Kemper et al. 2022) which can be considered a hybrid model (compared to MT-BLR-STRICT and MT-BLR-FLEX). In this model the prior for the marker effects is a mixture of normal distributions (i.e. Bayes R prior). However these distributions were assumed to be independent between traits but with a specified prior proportion of markers having no effect on any trait. Thus the "learning" between traits is primarily from the marker-trait indicator variable which is a slightly more flexible approach.
+
+The above mentioned MT-BLR can also be implemented using the Bayes N and Bayes A priors (Fernando and Gianola).
+
+In summary MT-BLR models provide a flexible approach for the detection of pleiotropic loci which can be utilised to increase accuracy of genomic predictions. However, the impact of prior assumptions on marker effects across traits requires further investigation. Also, an important limitation of all methods that attempt to use genotype–phenotype associations to detect pleiotropic loci is that they cannot differentiate the presence of a pleiotropic locus from the presence of two closely linked single-trait loci, depending on the extent of LD in the region. Furthermore issues with inferences about genetic (co) variance based on BLR models can misrepresent the true genetic parameters if the causal loci are not genotyped because of incomplete LD between markers and causal loci and among causal loci (de los Campos et al., Gianola et al.).
 
 
-### Prior distributions for multiple traits
-In practice, genetic variances from previous conventional analyses are usually used to construct priors for marker effect variances. For single trait analyses, under some assumptions, it can be shown that the marker effect variance XX can be obtained as XX (2) where XX is the genetic variance, XX is the allele frequency for locus j, and $\pi$ is the probability that a marker has a null effect (Habier et al. 2007; Gianola et al. 2009; Fernando and Garrick 2013). Following a similar strategy, the marker effect covariance matrix XX in a two-trait analysis can be obtained as XX (3) where XX is the genetic covariance matrix and XX XX and XX are the probabilities a marker has null effects on the first trait but not the second trait, on the second trait but not the first trait, or on neither trait. Thus the probability that a marker has an effect on the first trait can be obtained as XX which is the denominator of the upper left element in (3). This strategy relating marker effect covariance matrix to genetic covariance matrix can be readily extended to >2 traits. Note that positive definite matrix XX may result in negative definite matrix XX using (3), especially when the prior for the probability a marker has null effects is far from the real value. In that case, the diagonal elements of XX which are the marker effect variances for different traits, can be obtained using (2), where $\pi$ may be estimated from previous single-trait analyses, and the off-diagonal elements of XX may be set to zero to guarantee positive definiteness of XX
+### Posterior sampling distributions for multiple trait BLR model based on the Bayes C prior
 
-
-### Multi-trait variable selection
-In regard to a single trait, a locus either has an effect, or it does not. Hence, the scalar parameter $\pi$ (and its complement XX) completely defines this circumstance. In a multi-trait setting, it is conceivable that loci that influence one trait, may or may not influence other traits. In that circumstance, a vector XX is required to define the genetic architecture. The number of parameters that constitute the vector XX is XX which grows rapidly with the number of traits. In most cases, the researcher will have little or no knowledge of the likely extent of pleiotropy of loci that influence two traits, other than knowing or having an estimate of the genetic covariance. There are two simple ways to reduce this complexity in priors.
-
-First, one can assume, as did Jia and Jannink (2012), that, in the context of variable selection, a locus should be selected for all of the traits or selected for none of the traits, reducing the required probabilities to being analogous to the single trait $\pi$ and XX This approach has the advantage of simplicity, but the disadvantage that many effects might need to be estimated for loci that have no effect on a trait, and this may erode the accuracy of prediction. This should not be a problem for asymptotically large datasets, as in that case the fitted locus effects should converge to zero for those traits not influenced by that locus.
-
-A second simple way to accommodate the multiple trait circumstance is to assume the XX parameters can be derived from t trait-specific parameters. However, when the probability that a single trait locus has an effect is small for each of two or more traits, the pair-wise probability that a locus affects all the traits will be the product of those small probabilities, making it very difficult for loci to enter the model for all traits simultaneously.
-
-The better way to solve this problem is to use a hyper-parameter XX that completely defines the alternative models that are required to capture all the alternative forms of genetic architecture. We have shown here how this can be done, with two alternative Gibbs sampling strategies. One involves single-site sampling for one locus and trait at a time. The other samples all the alternative combinations of effects for one locus considering all traits simultaneously. We have shown that both are practical with real data and can result in improved accuracies of prediction in certain circumstances in terms of genetic architecture and size of dataset.
-
-### Posterior sampling distributions for multiple traits
+A multiple trait BLR (MT-BLR) model estimate joint marker effect accounting for LD and borrow information across traits based on the following equation (two-trait example):
 
 \begin{align}
 b= \left[ \begin{matrix}
@@ -372,22 +214,28 @@ b_{2}\\
 X_{1}^{'}X_{1}^{}  &  0\\
 0  &  X_{2}^{'}X_{2}^{}\\
 \end{matrix}
-\right] ~ +I\otimes G^{-1}E \right) ^{-1} \left[ \begin{matrix}
+\right] ~ +I\otimes B^{-1}E \right) ^{-1} \left[ \begin{matrix}
 X_{1}^{'}y_{1}^{}\\
 X_{2}^{'}y_{2}^{}\\
 \end{matrix}
 \right] 
 \end{align}
 
+- $b_1$ and $b_2$ are the marker effects for trait 1 and 2
+- $y_1$ and $y_2$ are the vectors of phenotypes for trait 1 and 2
+- $X_1$ and $X_2$ are the matrices of genotypes for trait 1 and 2
+- $X_{1}^{'}X_{1}^{}$ and $X_{2}^{'}X_{2}^{}$ are the LD t-erms which may differ across ancestries
+
+- $B$ is the genetic co-variance matrix between traits
 \begin{align}
-G= \left[ \begin{matrix}
-\sigma _{s_{1}}^{2}  &   \sigma _{s_{12}}^{2}\\
-\sigma _{s_{21}}^{2}  &   \sigma _{s_{2}}^{2}\\
+B= \left[ \begin{matrix}
+\sigma_{b_{1}}^{2}  &   \sigma_{b_{12}}^{2}\\
+\sigma_{b_{21}}^{2}  &   \sigma_{b_{2}}^{2}\\
 \end{matrix}
 \right]
 \end{align}
 
- 
+- $E$ is the residual co-variance matrix between traits
 \begin{align}
 E= \left[ \begin{matrix}
 \sigma _{e_{1}}^{2}  &   \sigma _{e_{12}}^{2}\\
@@ -396,14 +244,14 @@ E= \left[ \begin{matrix}
 \right] 
 \end{align}
  
-$\sigma _{e_{12}}^{2}= \sigma _{e_{21}}^{2}=0$
+- the shrinkage term, $B^{-1}E$, that depends on both prior distribution of the marker effects (e.g. Bayes C) and the model selection procedure (e.g. marker-trait configuration) 
  
 
-The covariance matrix $\textbf{G}$ for the marker effect is a priori assumed to follow an inverse Wishart distribution $IW(\widetilde{S}_{\beta}^{2},\widetilde{\nu}_{\beta })$ where $\widetilde{\nu}_{\beta}$ and  $\widetilde{S}_{\beta }^{2}$ (t by t matrix) are the prior degrees of freedom and scale parameters. 
+The covariance matrix $\textbf{B}$ for the marker effect is a priori assumed to follow an inverse Wishart distribution $IW(\widetilde{S}_b^{2},\widetilde{\nu}_b)$ where $\widetilde{\nu}_b$ and  $\widetilde{S}_b^{2}$ (t by t matrix) are the prior degrees of freedom and scale parameters. 
 
-The full conditional distribution for $\textbf{G}$ the covariance matrix for the jth marker is also an inverse Wishart distribution of the form:
+The full conditional distribution for $\textbf{B}$ the covariance matrix for the jth marker is also an inverse Wishart distribution of the form:
 
-$IW(\widetilde{S}_{\beta}^{2} + bb' ,\widetilde{\nu}_{\beta}+m)$, where $\textbf{b}$ is a matrix (m x t) of sampled marker effects
+$IW(\widetilde{S}_b^{2} + bb' ,\widetilde{\nu}_b+m)$, where $\textbf{b}$ is a matrix (m x t) of sampled marker effects
 
 or
 
@@ -438,126 +286,6 @@ where  $f_{j} \left( \widetilde{y} \vert d_{j}=c, \theta _{-j} \right) = \vert C
 In the most general case, any marker effect might be zero for any possible combination of t traits resulting in $2^t$ possible combinations of $d_{j}$: For example, in a t=2 trait model, there are $2^t=4$  combinations for $d_{j}$: (0,0), (0,1), (1,0), (1,1).  Suppose, in general, we use numerical labels $1$,$2$,...,$l$  for the $2^t$ possible outcomes for $d_{j}$  then the prior for $d_{j}$ is a categorical distribution.
 
 
-## Extensions to Summary Statistics
-
-The multiple regression model described above can be related to the estimates of the regression coefficients from m simple linear regressions  $b_{marg}$ from a standard GWAS, by multiplying by $D^{-1}X'$  where  $D=~diag \left(x_{1}^{'}x_{1},x_{2}^{'}x_{2},...,x_{m}^{'}x_{m} \right)$  such that:
-
-\begin{align}
-D^{-1}X'y=D^{-1}X'Xb+D^{-1}X'e
-\end{align}
-
-Noting that  $b_{marg}=D^{-1}X'y$  is a vector (m $\times$ 1) of least-squares marginal regression effect estimates and the LD correlation matrix between all genetic markers  $B=D^{-0.5}X'XD^{-0.5}$. The key parameter of interest in the multiple regression model are the marker effects. These can be obtained by solving an equation system similar to:
-
-\begin{align}
-\hat{b}&= \left( X'X~ +I\frac{ \sigma _{e}^{2}}{ \sigma _{ \beta }^{2}} \right) ^{-1}X'y
-\end{align}
-
-\begin{align}
-\hat{b}&= \left( X'X~ +I \lambda  \right) ^{-1}X'y
-\end{align}
-
-\begin{align}
-\lambda &= \left( \frac{ \sigma _{e}^{2}}{ \sigma _{b_{1}}^{2}},\frac{ \sigma _{e}^{2}}{ \sigma _{b_{2}}^{2}},...,\frac{ \sigma _{e}^{2}}{ \sigma _{b_{m}}^{2}} \right)
-\end{align}
-
-$\sigma _{b_{j}}^{2}$ can take values $\gamma _{c} \sigma _{ \beta  }^{2}$ where $~\gamma = \left(  \gamma _{1}, \gamma _{2}, \gamma _{3}, \gamma _{4} \right)$  depending on the state of the indicator variable $d$.
-
-In order to solve this equation system individual level data (genotypes $X$ and phenotypes $y$) is required. If these are not available, it is possible to reconstruct $X^{'}y$  and $X'X$  from summary statistics and LD reference panel. $X'X$ is derived from an LD matrix $\bf{B}$ (from population matched reference) and summary statistics: 
-
-\begin{align}
-X^{'}X=D^{0.5}BD^{0.5}
-\end{align}
-
-where  \(D_{i}=\frac{1}{\hat{\sigma}_{b_{i}}^{2}+\hat{b}_{i}^{2}/n_{i}}\) if the genotypes have been centered to mean 0 \(D_{i}=n_{i}\) if the genotypes have been centered to mean 0 and scaled to unit variance.  \( X'y\)  is derived from univariate marker effects ( \(b_{marg}\) ):
-
-\begin{align}
- b_{marg}&=D^{-1}X'y 
- X^{'}y&=Db_{marg} 
-\end{align}
-
-
-### Reference LD matrix construction {.unlisted .unnumbered}
-
-The summary statistics methods used require the construction of a reference LD correlation matrix. Typically this is done through the use of a fixed 1–10-Mb window approach, as in GCTA-SBLUP or LDpred, which sets LD correlation values outside this window to zero. Zhu and Stephens detail the reasons for using the shrinkage estimator of the LD matrix, which shrinks the off-diagonal entries of the LD correlation matrix towards zero and is required for the implementation based on summary statistics. Experimentation with different types of sparse LD correlation matrices led to the conclusion that the shrinkage estimator was the most stable for SBayesR implementation. Briefly, each element of the reference LD correlation matrix Bij is shrunk by the factor $exp(-\varrho_{ij}/2m)$, where m is taken to be the sample size used to generate the genetic map, $(\varrho _{ij})$ is an estimate of the population-scaled recombination rate between SNPs i and j taken as $\varrho _{ij} = 4N_{\mathrm{e}}c_{ij}$, for Ne the effective population size and $c_{ij}$ the genetic distance between sites i and j in centimorgans as stated in Li and Stephens. LD matrix entries are set to zero if $exp(-\varrho _{ij}/2m)$ is less than a user-chosen cutoff.
-
-Genetic distance between sites is derived from the genetic map files containing interpolated map positions for the CEU population generated from the 1000G OMNI arrays (Data availability). The calculation of the shrunk LD matrix requires the effective population sample size, which we set to be 11,400 (as in Zhu and Stephens), the sample size of the genetic map reference, which corresponds to the 183 individuals from the CEU cohort of the 1000G and the hard threshold on the shrinkage value, which we set to $10^{-3}$. This threshold gave a good balance between computational efficiency and accuracy with, on average, each SNP having a window width of 10.6 Mb (SD=5.6Mb) across the autosomes. The shrunk LD matrix is stored in a sparse matrix format (ignoring matrix elements equal to 0) for efficient SBayesR computation. Currently, the LD matrix construction can only be performed with PLINK hard-call genotypes.
-
-
-### McMC algorithm for a single trait Bayesian model based on summary statistics  
-
-The following steps are required, 1) reconstruct  \( X^{'}y \)  and  \( X'X \)  from summary statistics and LD reference panel as explained above, 2) initialise parameters, 3) sampling of model parameters from full conditional posterior distributions described above.
-
-Initialize parameters:
-
-\[ b=0 \]
-
-\[  \sigma _{e}^{2}=\frac{sse}{n-1} \]
-
-\[ sse=y^{'}y-2b'X'y+b^{'}X^{'}Xb=y^{'}y~~~~~~~~~~~~~ \left( given that b=0 initially \right)\] 
-
-\[ y^{'}y=\frac{1}{m} \sum _{j=1}^{m} \left( y^{'}y \right) _{j} \]
-
-\[  \left( y^{'}y \right) _{j}=\hat{ \sigma }_{b_{i}}^{2}x_{j}^{'}x_{j} \left( n-2 \right) +\hat{b}_{i}^{2}x_{j}^{'}x_{j} \]
-
-\[ h_{snp}^{2}=0.5 \]
-
-\[  \sigma _{g}^{2}= \sigma _{e}^{2}h_{snp}^{2} \]
-
-\[  \sigma _{ \beta }^{2}=\frac{ \sigma _{g}^{2}}{ \left( 1- \pi _{c=1} \right)  \sum _{j=1}^{m}2p_{j} \left( 1-p_{j} \right) } \]
-
-
-\[  \pi = \left( \text{0.995, 0.002, 0.002, 0.001} \right)  \]
-
-\[  \gamma = \left( 0,0.01,0.1,1.0 \right)  \]
-
-\[ \widetilde{v}_{ \beta }=\widetilde{v}_{e}=4 \] 
-
-\[ \widetilde{S}_{ \beta }^{2}=\frac{ \left( \widetilde{v}_{ \beta }-2 \right)  \sigma _{ \beta }^{2}}{\widetilde{v}_{ \beta }}=\frac{ \sigma _{ \beta }^{2}}{2} \] 
-
-\[ \widetilde{S}_{e}^{2}=\frac{ \left( \widetilde{v}_{e}-2 \right)  \sigma_{e}^{2}}{\widetilde{v}_{e}}=\frac{ \sigma _{e}^{2}}{2} \]
-
-\( r^{\ast}=X^{'}y- \) \( X^{'}Xb \) 
-
-
-\[  \left( r^{\ast}= X^{'}y~\text{because initially }b=0 \right)  \]
-
-
-Gibbs sampler:
-
-
-for i = 1 to number of iterations do
-
-for j = 1 to number of markers do
-
- \( r_{j}=r_{j}^{\ast}+ x_{j}^{'}x_{j}b_{j}^{i}~~ \left( rhs for marker j  \right)  \)
-
- \(  \sigma _{c}^{2}= \sigma _{ \beta }^{2} \gamma _{d_{j}=c}~\text{for each of C classes } \left( e.g. 4 classes  \gamma = \left( 0,0.01,0.1,1.0 \right)   \right)  \)
-
- \( l_{jc}=x_{j}^{'}x_{j}+ \frac{ \sigma _{e}^{2}}{ \sigma _{c}^{2}}~~ \left( lhs for marker j in class c  \right)  \) 
-
- \( logL_{c}=0.5 \left[ \log  \left( \frac{ \sigma _{e}^{2}}{ \sigma _{c}^{2}l_{jc}} \right) +\frac{ \sigma _{c}^{2}}{ \sigma _{e}^{2}} \left( \frac{r_{j}^{2}}{ \sigma _{c}^{2}l_{jc}} \right)  \right] + log \left(  \pi _{c} \right)  \) \   \(  \left( \log likelihoodfor marker j in class c  \right)  \) 
-
- \( P \left( d_{j}=c \vert  \theta _{-j},\widetilde{y} \right) =\frac{1}{ \sum _{k=1}^{C}\exp  \left[ logL_{k}-logL_{c} \right] }~ \left( posterior probability for marker j in class c  \right)  \) \   \( \text{Sample variance class membership, d}_{j}\text{, for marker j using a categorical sampler } \) 
-
- \( \text{Sample marker effect,}b_{j}^{i+1}\text{, from N} \left( \frac{r_{j}}{l_{jc}},\frac{ \sigma _{e}^{2}}{l_{jc}} \right) \text{based on variance class membership }d_{j} \)  \par
-
- \[  \]  \[ \text{Update right hand side }r_{j}^{\ast \left( i+1 \right) }=r_{j}^{\ast \left( i \right) }- X_{j}^{'}x_{j} \left( b_{j}^{i+1}-b_{j}^{i} \right) ~where~X_{j}^{'}x_{j}\text{is the jth column of}~X^{'}X \]
-
-enddo
-
-
-Sample  \(  \sigma _{ \beta }^{2}~ \) from scaled inverse chi-squared distribution with  \(  \upsilon _{ \beta }=\widetilde{ \nu }_{ \beta }+q \)  degrees of freedom and scale parameter  \( S_{ \beta }^{2}=\frac{\widetilde{ \nu }_{ \beta }\widetilde{S}_{ \beta }^{2}+ \sum _{j=1}^{q}\frac{b_{j}^{2}}{ \gamma _{d_{j}}}}{\widetilde{ \nu }_{ \beta }+q} \)  where  \( \widetilde{ \nu }_{ \beta }~ \) and  \( \widetilde{S}_{ \beta }^{2} \)  are the prior degrees of freedom and scale parameters.
-
-
-Sample $\sigma _{e}^{2}~$ from scaled inverse chi-squared distribution with $\upsilon_{e}=\widetilde{ \nu }_{e}+n$  degrees of freedom and scale parameter $S_{ \beta }^{2}=\frac{\widetilde{ \nu }_{e}\widetilde{S}_{e}^{2}+sse}{\widetilde{ \nu }_{e}+n}$ where $\widetilde{ \nu }_{e}~$ and $\widetilde{S}_{e}^{2}$ are the prior degrees of freedom and scale parameters and $sse=y^{'}y-b^{'}r^{\ast}-b^{'}X^{'}y$.
-
-Sample  $\pi$ from a $Direchlet~\left( C,c + \alpha  \right)$, where $\bf{c}$ is a vector of length C that contains the counts of the number of variants in each variance class and $\alpha = \left( 1,1,..,1 \right)$.
-
-Calculate  $\sigma _{g}^{2}=\frac{mss}{n} \)  where  \( mss=b^{'}X^{'}y-b^{'}r$ 
-
-Calculate  $h_{snp}^{2}=\frac{ \sigma _{g}^{2}}{ \sigma _{g}^{2}+ \sigma _{e}^{2}}$  
-
-enddo
 
 # Bayesion Linear Regression Model for Individual Effects
 
